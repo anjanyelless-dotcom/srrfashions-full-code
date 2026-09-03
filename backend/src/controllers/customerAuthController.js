@@ -162,9 +162,7 @@ const customerLogin = async (req, res) => {
       token
     });
   } catch (error) {
-    console.error('[ERROR] Login failed:', error.message);
-    console.error('[ERROR] Stack trace:', error.stack);
-    console.error('[ERROR] Error details:', JSON.stringify(error, null, 2));
+    console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
   }
 };
