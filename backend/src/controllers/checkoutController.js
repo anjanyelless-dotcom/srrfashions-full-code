@@ -203,6 +203,30 @@ const calculateReferralDiscount = async (useReferralReward, userId) => {
   }
 };
 
+// ============================================================
+// TEMPORARY LIVE PAYMENT TEST MODE
+// Set LIVE_PAYMENT_TEST_MODE=true and LIVE_PAYMENT_TEST_AMOUNT=1.00
+// to force all Cashfree LIVE orders to charge exactly ₹1.00.
+// This MUST be disabled (set to false) before real customer payments.
+// The override is applied server-side and cannot be bypassed by the frontend.
+// ============================================================
+const getLivePaymentTestAmount = () => {
+  const isTestMode = process.env.LIVE_PAYMENT_TEST_MODE === 'true';
+  if (!isTestMode) return null;
+
+  const testAmount = parseFloat(process.env.LIVE_PAYMENT_TEST_AMOUNT || '1.00');
+  return isNaN(testAmount) ? 1.00 : testAmount;
+};
+
+const resolveCashfreeOrderAmount = (calculatedFinalAmount) => {
+  const testAmount = getLivePaymentTestAmount();
+  if (testAmount !== null) {
+    console.log(`[LIVE PAYMENT TEST MODE] Overriding Cashfree order amount from ${calculatedFinalAmount} to ${testAmount} INR`);
+    return testAmount;
+  }
+  return calculatedFinalAmount;
+};
+
 const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) => {
   const clientId = process.env.CASHFREE_CLIENT_ID;
   const clientSecret = process.env.CASHFREE_CLIENT_SECRET;
@@ -219,7 +243,9 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
     throw new Error(`Cashfree payment gateway not configured. Missing: ${missingVars.join(', ')}`);
   }
 
-  console.log(`Creating Cashfree order for order ${orderNumber} with amount ${finalAmount}`);
+  const cashfreeOrderAmount = resolveCashfreeOrderAmount(finalAmount);
+
+  console.log(`Creating Cashfree order for order ${orderNumber} with amount ${cashfreeOrderAmount}`);
 
   try {
     const url = `${baseUrl}/pg/orders`;
@@ -232,7 +258,7 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
 
     const requestBody = {
       order_id: orderNumber,
-      order_amount: finalAmount.toFixed(2),
+      order_amount: cashfreeOrderAmount.toFixed(2),
       order_currency: 'INR',
       customer_details: {
         customer_id: String(customerDetails.customer_id),
@@ -273,7 +299,8 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
     return {
       cf_order_id: responseData.order_id,
       payment_session_id: responseData.payment_session_id,
-      order_status: responseData.order_status
+      order_status: responseData.order_status,
+      order_amount: cashfreeOrderAmount
     };
   } catch (error) {
     console.error(`Cashfree order creation error for ${orderNumber}:`, error.message);
@@ -452,13 +479,15 @@ const createOrder = async (req, res) => {
     }
 
     // Create payment record with Cashfree details
+    // Use the actual Cashfree order amount (which may be overridden in test mode)
+    const cashfreeOrderAmount = cashfreeOrder?.order_amount || finalAmount;
     const paymentResult = await pool.query(
       `INSERT INTO payments (order_id, amount, payment_method, payment_status, cashfree_order_id, payment_session_id, cf_order_status)
        VALUES ($1, $2, $3, 'PAYMENT_PENDING', $4, $5, $6)
        RETURNING *`,
       [
         order.id,
-        finalAmount,
+        cashfreeOrderAmount,
         payment_method,
         cashfreeOrder?.cf_order_id || null,
         cashfreeOrder?.payment_session_id || null,
@@ -487,8 +516,16 @@ const createOrder = async (req, res) => {
 
     // Note: Cart is NOT cleared here - it will be cleared after successful payment
 
+    // Include test mode status in response so the frontend can display an indicator
+    const livePaymentTestMode = process.env.LIVE_PAYMENT_TEST_MODE === 'true';
+    const livePaymentTestAmount = livePaymentTestMode
+      ? parseFloat(process.env.LIVE_PAYMENT_TEST_AMOUNT || '1.00')
+      : null;
+
     res.status(201).json({
       message: 'Order created successfully',
+      live_payment_test_mode: livePaymentTestMode,
+      live_payment_test_amount: livePaymentTestAmount,
       order: {
         id: order.id,
         order_number: orderNumber,

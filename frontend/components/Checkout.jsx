@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useCart } from './CartContext.jsx';
-import { createOrder } from '../services/checkoutApi.js';
+import { createOrder, getPaymentSettings } from '../services/checkoutApi.js';
 import { getAddresses } from '../services/addressApi.js';
 import { formatPrice } from '../services/price.js';
 import './Checkout.css';
@@ -18,6 +18,7 @@ export default function Checkout() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
   const [placing, setPlacing] = useState(false);
+  const [paymentSettings, setPaymentSettings] = useState(null);
 
   console.log('Checkout component - cart state:', cart.length, 'items', cart);
 
@@ -28,10 +29,14 @@ export default function Checkout() {
     (async () => {
       try {
         setLoading(true);
-        const res = await getAddresses().catch(() => ({ addresses: [] }));
-        const addrList = res.addresses || [];
+        const [addressRes, settingsRes] = await Promise.all([
+          getAddresses().catch(() => ({ addresses: [] })),
+          getPaymentSettings().catch(() => ({}))
+        ]);
+        const addrList = addressRes.addresses || [];
         if (!cancelled) {
           setAddresses(addrList);
+          setPaymentSettings(settingsRes);
           const defaultAddr = addrList.find((a) => a.is_default) || addrList[0];
           if (defaultAddr) setSelectedAddress(String(defaultAddr.id));
         }
@@ -170,6 +175,23 @@ export default function Checkout() {
         <h1 className="srfashion-checkout-title">Checkout</h1>
 
         {error && <div className="srfashion-checkout-error">{error}</div>}
+
+        {paymentSettings?.live_payment_test_mode && (
+          <div
+            className="srfashion-checkout-test-mode"
+            style={{
+              background: '#fff3cd',
+              color: '#856404',
+              padding: '12px 16px',
+              borderRadius: 6,
+              marginBottom: 16,
+              border: '1px solid #ffeeba',
+              fontWeight: 600
+            }}
+          >
+            LIVE PAYMENT TEST MODE — You will be charged exactly ₹{Number(paymentSettings.live_payment_test_amount || 1).toFixed(2)} for this test
+          </div>
+        )}
 
         <section className="srfashion-checkout-section">
           <h2>Order Summary</h2>

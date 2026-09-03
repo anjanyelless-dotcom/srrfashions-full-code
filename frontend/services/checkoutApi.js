@@ -29,3 +29,11 @@ export async function createOrder(orderData) {
   });
   return handleResponse(res);
 }
+
+export async function getPaymentSettings() {
+  const res = await fetch(`${API_BASE}/api/payment-settings`, {
+    method: 'GET',
+    headers: headers(),
+  });
+  return handleResponse(res);
+}
