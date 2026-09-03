@@ -32,7 +32,10 @@ const cashfreeRouter = require('./routes/cashfree');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://www.srrfashions.in', 'https://srrfashions.in'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
