@@ -1,0 +1,120 @@
+/********************************/
+// ThShopManiaWooLib Custom Function
+/********************************/
+(function ($) {
+    var ThShopManiaWooLib = {
+        init: function (){
+            this.bindEvents();
+        },
+        bindEvents: function (){
+            var $this = this;
+            $this.AddtoCartQuanty();
+            if ($('body.single-product').length) {
+             $this.woccomerce_tab();
+           }
+            $this.copyProductLink(); 
+            $this.woo_login_extend();
+            $this.accordionTab();
+          },
+          woccomerce_tab: function (){
+                 $( document ).ready( function() {
+                 if($( '.description_tab' ).hasClass('active')){
+                       $('.woocommerce-Tabs-panel.woocommerce-Tabs-panel--description').css('display','block');
+                    }
+                });
+
+           },
+         AddtoCartQuanty: function (){
+         $('form.cart').on('click', '.plus, .minus', function () {
+
+        // Find input correctly
+        var qty = $(this)
+            .closest('.th-shop-mania-quantity')
+            .find('input.qty');
+
+        var val  = parseFloat(qty.val()) || 0;
+        var max  = parseFloat(qty.attr('max'));
+        var min  = parseFloat(qty.attr('min')) || 1;
+        var step = parseFloat(qty.attr('step')) || 1;
+
+        if ($(this).hasClass('plus')) {
+
+            if (max && val >= max) {
+                qty.val(max);
+            } else {
+                qty.val(val + step);
+            }
+
+        } else {
+
+            if (val <= min) {
+                qty.val(min);
+            } else {
+                qty.val(val - step);
+            }
+        }
+
+        // IMPORTANT for WooCommerce
+        qty.trigger('change');
+    });
+
+        },
+       woo_login_extend: function (){
+            document.addEventListener('DOMContentLoaded', function() {
+                var modal = document.getElementById('th-register-success-modal');
+                var closeBtn = document.getElementById('th-close-register-modal');
+
+                if (modal && document.querySelector('.woocommerce-message') && 
+                    document.querySelector('.woocommerce-message').innerText.toLowerCase().includes('account was created')) {
+                    modal.style.display = 'flex';
+                }
+
+                if (modal) {
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) modal.style.display = 'none';
+                    });
+                }
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function(){
+                        modal.style.display = 'none';
+                    });
+                }
+            });
+
+        },
+        copyProductLink: function () {
+            $(document).on('click', '.copy-product-link', function () {
+                var link = $(this).data('link');
+                navigator.clipboard.writeText(link).then(function () {
+                    alert('Product link copied to clipboard!');
+                }, function (err) {
+                    alert('Failed to copy: ' + err);
+                });
+            });
+        },
+
+         accordionTab: function (){
+
+            $(document).on(
+        'click',
+        '.thsm-accordion-title',
+        function () {
+
+            var $parent = $(this).parent();
+
+            $parent
+                .toggleClass('active')
+                .find('.thsm-accordion-content')
+                .stop()
+                .slideToggle(250);
+        }
+    );
+
+         },
+
+      
+    
+      }
+    ThShopManiaWooLib.init();
+})(jQuery);

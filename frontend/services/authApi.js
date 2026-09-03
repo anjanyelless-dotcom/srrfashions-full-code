@@ -1,0 +1,28 @@
+const API_BASE = 'http://localhost:3000';
+
+async function handleResponse(res) {
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const message = data?.message || data?.error || `Request failed with status ${res.status}`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+export async function loginCustomer(identifier, password) {
+  const res = await fetch(`${API_BASE}/api/auth/customer/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identifier, password }),
+  });
+  return handleResponse(res);
+}
+
+export async function registerCustomer({ full_name, email, mobile_number, password }) {
+  const res = await fetch(`${API_BASE}/api/auth/customer/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ full_name, email, mobile_number, password }),
+  });
+  return handleResponse(res);
+}

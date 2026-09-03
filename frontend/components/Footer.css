@@ -1,0 +1,299 @@
+/* Veloura footer — premium dark luxury aesthetic */
+
+.veloura-footer {
+  width: 100%;
+  background-color: #111111;
+  color: #e8e6e3;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.veloura-footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 64px 24px 32px;
+}
+
+.veloura-footer a {
+  color: #b9b5b0;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.veloura-footer a:hover {
+  color: #f5f3f0;
+}
+
+.veloura-footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.veloura-footer-brand {
+  flex: 1 1 320px;
+  max-width: 460px;
+}
+
+.veloura-footer-logo {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: #f5f3f0;
+  margin: 0 0 16px;
+  cursor: pointer;
+}
+
+.veloura-footer-tagline {
+  color: #9c9791;
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 360px;
+  margin: 0;
+}
+
+.veloura-footer-newsletter {
+  flex: 1 1 320px;
+  max-width: 420px;
+}
+
+.veloura-footer-heading {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #f5f3f0;
+  margin: 0 0 10px;
+}
+
+.veloura-footer-text {
+  color: #9c9791;
+  margin: 0 0 18px;
+  font-size: 14px;
+}
+
+.veloura-newsletter-form {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0;
+  overflow: hidden;
+  background-color: #1a1a1a;
+}
+
+.veloura-newsletter-input {
+  flex: 1 1 auto;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  color: #f5f3f0;
+  font-size: 14px;
+  outline: none;
+}
+
+.veloura-newsletter-input::placeholder {
+  color: #7a756f;
+}
+
+.veloura-newsletter-button {
+  padding: 14px 22px;
+  border: none;
+  background-color: #f5f3f0;
+  color: #111111;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.veloura-newsletter-button:hover {
+  background-color: #d4cfc9;
+}
+
+.veloura-newsletter-confirm {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #a68a6f;
+}
+
+.veloura-footer-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.08);
+  margin: 48px 0;
+}
+
+.veloura-footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.veloura-footer-column-title {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #f5f3f0;
+  margin: 0 0 18px;
+  letter-spacing: 0.5px;
+}
+
+.veloura-footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.veloura-footer-list li {
+  margin-bottom: 10px;
+}
+
+.veloura-footer-list a {
+  color: #9c9791;
+  font-size: 14px;
+}
+
+.veloura-footer-list a:hover {
+  color: #f5f3f0;
+}
+
+.veloura-footer-email {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 14px;
+  color: #f5f3f0;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  width: fit-content;
+}
+
+.veloura-footer-email:hover {
+  border-bottom-color: rgba(245, 243, 240, 0.4);
+}
+
+.veloura-footer-social {
+  display: flex;
+  gap: 16px;
+}
+
+.veloura-footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  color: #b9b5b0;
+  transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
+}
+
+.veloura-footer-social a:hover {
+  border-color: rgba(245, 243, 240, 0.4);
+  color: #f5f3f0;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.veloura-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.veloura-copyright {
+  color: #7a756f;
+  font-size: 13px;
+  margin: 0;
+}
+
+.veloura-legal-links {
+  display: flex;
+  gap: 24px;
+}
+
+.veloura-legal-links a {
+  color: #7a756f;
+  font-size: 13px;
+}
+
+.veloura-legal-links a:hover {
+  color: #f5f3f0;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  .veloura-footer-inner {
+    padding: 56px 24px 28px;
+  }
+
+  .veloura-footer-top {
+    gap: 40px;
+  }
+
+  .veloura-footer-links {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 24px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .veloura-footer-inner {
+    padding: 48px 20px 24px;
+  }
+
+  .veloura-footer-top {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .veloura-footer-brand,
+  .veloura-footer-newsletter {
+    max-width: 100%;
+  }
+
+  .veloura-footer-logo {
+    font-size: 30px;
+  }
+
+  .veloura-newsletter-form {
+    flex-direction: column;
+    border: none;
+    background: transparent;
+    gap: 10px;
+  }
+
+  .veloura-newsletter-input,
+  .veloura-newsletter-button {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .veloura-newsletter-input {
+    border-radius: 0;
+  }
+
+  .veloura-newsletter-button {
+    border-radius: 0;
+  }
+
+  .veloura-footer-links {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .veloura-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

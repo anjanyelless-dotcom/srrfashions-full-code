@@ -1,0 +1,52 @@
+/* ==========================================
+   BASE LIQUID GLASS STYLE
+========================================== */
+
+.lge-glass {
+    position: relative;
+   
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+
+    box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 0.4);
+
+    transition: all 0.4s ease;
+}
+
+
+/* ==========================================
+   SHINE EFFECT (Liquid Reflection Layer)
+========================================== */
+
+.lge-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.4) 0%,
+        rgba(255,255,255,0.1) 40%,
+        rgba(255,255,255,0.05) 100%
+    );
+
+    opacity: 0.6;
+}
+
+
+/* ==========================================
+   PRESETS
+========================================== */
+
+/* Soft Mist */
+.lge-soft {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(14px);
+}

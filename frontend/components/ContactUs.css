@@ -1,0 +1,440 @@
+/* Contact Us page — styled to match the Veloura reference design */
+
+.veloura-contact-page {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Hero */
+.veloura-contact-hero {
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  background-image: url("../wp-content/uploads/sites/383/2026/07/sou-jest-kEbuLsP6hVE-unsplash-1.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+}
+
+.veloura-contact-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.veloura-contact-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.veloura-contact-label {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.veloura-contact-title {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 70px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.veloura-contact-subtitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 560px;
+  margin: 0;
+}
+
+/* Contact Information */
+.veloura-contact-info {
+  padding: 80px 24px;
+  background-color: #ffffff;
+}
+
+.veloura-contact-info-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.veloura-contact-card {
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.veloura-contact-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.veloura-contact-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.veloura-contact-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.veloura-card-title {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 40px;
+  color: #000000;
+  margin: 0;
+}
+
+.veloura-card-text {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  color: rgba(0, 0, 0, 0.55);
+  margin: 0;
+}
+
+.veloura-card-text a {
+  color: rgba(0, 0, 0, 0.55);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.veloura-card-text a:hover {
+  color: #8B9E7A;
+  border-bottom-color: #8B9E7A;
+}
+
+/* Form Section */
+.veloura-contact-form-section {
+  padding: 0 24px 80px;
+  background-color: #ffffff;
+}
+
+.veloura-contact-form-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.veloura-contact-image {
+  min-height: 500px;
+  border-radius: 8px;
+  background-image: url("../wp-content/uploads/sites/383/2026/06/g2-1.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.veloura-contact-form-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.veloura-form-heading {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 56px;
+  color: #000000;
+  margin: 0 0 16px;
+}
+
+.veloura-form-highlight {
+  position: relative;
+  display: inline-block;
+  color: #8B9E7A;
+}
+
+.veloura-form-highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 100%;
+  height: 3px;
+  background-color: #8B9E7A;
+  opacity: 0.4;
+}
+
+.veloura-form-intro {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  color: rgba(0, 0, 0, 0.55);
+  margin: 0 0 32px;
+  max-width: 540px;
+}
+
+.veloura-form-success {
+  background-color: #f2f9f2;
+  border-left: 3px solid #8B9E7A;
+  color: #2f4f2f;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.veloura-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.veloura-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.veloura-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.veloura-form-field label {
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.veloura-form-field input,
+.veloura-form-field textarea {
+  padding: 14px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.veloura-form-field input::placeholder,
+.veloura-form-field textarea::placeholder {
+  color: #9c9c9c;
+}
+
+.veloura-form-field input:focus,
+.veloura-form-field textarea:focus {
+  border-color: #8B9E7A;
+  box-shadow: 0 0 0 1px #8B9E7A;
+}
+
+.veloura-input-error {
+  border-color: #c0392b !important;
+}
+
+.veloura-input-error:focus {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 1px #c0392b !important;
+}
+
+.veloura-form-error {
+  font-size: 12px;
+  color: #c0392b;
+}
+
+.veloura-form-button {
+  align-self: flex-start;
+  padding: 16px 36px;
+  background-color: #111111;
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.veloura-form-button:hover {
+  background-color: #8B9E7A;
+  color: #ffffff;
+}
+
+/* Help / FAQ */
+.veloura-contact-help {
+  padding: 80px 24px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #eeeeee;
+}
+
+.veloura-contact-help-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.veloura-help-heading {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 36px;
+  font-weight: 500;
+  color: #000000;
+  margin: 0 0 36px;
+  text-align: center;
+}
+
+.veloura-help-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.veloura-help-card {
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-decoration: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.veloura-help-card:hover {
+  border-color: #8B9E7A;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.veloura-help-title {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.veloura-help-desc {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  .veloura-contact-title {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  .veloura-contact-info-inner,
+  .veloura-help-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .veloura-contact-form-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .veloura-contact-image {
+    min-height: 300px;
+  }
+
+  .veloura-form-heading {
+    font-size: 40px;
+    line-height: 48px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .veloura-contact-hero {
+    padding: 64px 20px;
+  }
+
+  .veloura-contact-title {
+    font-size: 38px;
+    line-height: 46px;
+  }
+
+  .veloura-contact-subtitle {
+    font-size: 15px;
+    line-height: 24px;
+  }
+
+  .veloura-contact-info,
+  .veloura-contact-form-section,
+  .veloura-contact-help {
+    padding: 48px 20px;
+  }
+
+  .veloura-contact-info-inner,
+  .veloura-help-grid,
+  .veloura-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .veloura-contact-card,
+  .veloura-help-card {
+    padding: 24px;
+  }
+
+  .veloura-contact-image {
+    min-height: 220px;
+  }
+
+  .veloura-form-heading {
+    font-size: 34px;
+    line-height: 40px;
+  }
+
+  .veloura-form-intro {
+    font-size: 15px;
+  }
+
+  .veloura-form-button {
+    width: 100%;
+  }
+}

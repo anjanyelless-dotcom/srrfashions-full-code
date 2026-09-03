@@ -1,0 +1,144 @@
+
+.demo-page-buydemo .demo-button-wrapper{
+    z-index: 1000000;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 0;
+    height: 100vh;
+    width: 0;
+    font-family: sans-serif;
+}
+.elementor-editor-active .demo-page-buydemo{
+display:none;
+}
+.demo-page-buydemo .demo-button-first, .demo-page-buydemo .demo-button-second {
+    display: flex;
+  text-decoration: none;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    position: absolute;
+    top: 150px;
+    right: 0;
+    padding: 8px 6px;
+    width: 70px;
+    height: 65px;
+    cursor: pointer;
+    background-color: #e91e61;
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+    box-shadow: -5px 0px 20px -5px rgba(0, 0, 0, 0.25);
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+  font-size:12px;
+  color:#fff;
+  font-weight:700;
+        box-sizing: border-box;
+}
+
+.demo-page-buydemo .demo-button-first, .demo-page-buydemo .demo-button-second{
+  display: flex;
+  text-decoration: none;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    position: absolute;
+    top: 150px;
+    right: 0;
+    padding: 8px 6px;
+    width: 70px;
+    height: 65px;
+    cursor: pointer;
+    background-color: #ff0076;
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+    box-shadow: -5px 0px 20px -5px rgba(0, 0, 0, 0.25);
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+  font-size:12px;
+  color:#fff;
+  font-weight:700;
+}
+.demo-page-buydemo .demo-button-second{
+  background-color:#5a3cf3;
+}
+.demo-page-buydemo .demo-button-second{
+top: 222px;
+}
+.demo-page-buydemo .demo-button-first:hover, .demo-page-buydemo .demo-button-second:hover{
+  background:#373737;
+  -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+  color:#fff;
+
+}
+.demo-page-buydemo .demo-button-first i, .demo-page-buydemo .demo-button-second i{
+  font-size: 28px;
+  color:#fff;
+}
+.demo-page-buydemo .demo-button-first:hover > i, .demo-page-buydemo .demo-button-second:hover > i {color:#fff;}
+@media screen and (max-width: 767px){
+
+.demo-page-buydemo .demo-button-first, .demo-page-buydemo .demo-button-second {
+  padding: 4px 4px;
+    width: 50px;
+    height: 55px;
+}
+
+.demo-page-buydemo .demo-button-first i, .demo-page-buydemo .demo-button-second i {
+    font-size: 18px;
+	}
+
+	.demo-page-buydemo .demo-button-second {
+ line-height: 15px;
+}
+
+}
+
+
+/* Device Switcher Buttons 
+#device-switcher {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+#device-switcher button {
+  margin: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#responsive-wrapper {
+  margin: 0 auto;
+  transition: max-width 0.3s ease;
+  overflow-x: hidden;
+}
+
+.view-desktop  {
+    max-width: 1200px;
+
+}
+.view-tablet {
+  max-width: 768px;
+}
+.view-mobile{
+  max-width: 375px;
+}
+*/

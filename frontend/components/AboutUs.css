@@ -1,0 +1,14 @@
+.srfashion-about-us-page {
+  padding: 140px 0 80px;
+  min-height: 60vh;
+  background: #fff;
+}
+
+.srfashion-about-content {
+  width: 100%;
+}
+
+.srfashion-about-content h1,
+.srfashion-about-content h2 {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+}

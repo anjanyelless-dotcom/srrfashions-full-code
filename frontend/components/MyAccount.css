@@ -1,0 +1,345 @@
+/* My Account page — matches my-account/index.html WooCommerce login/register layout */
+
+.srfashion-my-account {
+  background-color: #f9f9f9;
+  padding: 0 0 3rem;
+}
+
+.srfashion-my-account .page-content {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.srfashion-my-account .page-head {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.srfashion-my-account .page-head .entry-title {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 0.75rem;
+}
+
+.srfashion-my-account .breadcrumb-trail {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.srfashion-my-account .thunk-breadcrumb {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.srfashion-my-account .thunk-breadcrumb a {
+  color: #111111;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.srfashion-my-account .thunk-breadcrumb a:hover {
+  color: #8B9E7A;
+}
+
+.srfashion-my-account .thunk-breadcrumb .trail-end {
+  color: #8B9E7A;
+}
+
+.srfashion-user-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  max-width: 720px;
+  margin: 0 auto 1.5rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+}
+
+.srfashion-user-bar strong {
+  color: #111111;
+}
+
+.srfashion-logout {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #c0392b;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.srfashion-logout:hover {
+  text-decoration: underline;
+}
+
+.srfashion-my-orders,
+.srfashion-manage-addresses {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #111111;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.srfashion-my-orders:hover,
+.srfashion-manage-addresses:hover {
+  color: #8B9E7A;
+}
+
+.srfashion-my-account .woocommerce {
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  padding: 1.5rem;
+}
+
+.thsm-popup-header {
+  display: flex;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+.thsm-popup-content {
+  max-width: 100%;
+  margin: 0;
+}
+
+.th-popup-tab {
+  flex: 1 1 50%;
+  width: 50%;
+  padding: 16px;
+  text-align: center;
+  background: #e6e9e6;
+  color: #111111;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.th-popup-tab:hover {
+  background: #d5d8d5;
+}
+
+.th-popup-tab.active {
+  background: #111111;
+  color: #ffffff;
+  border-bottom-color: #8B9E7A;
+}
+
+.srfashion-form-title {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111111;
+  margin: 0 0 1.25rem;
+}
+
+.woocommerce-form {
+  margin: 0;
+}
+
+.woocommerce-form .form-row {
+  margin: 0 0 1rem;
+}
+
+.woocommerce-form label {
+  display: inline-block;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.woocommerce-form .required {
+  color: #c0392b;
+}
+
+.woocommerce-form .input-text,
+.woocommerce-form input[type="text"],
+.woocommerce-form input[type="email"],
+.woocommerce-form input[type="password"] {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  color: #111111;
+  outline: none;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+  box-sizing: border-box;
+}
+
+.woocommerce-form .input-text:focus,
+.woocommerce-form input[type="text"]:focus,
+.woocommerce-form input[type="email"]:focus,
+.woocommerce-form input[type="password"]:focus {
+  background: #fff;
+  border-color: #111111;
+}
+
+.woocommerce-form-login__rememberme {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.woocommerce-form-login__rememberme input {
+  width: 16px;
+  height: 16px;
+  accent-color: #111111;
+}
+
+.woocommerce-form-login__rememberme span {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.woocommerce-button {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: #111111;
+  color: #ffffff;
+  border: 1px solid #111111;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.woocommerce-button:hover {
+  background: #8B9E7A;
+  border-color: #8B9E7A;
+  color: #ffffff;
+}
+
+.lost_password {
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.lost_password a {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  color: #111111;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lost_password a:hover {
+  color: #8B9E7A;
+}
+
+.woocommerce-error,
+.woocommerce-message {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.woocommerce-error {
+  background: #fff0f0;
+  border-left: 4px solid #c0392b;
+  color: #c0392b;
+}
+
+.woocommerce-error ul,
+.woocommerce-error li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.woocommerce-message {
+  background: #f0f8f0;
+  border-left: 4px solid #8B9E7A;
+  color: #2f5a2f;
+}
+
+.screen-reader-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  .srfashion-my-account {
+    padding: 0 0 2rem;
+  }
+
+  .srfashion-my-account .woocommerce {
+    max-width: 100%;
+    margin: 0 1rem;
+    padding: 1.25rem;
+  }
+
+  .thsm-popup-header {
+    margin: -1.25rem -1.25rem 1.25rem -1.25rem;
+  }
+
+  .th-popup-tab {
+    width: auto;
+    padding: 14px 10px;
+    font-size: 14px;
+  }
+
+  .srfashion-form-title {
+    font-size: 1.25rem;
+  }
+
+  .srfashion-user-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 1rem 1.25rem;
+  }
+}
+
+/* On the My Account page the header should take up normal document flow
+   so the page title sits below it instead of sliding underneath the
+   absolutely-positioned transparent header. */
+.srfashion-my-account-page > header.zta-transparent-header,
+.srfashion-my-account-page > header.thsm-header {
+  position: relative;
+}
+
+.srfashion-my-account-page .srfashion-my-account .page-content {
+  padding-top: 1.5rem;
+}

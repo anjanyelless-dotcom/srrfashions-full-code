@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+       <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <link rel="profile" href="https://gmpg.org/xfn/11">
+    <title>Veloura &#8211; Veloura Fashion Website Template</title>
+    <link rel="stylesheet" href="/global.css" />
+    <meta name='robots' content='max-image-preview:large' />
+    <link rel='dns-prefetch' href="https://fonts.googleapis.com/" />
+    <link rel="alternate" type="application/rss+xml" title="Veloura &raquo; Feed" href="feed/index.html" />
+    <link rel="alternate" type="application/rss+xml" title="Veloura &raquo; Comments Feed"
+        href="comments/feed/index.html" />
+    <link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed"
+        href="wp-json/oembed/1.0/embed0e36.json?url=https%3A%2F%2Fwpthemes.themehunk.com%2Fveloura%2F" />
+    <link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed"
+        href="wp-json/oembed/1.0/embedf874?url=https%3A%2F%2Fwpthemes.themehunk.com%2Fveloura%2F&amp;format=xml" />
+
+<script type="text/template" id="tmpl-variation-template">
+	<div class="woocommerce-variation-description">{{{ data.variation.variation_description }}}</div>
+	<div class="woocommerce-variation-price">{{{ data.variation.price_html }}}</div>
+	<div class="woocommerce-variation-availability">{{{ data.variation.availability_html }}}</div>
+</script>
+    <script type="text/template" id="tmpl-unavailable-variation-template">
+	<p role="alert">Sorry, this product is unavailable. Please choose a different combination.</p>
+</script>
+    <script id="jquery-core-js" src="wp-includes/js/jquery/jquery.minf43b.js?ver=3.7.1"></script>
+    <script id="jquery-migrate-js" src="wp-includes/js/jquery/jquery-migrate.min5589.js?ver=3.4.1"></script>
+    <script id="taiowc-owl.carousel-script-js"
+        src="wp-content/plugins/th-all-in-one-woo-cart/assets/js/owl.carousel68b3.js?ver=1"></script>
+    <script data-wp-strategy="defer" defer id="wc-js-cookie-js"
+        src="wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min6f96.js?ver=2.1.4-wc.11.0.1"></script>
+    <script id="wc-cart-fragments-js-extra">
+        var wc_cart_fragments_params = { "ajax_url": "/veloura/wp-admin/admin-ajax.php", "wc_ajax_url": "/veloura/?wc-ajax=%%endpoint%%", "cart_hash_key": "wc_cart_hash_74229f2a70813cfd32b75cbe29e3f3e5", "fragment_name": "wc_fragments_74229f2a70813cfd32b75cbe29e3f3e5", "request_timeout": "5000" };
+        //# sourceURL=wc-cart-fragments-js-extra
+    </script>
+    <script data-wp-strategy="defer" defer id="wc-cart-fragments-js"
+        src="wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min5ae7.js?ver=11.0.1"></script>
+    <script data-wp-strategy="defer" id="wc-jquery-blockui-js"
+        src="wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.mine7c9.js?ver=2.7.0-wc.11.0.1"></script>
+    <script id="wc-add-to-cart-js-extra">
+        var wc_add_to_cart_params = { "ajax_url": "/veloura/wp-admin/admin-ajax.php", "wc_ajax_url": "/veloura/?wc-ajax=%%endpoint%%", "i18n_view_cart": "View cart", "cart_url": "https://wpthemes.themehunk.com/veloura/cart/", "is_cart": "", "cart_redirect_after_add": "no" };
+        //# sourceURL=wc-add-to-cart-js-extra
+    </script>
+    <script data-wp-strategy="defer" defer id="wc-add-to-cart-js"
+        src="wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min5ae7.js?ver=11.0.1"></script>
+    <script id="woocommerce-js-extra">
+        var woocommerce_params = { "ajax_url": "/veloura/wp-admin/admin-ajax.php", "wc_ajax_url": "/veloura/?wc-ajax=%%endpoint%%", "i18n_password_show": "Show password", "i18n_password_hide": "Hide password" };
+        //# sourceURL=woocommerce-js-extra
+    </script>
+    <script data-wp-strategy="defer" defer id="woocommerce-js"
+        src="wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min5ae7.js?ver=11.0.1"></script>
+    <script id="underscore-js" src="wp-includes/js/underscore.min55e2.js?ver=1.13.8"></script>
+    <script id="wp-util-js-extra">
+        var _wpUtilSettings = { "ajax": { "url": "/veloura/wp-admin/admin-ajax.php" } };
+        //# sourceURL=wp-util-js-extra
+    </script>
+    <script id="wp-util-js" src="wp-includes/js/wp-util.min40dd.js?ver=7.0.4"></script>
+    <script id="wc-add-to-cart-variation-js-extra">
+        var wc_add_to_cart_variation_params = { "wc_ajax_url": "/veloura/?wc-ajax=%%endpoint%%", "i18n_no_matching_variations_text": "Sorry, no products matched your selection. Please choose a different combination.", "i18n_make_a_selection_text": "Please select some product options before adding this product to your cart.", "i18n_unavailable_text": "Sorry, this product is unavailable. Please choose a different combination.", "i18n_reset_alert_text": "Your selection has been reset. Please select some product options before adding this product to your cart." };
+        //# sourceURL=wc-add-to-cart-variation-js-extra
+    </script>
+    <script data-wp-strategy="defer" id="wc-add-to-cart-variation-js"
+        src="wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.min5ae7.js?ver=11.0.1"></script>
+
+
+
+    <script id="th-advance-product-search-front-js-extra">
+        var th_advance_product_search_options = { "ajaxUrl": "https://wpthemes.themehunk.com/veloura/wp-admin/admin-ajax.php", "thaps_nonce": "c8bff5af31", "thaps_length": "1", "thaps_ga_event": "1", "thaps_ga_site_search_module": "", "tapsp_enable_voice_search": "", "tapsp_show_body_overlay": "1" };
+        //# sourceURL=th-advance-product-search-front-js-extra
+    </script>
+    <script id="th-advance-product-search-front-js"
+        src="wp-content/plugins/th-advance-product-search/assets/js/thaps-search68b3.js?ver=1"></script>
+    <script id="th-variation-swatches-front-js-extra">
+        var th_variation_swatches_options = { "is_product_page": "", "show_variation_label": "1", "variation_label_separator": ":", "thvs_nonce": "65ba6a17f5" };
+        //# sourceURL=th-variation-swatches-front-js-extra
+    </script>
+    <script id="th-variation-swatches-front-js"
+        src="wp-content/plugins/th-variation-swatches/assets/js/thvs-front68b3.js?ver=1"></script>
+    <link rel="https://api.w.org/" href="wp-json/index.html" />
+    <link rel="alternate" title="JSON" type="application/json" href="wp-json/wp/v2/pages/13.json" />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="xmlrpc0db0.php?rsd" />
+
+    <link rel="canonical" href="index.html" />
+    <link rel='shortlink' href='index.html' />
+<meta name="generator"
+        content="Elementor 4.1.4; features: e_font_icon_svg, additional_custom_breakpoints; settings: css_print_method-external, google_font-enabled, font_display-swap">
+<link rel="icon" href="wp-content/uploads/sites/383/2026/07/cropped-3-3-32x32.png" sizes="32x32" />
+    <link rel="icon" href="wp-content/uploads/sites/383/2026/07/cropped-3-3-192x192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="wp-content/uploads/sites/383/2026/07/cropped-3-3-180x180.png" />
+    <meta name="msapplication-TileImage" content="wp-content/uploads/sites/383/2026/07/cropped-3-3-270x270.png" />
+
+</head>
+<body
+    class="home wp-singular page-template page-template-elementor_header_footer page page-id-13 wp-custom-logo wp-embed-responsive wp-theme-th-shop-mania theme-th-shop-mania th-shop-mania-pro theme-th-shop-mania-pro center-menu fullwidth verticalslide-gallery thsm-acc-standard thsm-blog-layout-1 respmobile-layout-2 th-single-twocolumn woocommerce-no-js th-advance-product-search th-variation-swatches thvs-style-rounded thvs-attr-behavior-blur thvs-css woocommerce th-product-style-1 thsm-medium-add-button taiowc-slide-right fxd-right taiowc thsm-checkout-layout-standard elementor-default elementor-template-full-width elementor-kit-4 elementor-page elementor-page-13">
+  <div id="root"></div>
+  <script type="module" src="/main.jsx"></script>
+  <script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/veloura/*"},{"not":{"href_matches":["/veloura/wp-*.php","/veloura/wp-admin/*","/veloura/wp-content/uploads/sites/383/*","/veloura/wp-content/*","/veloura/wp-content/plugins/*","/veloura/wp-content/themes/th-shop-mania/*","/veloura/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+
+
+    <style type="text/css">
+        .widget-visible iframe {
+            display: none !important;
+        }
+    </style>
+    <script>
+
+
+        function receiveMessage(event) {
+
+            const childData = document.querySelectorAll('.' + event.data.class);
+
+
+            if (event.data.call !== undefined && event.data.call !== null) {
+
+
+                childData.forEach(function (childData) {
+                    console.log(childData);
+                    childData.src = event.data.src;
+                    childData.srcset = event.data.src;
+                });
+
+
+
+            } else {
+                return;
+            }
+
+        }
+
+        // Add an event listener to listen for messages from the parent
+        window.addEventListener("message", receiveMessage);
+
+        // Remove the event listener when the component unloads
+        window.addEventListener("unload", function () {
+            window.removeEventListener("message", receiveMessage);
+        });
+
+
+
+    </script>
+    <div class="th-shop-mania-mobile-menu-wrapper"></div>
+
+    <div class="mobile-nav-bar sider main  th-shop-mania-menu-hide left respmobile-layout-2">
+
+        <div id='thaps-search-box' class="thaps-search-box  submit-active  default_style">
+
+            <form class="thaps-search-form" action='https://wpthemes.themehunk.com/veloura/' id='thaps-search-form'
+                method='get'>
+
+                <div class="thaps-from-wrap">
+
+                    <input id='thaps-search-autocomplete-2' name='s' placeholder='Search for products...'
+                        class="thaps-search-autocomplete thaps-form-control" value='' type='text' title='Search' />
+
+
+
+                    <div class="thaps-preloader"></div>
+
+
+
+
+                    <button id='thaps-search-button' value="Submit" type='submit'>
+
+                        Search</button> <input type="hidden" name="post_type" value="product" />
+
+                    <span class="label label-default" id="selected_option"></span>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- Bar style   -->
+
+        <div class="sider-inner">
+
+            <div class="mobile-tab-wrap">
+                <div class="mobile-nav-tabs">
+                    <ul>
+                        <li class="primary active" data-menu="primary">
+                            <a href="#mobile-nav-tab-menu">Menu</a>
+                        </li>
+
+                        <li class="categories" data-menu="categories">
+                            <a href="#mobile-nav-tab-category">All Categories</a>
+                        </li>
+
+
+                    </ul>
+                </div>
+                <div id="mobile-nav-tab-menu" class="mobile-nav-tab-menu panel">
+                    <ul id="th-shop-mania-menu" role="menu" class="th-shop-mania-menu" data-menu-style=horizontal>
+                        <li
+                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-13 current_page_item menu-item-416">
+                            <a href="index.html" aria-current="page"><span
+                                    class="th-shop-mania-menu-link">Home</span></a>
+                        </li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-417"><a
+                                href="shop/index.html"><span class="th-shop-mania-menu-link">Shop</span></a></li>
+                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-418"><a
+                                href="product-category/dresses/index.html"><span
+                                    class="th-shop-mania-menu-link">Dresses</span></a></li>
+                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-419"><a
+                                href="product-category/accesories/index.html"><span
+                                    class="th-shop-mania-menu-link">Accesories</span></a></li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-423"><a
+                                href="#/about-us"><span class="th-shop-mania-menu-link">About Us</span></a>
+                        </li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-422"><a
+                                href="#contact-us"><span class="th-shop-mania-menu-link">Contact Us</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="mobile-nav-tab-category" class="mobile-nav-tab-category panel">
+                    <ul class="mob-product-cat-list thunk-product-cat-list mobile" data-menu-style="accordion">
+                        <li class="cat-item cat-item-17"><a href="product-category/accesories/index.html">Accesories</a>
+                        </li>
+                        <li class="cat-item cat-item-18"><a href="product-category/cardigans/index.html">Cardigans</a>
+                        </li>
+                        <li class="cat-item cat-item-19"><a href="product-category/dresses/index.html">Dresses</a>
+                        </li>
+                        <li class="cat-item cat-item-33"><a href="product-category/handbags/index.html">Handbags</a>
+                        </li>
+                        <li class="cat-item cat-item-57"><a href="product-category/save-more/index.html">Save More</a>
+                        </li>
+                        <li class="cat-item cat-item-20"><a href="product-category/shoes/index.html">Shoes</a>
+                        </li>
+                        <li class="cat-item cat-item-21"><a href="product-category/sunglasses/index.html">Sunglasses</a>
+                        </li>
+                        <li class="cat-item cat-item-22"><a
+                                href="product-category/sweatshirts/index.html">Sweatshirts</a>
+                        </li>
+                        <li class="cat-item cat-item-24"><a href="product-category/tops/index.html">Tops</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="th-register-success-modal" style="display:none;">
+        <div class="th-modal-inner">
+            <span id="th-close-register-modal">&times;</span>
+            <h2>🎉Successfully Registered!</h2>
+            <p>You have successfully created your account.</p>
+            <a href="my-account/index.html" class="button">Login Now</a>
+        </div>
+    </div>
+
+    <div class="thnew-popup">
+
+        <div class="thnew-popup-overlay"></div>
+
+        <div class="thnew-popup-wrapper">
+
+            <button type="button" class="thnew-popup-close" aria-label="Close Popup">
+
+                ×
+            </button>
+
+            <div class="thnew-popup-content"></div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="th-recent-products-wrapper">
+        <div class="th-recent-products-canvas">
+            <div class="thrv-header"><span class="th-close th-icon th-icon-clear"></span>
+                <h2>You have not viewed any product yet!</h2>
+            </div> <a href="shop/index.html" class="th-back-to-shop">Back To Shop</a>
+
+        </div>
+    </div>
+    <script>
+        const lazyloadRunObserver = () => {
+            const lazyloadBackgrounds = document.querySelectorAll(`.e-con.e-parent:not(.e-lazyloaded)`);
+            const lazyloadBackgroundObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        let lazyloadBackground = entry.target;
+                        if (lazyloadBackground) {
+                            lazyloadBackground.classList.add('e-lazyloaded');
+                        }
+                        lazyloadBackgroundObserver.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '200px 0px 200px 0px' });
+            lazyloadBackgrounds.forEach((lazyloadBackground) => {
+                lazyloadBackgroundObserver.observe(lazyloadBackground);
+            });
+        };
+        const events = [
+            'DOMContentLoaded',
+            'elementor/lazyload/observe',
+        ];
+        events.forEach((event) => {
+            document.addEventListener(event, lazyloadRunObserver);
+        });
+    </script>
+    <script type='text/javascript'>
+        (function () {
+            var c = document.body.className;
+            c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
+            document.body.className = c;
+        })();
+    </script>
+    <script>
+        window.thStoreOnePro = { modules: {} };
+    </script>
+    <script id="th-store-one-pro-frontend-js"
+        src="wp-content/plugins/store-one-pro/build/frontend3dc3.js?ver=a4f84a3770cb8d5e3ca6"></script>
+    <script id="th-store-one-frontend-js-extra">
+        var thStoreOne = { "modules": { "saleNotification": true, "stickyCart": true, "buynowButton": true, "saleCountdown": true, "buyToList": true, "inactiveTab": true, "productBrand": true, "recentView": true, "productVideo": true, "quickSocial": true, "smartOffers": true, "shopableList": true } };
+        var thSmartOffer = { "currency_symbol": "₹", "currency": "INR", "price_format": "%1$s%2$s", "decimals": "2", "decimal_sep": ".", "thousand_sep": ",", "select_variation_text": "Choose variation options to view this offer", "select_options_text": "Select Options" };
+        var thShopable = { "ajaxurl": "https://wpthemes.themehunk.com/veloura/wp-admin/admin-ajax.php", "nonce": "ff9d1c3d54" };
+        //# sourceURL=th-store-one-frontend-js-extra
+    </script>
+    <script id="th-store-one-frontend-js"
+        src="wp-content/plugins/th-store-one/build/frontende471.js?ver=f5dfc9f43eb6875d4e2d"></script>
+    <script>
+        window.thwcd_js = { is_rtl: false, gmt: 0, variation: false };
+    </script>
+    <script data-wp-strategy="defer" defer id="thsm-sale-countdownfront-js-js"
+        src="wp-content/plugins/th-shop-mania-pro/th-shop-mania-admin/addon/sale-countdown/js/minified/sale-countdownfront.min60c6.js?ver=1.01"></script>
+    <script id="swiper-js-js"
+        src="wp-content/plugins/th-store-one/assets/js/swiper/swiper-bundle.min8bb0.js?ver=11"></script>
+    <script id="sourcebuster-js-js"
+        src="wp-content/plugins/woocommerce/assets/js/sourcebuster/sourcebuster.min5ae7.js?ver=11.0.1"></script>
+    <script id="wc-order-attribution-js-extra">
+        var wc_order_attribution = { "params": { "lifetime": 1.0e-5, "session": 30, "base64": false, "ajaxurl": "https://wpthemes.themehunk.com/veloura/wp-admin/admin-ajax.php", "prefix": "wc_order_attribution_", "allowTracking": true }, "fields": { "source_type": "current.typ", "referrer": "current_add.rf", "utm_campaign": "current.cmp", "utm_source": "current.src", "utm_medium": "current.mdm", "utm_content": "current.cnt", "utm_id": "current.id", "utm_term": "current.trm", "utm_source_platform": "current.plt", "utm_creative_format": "current.fmt", "utm_marketing_tactic": "current.tct", "session_entry": "current_add.ep", "session_start_time": "current_add.fd", "session_pages": "session.pgs", "session_count": "udata.vst", "user_agent": "udata.uag" } };
+        //# sourceURL=wc-order-attribution-js-extra
+    </script>
+
+    <script>
+        window.elementorFrontendConfig = { environmentMode: { edit: false, wpPreview: false }, is_rtl: false, breakpoints: { xs: 0, sm: 480, md: 768, lg: 1025, xl: 1440, xxl: 1600 }, version: '4.1.4', urls: { assets: 'wp-content/plugins/elementor/assets/' } };
+        window.th_shop_mania_pro = { currency_symbol: '₹', nonce: '', ajax_url: '' };
+    </script>
+    <script id="elementor-frontend-js"
+        src="wp-content/plugins/elementor/assets/js/frontend.mineda1.js?ver=4.1.4"></script>
+
+
+    <script data-wp-strategy="defer" defer id="th-shop-mania-pro-custom-js-js"
+        src="wp-content/plugins/th-shop-mania-pro/assets/js/custom254d.js?ver=2.3.1"></script>
+
+    <script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://wpthemes.themehunk.com/veloura/wp-includes/js/wp-emoji-release.min.js?ver=7.0.4"}}
+</script>
+</body>

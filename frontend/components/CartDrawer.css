@@ -1,0 +1,298 @@
+/* Cart drawer overlay and item helpers — the core taiowc model is styled by the theme */
+
+.taiowc-cart-model {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.taiowc-cart-model-body {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.taiowc-cart-model-footer {
+  flex: 0 0 auto !important;
+}
+
+.taiowc-model-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.taiowc-model-wrap.model-cart-active {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+.taiowc-model-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.model-cart-active .taiowc-model-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Cart items custom layout */
+.taiowc-cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+}
+
+.taiowc-cart-model-body .taiowc-woocommerce-mini-cart-item {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 0.9rem;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.item-product-wrap {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  float: none;
+  width: 100%;
+}
+
+.item-image {
+  flex: 0 0 5rem;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #f3f4f6;
+  background-color: #f9fafb;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-no-image svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: #c0c0c0;
+}
+
+.item-details {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.item-name {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111111;
+  margin: 0;
+}
+
+.item-price,
+.item-line-total {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.item-line-total {
+  color: #111111;
+  font-weight: 700;
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ebebeb;
+  border-radius: 0;
+}
+
+.qty-btn {
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  color: #111111;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.qty-btn:hover {
+  background-color: #f2f2f2;
+}
+
+.qty-value {
+  min-width: 1.75rem;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.875rem;
+  color: #111111;
+}
+
+.item-remove {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  color: #c0392b;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.item-remove:hover {
+  color: #a93226;
+}
+
+/* Footer buttons */
+.taiowc-cart-model-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.taiowc-total-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+}
+
+.taiowc-total-label {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+.taiowc-total-amount {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.taiowc-cart-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0 1rem 1rem;
+}
+
+.taiowc-clear-cart,
+.taiowc-checkout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid #111111;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.taiowc-clear-cart {
+  background-color: transparent;
+  color: #111111;
+}
+
+.taiowc-clear-cart:hover {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.taiowc-checkout-btn {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.taiowc-checkout-btn:hover {
+  background-color: #8B9E7A;
+  border-color: #8B9E7A;
+  color: #ffffff;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .taiowc-cart-model {
+    max-width: 100%;
+  }
+
+  .item-product-wrap {
+    gap: 0.75rem;
+  }
+
+  .item-image {
+    flex: 0 0 4.5rem;
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .taiowc-cart-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Header cart count / total helpers (loaded with bundle) */
+.cart-count-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 50%;
+  background-color: #111111;
+  color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.taiowc-total {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111111;
+}
