@@ -115,6 +115,8 @@ const customerRegister = async (req, res) => {
 
 const customerLogin = async (req, res) => {
   const { identifier, password } = req.body;
+  console.log('[DEBUG] Login attempt for identifier:', identifier);
+  console.log('[DEBUG] JWT_SECRET configured:', !!process.env.JWT_SECRET);
 
   const validationErrors = validateLoginData(req.body);
   if (validationErrors.length > 0) {
@@ -160,7 +162,9 @@ const customerLogin = async (req, res) => {
       token
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('[ERROR] Login failed:', error.message);
+    console.error('[ERROR] Stack trace:', error.stack);
+    console.error('[ERROR] Error details:', JSON.stringify(error, null, 2));
     res.status(500).json({ error: 'Login failed' });
   }
 };

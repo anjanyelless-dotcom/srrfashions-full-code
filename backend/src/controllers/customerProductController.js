@@ -15,7 +15,9 @@ const getProducts = async (req, res) => {
   } = req.query;
 
   try {
+    console.log('[DEBUG] getProducts called with params:', { category_id, sort, page, limit });
     const offset = (page - 1) * limit;
+    console.log('[DEBUG] Offset calculated:', offset);
 
     // Build WHERE conditions
     const conditions = ['p.is_active = true'];
@@ -107,7 +109,9 @@ const getProducts = async (req, res) => {
     query += ` LIMIT $${paramCount++} OFFSET $${paramCount++}`;
     values.push(limit, offset);
 
+    console.log('[DEBUG] Executing main query with', values.length, 'parameters');
     const result = await pool.query(query, values);
+    console.log('[DEBUG] Main query returned', result.rows.length, 'products');
 
     // Get additional data for each product (images, variants, colors, sizes)
     const products = await Promise.all(result.rows.map(async (product) => {
@@ -222,7 +226,9 @@ const getProducts = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get products error:', error);
+    console.error('[ERROR] Get products failed:', error.message);
+    console.error('[ERROR] Stack trace:', error.stack);
+    console.error('[ERROR] Error details:', JSON.stringify(error, null, 2));
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 };
