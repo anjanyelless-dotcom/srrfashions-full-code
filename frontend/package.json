@@ -10,7 +10,6 @@
     "convert": "node convert.js"
   },
   "dependencies": {
-    "qrcode.react": "^4.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
@@ -18,7 +17,7 @@
     "@vitejs/plugin-react": "^4.3.1",
     "htmltojsx": "*",
     "vite": "^5.4.0"
-  },
+  }, 
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
