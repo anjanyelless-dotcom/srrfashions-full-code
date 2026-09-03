@@ -10,10 +10,12 @@ const CANCELLABLE_STATUSES = ['PENDING', 'PAYMENT_VERIFICATION_PENDING', 'PAYMEN
 
 const money = (value) => formatPrice(value);
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 function resolveUrl(src) {
   if (!src) return '';
   if (src.startsWith('http://') || src.startsWith('https://')) return src;
-  return `http://localhost:3000${src.startsWith('/') ? '' : '/'}${src}`;
+  return `${API_BASE}${src.startsWith('/') ? '' : '/'}${src}`;
 }
 
 function isUnauthorized(err) {

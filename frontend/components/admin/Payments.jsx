@@ -14,10 +14,12 @@ function formatDate(value) {
   return isNaN(d.getTime()) ? value : d.toLocaleString();
 }
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 function resolveUrl(src) {
   if (!src) return '';
   if (src.startsWith('http://') || src.startsWith('https://')) return src;
-  return `http://localhost:3000${src.startsWith('/') ? '' : '/'}${src}`;
+  return `${API_BASE}${src.startsWith('/') ? '' : '/'}${src}`;
 }
 
 export default function Payments({ onAuthError }) {

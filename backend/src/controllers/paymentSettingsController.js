@@ -7,6 +7,9 @@ const getPaymentSettings = async (req, res) => {
       ? parseFloat(process.env.LIVE_PAYMENT_TEST_AMOUNT || '1.00')
       : null;
 
+    const cashfreeBaseUrl = process.env.CASHFREE_BASE_URL || '';
+    const cashfreeMode = cashfreeBaseUrl.includes('sandbox') ? 'sandbox' : 'production';
+
     res.json({
       upi_id: process.env.UPI_ID || '',
       upi_qr_url: process.env.UPI_QR_IMAGE_URL || '',
@@ -14,7 +17,9 @@ const getPaymentSettings = async (req, res) => {
       currency: 'INR',
       symbol: '₹',
       live_payment_test_mode: livePaymentTestMode,
-      live_payment_test_amount: livePaymentTestAmount
+      live_payment_test_amount: livePaymentTestAmount,
+      cashfree_mode: cashfreeMode,
+      frontend_url: process.env.FRONTEND_URL || 'http://localhost:5173'
     });
   } catch (error) {
     console.error('Get payment settings error:', error);

@@ -273,8 +273,7 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
     };
 
     console.log(`Cashfree request to: ${url}`);
-    console.log(`Request body: order_id=${requestBody.order_id}, amount=${requestBody.order_amount}`);
-    console.log(`Request body:`, JSON.stringify(requestBody, null, 2));
+    console.log(`Cashfree order_id: ${requestBody.order_id}, amount: ${requestBody.order_amount}`);
 
     const response = await fetch(url, {
       method: 'POST',
@@ -285,16 +284,18 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
     const responseData = await response.json();
 
     console.log(`Cashfree response status: ${response.status}`);
-    console.log(`Cashfree response data: order_id=${responseData.order_id}, cf_order_id=${responseData.cf_order_id}, payment_session_id length=${responseData.payment_session_id?.length || 0}`);
-    console.log(`Payment session ID prefix: ${responseData.payment_session_id?.substring(0, 8) || 'none'}`);
-    console.log(`Payment session ID suffix: ${responseData.payment_session_id?.substring((responseData.payment_session_id?.length || 0) - 8) || 'none'}`);
 
     if (!response.ok) {
       console.error(`Cashfree order creation failed: ${response.status}`, responseData);
       throw new Error('Failed to create payment session');
     }
 
-    console.log(`Cashfree order created successfully: ${responseData.order_id}`);
+    if (!responseData.payment_session_id || typeof responseData.payment_session_id !== 'string' || responseData.payment_session_id.length < 10) {
+      console.error('Cashfree did not return a valid payment session ID');
+      throw new Error('Cashfree did not return a payment session');
+    }
+
+    console.log(`Cashfree order created successfully: ${responseData.order_id}, payment_session_id length=${responseData.payment_session_id.length}`);
 
     return {
       cf_order_id: responseData.order_id,
@@ -538,7 +539,7 @@ const createOrder = async (req, res) => {
       },
       payment: {
         id: paymentResult.rows[0].id,
-        amount: finalAmount,
+        amount: cashfreeOrderAmount,
         payment_method,
         payment_status: 'PAYMENT_PENDING',
         payment_session_id: paymentResult.rows[0].payment_session_id,

@@ -7,7 +7,7 @@ import { formatPrice } from '../services/price.js';
 import { useCart } from './CartContext.jsx';
 import './Checkout.css';
 
-const API_BASE = 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function resolveUrl(src) {
   if (!src) return '';
@@ -124,10 +124,14 @@ export default function Payment() {
           setOrder(orderRes.order || null);
           setItems(orderRes.items || []);
           setSettings(settingsRes);
-          // Set payment session ID from order if not in URL
-          // CRITICAL: Do NOT use order.payment_session_id as it may come from Get Order API
-          // which returns a different session ID than Create Order API
-          // Only use the session ID that was passed via sessionStorage or URL
+
+          // Use payment session ID from order detail as fallback.
+          // The backend returns the session ID stored in the database,
+          // which came from the Cashfree Create Order API (not Get Order API).
+          const orderSession = orderRes.order?.payment_session_id;
+          if (!paymentSessionId && orderSession && typeof orderSession === 'string') {
+            setPaymentSessionId(orderSession);
+          }
         }
       } catch (err) {
         if (!cancelled) setError(err.message || 'Failed to load payment details.');
@@ -137,7 +141,7 @@ export default function Payment() {
     })();
 
     return () => { cancelled = true; };
-  }, [orderId, paymentSessionId]);
+  }, [orderId]);
 
   // Initialize Cashfree checkout when payment session is available
   useEffect(() => {
@@ -195,15 +199,17 @@ export default function Payment() {
           return;
         }
 
-        if (!paymentSessionId.startsWith('session_')) {
-          console.error('Payment session ID has invalid prefix:', paymentSessionId.substring(0, 8));
+        if (paymentSessionId.length < 20) {
+          console.error('Payment session ID is too short:', paymentSessionId.length);
           setError('Invalid payment session format. Please try again.');
           return;
         }
 
+        const cashfreeMode = settings?.cashfree_mode || 'production';
+
         console.log('=== Cashfree SDK Debugging ===');
         console.log({
-          environment: 'sandbox',
+          environment: cashfreeMode,
           paymentSessionExists: Boolean(paymentSessionId),
           paymentSessionType: typeof paymentSessionId,
           paymentSessionLength: paymentSessionId?.length,
@@ -224,12 +230,14 @@ export default function Payment() {
 
         // Cashfree SDK v3 initialization
         const cashfree = window.Cashfree({
-          mode: 'sandbox'
+          mode: cashfreeMode
         });
+
+        const returnUrl = `${window.location.origin}/#/payment?orderId=${orderId}`;
 
         const checkoutOptions = {
           paymentSessionId: paymentSessionId,
-          returnUrl: `http://localhost:5173/#/payment?orderId=${orderId}`,
+          returnUrl,
           redirectTarget: '_self'
         };
 
@@ -420,11 +428,16 @@ export default function Payment() {
                 onClick={() => {
                   // Force Cashfree redirect
                   if (window.Cashfree && paymentSessionId) {
-                    const cashfree = new window.Cashfree({
-                      mode: 'sandbox',
-                      order_token: paymentSessionId
+                    const cashfreeMode = settings?.cashfree_mode || 'production';
+                    const cashfree = window.Cashfree({
+                      mode: cashfreeMode
                     });
-                    cashfree.redirect();
+                    const returnUrl = `${window.location.origin}/#/payment?orderId=${orderId}`;
+                    cashfree.checkout({
+                      paymentSessionId,
+                      returnUrl,
+                      redirectTarget: '_self'
+                    });
                   } else {
                     setError('Payment gateway not available. Please refresh the page.');
                   }

@@ -74,6 +74,8 @@ const getCustomerOrderDetail = async (req, res) => {
         p.payment_status,
         p.utr_number,
         p.screenshot_url,
+        p.payment_session_id,
+        p.cashfree_order_id,
         p.rejection_reason,
         p.verified_at,
         p.verified_by_admin_id
