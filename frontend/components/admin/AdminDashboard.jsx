@@ -13,7 +13,7 @@ function AdminDashboard({ onAuthError }) {
       .then((res) => {
         setData(res);
         setLoading(false);
-      })
+      }) 
       .catch((err) => {
         const message = err.message || '';
         if (message.toLowerCase().includes('unauthorized') || message.includes('401')) {
