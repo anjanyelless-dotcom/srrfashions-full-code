@@ -267,8 +267,8 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
         customer_phone: customerDetails.customer_phone
       },
       order_meta: {
-        // Use non-hash URL for Cashfree return to ensure order_id is preserved
-        return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment-return.html?orderId=${customerDetails.internal_order_id}&from=cashfree`,
+        // Use backend URL for return to ensure file is served
+        return_url: `${process.env.BACKEND_URL || 'http://localhost:3000'}/payment-return?orderId=${customerDetails.internal_order_id}&from=cashfree`,
         notify_url: `${process.env.BACKEND_URL || 'http://localhost:3000'}/api/cashfree/webhook`
       }
     };
