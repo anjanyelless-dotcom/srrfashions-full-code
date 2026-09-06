@@ -271,7 +271,7 @@ pm2 restart srrfashions-backend --update-env
 ### 1. Verify Backend Health
 ```bash
 curl https://api.srrfashions.in/api/health
-```
+``` 
 ✅ Returns: `{"server":"up","database":"up"}`
 
 ### 2. Verify Payment Settings
