@@ -345,8 +345,7 @@ export default function Payment() {
         if (status.payment_status === 'PAID') {
           console.log('Payment verified as PAID');
           setOrder(prev => prev ? { ...prev, payment_status: 'PAID', order_status: 'PAID' } : prev);
-          clearCart();
-          fetchCart();
+          // Don't call clearCart/fetchCart to avoid potential errors
           setPolling(false);
           setVerifying(false);
           clearInterval(pollInterval);
@@ -384,7 +383,7 @@ export default function Payment() {
       setPolling(false);
       setPollCount(0);
     };
-  }, [orderId, order, pollCount, polling, clearCart, fetchCart]);
+  }, [orderId, order, pollCount, polling]);
 
   const copyUpiId = async () => {
     if (!settings?.upi_id) return;
