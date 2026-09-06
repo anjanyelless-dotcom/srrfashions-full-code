@@ -79,12 +79,25 @@ function getPaymentSessionIdFromHash() {
  
 function isReturningFromCashfree() {
   try {
+    console.log('=== Checking return from Cashfree ===');
+    console.log('window.location.search:', window.location.search);
+    console.log('window.location.hash:', window.location.hash);
+    
     // Check both URL search params and hash params since the bridge redirects
     const urlParams = new URLSearchParams(window.location.search);
     const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
     
-    return (urlParams.has('from') && urlParams.get('from') === 'cashfree') ||
+    const urlFrom = urlParams.get('from');
+    const hashFrom = hashParams.get('from');
+    
+    console.log('URL from param:', urlFrom);
+    console.log('Hash from param:', hashFrom);
+    
+    const result = (urlParams.has('from') && urlParams.get('from') === 'cashfree') ||
            (hashParams.has('from') && hashParams.get('from') === 'cashfree');
+    
+    console.log('isReturningFromCashfree result:', result);
+    return result;
   } catch (error) {
     console.error('Error checking return from Cashfree:', error);
     return false;
@@ -135,7 +148,7 @@ export default function Payment() {
       sessionStorage.removeItem('cashfree_payment_session_id');
       sessionStorage.removeItem('cashfree_order_id');
     }
-  }, []);
+  }, [orderId]);
 
   useEffect(() => {
     if (!orderId) return;
@@ -196,9 +209,7 @@ export default function Payment() {
       }
       
       // Check if this is a return from Cashfree by looking at URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const isReturn = urlParams.has('from') && urlParams.get('from') === 'cashfree';
-      if (isReturn) {
+      if (isReturningFromCashfree()) {
         console.log('Returning from Cashfree, skipping Cashfree initialization');
         cashfreeInitialized.current = true;
         return;
