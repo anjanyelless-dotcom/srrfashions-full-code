@@ -42,6 +42,12 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
+// Serve payment-return.html for Cashfree return handling
+app.use('/payment-return', express.static(path.join(__dirname, '../../frontend/payment-return.html')));
+
+// Also serve it from root for direct access
+app.use(express.static(path.join(__dirname, '../../../frontend')));
+
 app.use('/api/health', healthRouter);
 app.use('/api/auth/customer', customerAuthRouter);
 app.use('/api/auth/admin', adminAuthRouter);

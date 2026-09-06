@@ -53,7 +53,7 @@ function getPaymentSessionIdFromHash() {
 
   console.log('URL hash result:', session ? 'exists' : 'null');
   console.log('URL hash type:', typeof session);
-  console.log('URL hash length:', session?.length || 0);
+  console.log('URL hash length', session?.length || 0);
 
   if (session && typeof session === 'string') {
     try {
@@ -77,6 +77,11 @@ function getPaymentSessionIdFromHash() {
   return null;
 }
 
+function isReturningFromCashfree() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.has('from') && urlParams.get('from') === 'cashfree';
+}
+
 function formatOrderStatus(status) {
   if (!status) return 'Pending';
   return status.replace(/_/g, ' ');
@@ -96,8 +101,11 @@ export default function Payment() {
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [polling, setPolling] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [pollCount, setPollCount] = useState(0);
   const { clearCart, fetchCart } = useCart();
   const cashfreeInitialized = useRef(false);
+  const isReturningFromCashfree = useRef(false);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -106,6 +114,14 @@ export default function Payment() {
     };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    if (isReturningFromCashfree()) {
+      console.log('Detected return from Cashfree, clearing sessionStorage');
+      sessionStorage.removeItem('cashfree_payment_session_id');
+      sessionStorage.removeItem('cashfree_order_id');
+    }
   }, []);
 
   useEffect(() => {
@@ -150,6 +166,29 @@ export default function Payment() {
       console.error('No payment session ID available for order:', orderId);
       setError('No payment session available. Please initiate checkout again.');
       return;
+    }
+
+    // Don't initialize Cashfree if we're returning from payment
+    // Check if order is already in a state that suggests payment was attempted
+    if (order && paymentSessionId && !cashfreeInitialized.current) {
+      // If payment is already being processed or completed, don't open Cashfree
+      if (order.payment_status === 'PAID' || 
+          order.payment_status === 'CONFIRMED' || 
+          order.payment_status === 'PAYMENT_VERIFICATION_PENDING' ||
+          order.payment_status === 'FAILED') {
+        console.log('Payment already processed, skipping Cashfree initialization');
+        cashfreeInitialized.current = true;
+        return;
+      }
+      
+      // Check if this is a return from Cashfree by looking at URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const isReturn = urlParams.has('from') && urlParams.get('from') === 'cashfree';
+      if (isReturn) {
+        console.log('Returning from Cashfree, skipping Cashfree initialization');
+        cashfreeInitialized.current = true;
+        return;
+      }
     }
 
     if (!paymentSessionId || !order || cashfreeInitialized.current) return;
@@ -252,38 +291,86 @@ export default function Payment() {
     initializeCashfree();
   }, [paymentSessionId, order]);
 
-  // Poll payment status for non-Cashfree orders or manual payment
+  // Poll payment status for Cashfree orders after return from payment
   useEffect(() => {
-    if (!orderId || !order || order.payment_status === 'PAID' || order.payment_status === 'CONFIRMED') return;
+    if (!orderId || !order) return;
 
-    // Only poll if this is not a Cashfree order or if Cashfree failed
-    if (order.payment_session_id && order.payment_status !== 'FAILED') {
-      return; // Let Cashfree handle it
+    // Stop if payment is already in final state
+    if (order.payment_status === 'PAID' || 
+        order.payment_status === 'CONFIRMED' || 
+        order.payment_status === 'PAYMENT_VERIFICATION_PENDING' ||
+        order.payment_status === 'FAILED') {
+      return;
+    }
+
+    // Only poll if this is a Cashfree order with payment session
+    if (!order.payment_session_id) {
+      return; // Not a Cashfree order
     }
 
     let pollInterval;
+    const MAX_POLL_COUNT = 20; // Max 20 polls = 100 seconds
+    const POLL_INTERVAL = 5000; // 5 seconds
+
     const pollPaymentStatus = async () => {
+      if (pollCount >= MAX_POLL_COUNT) {
+        console.log('Max poll count reached, stopping');
+        setPolling(false);
+        clearInterval(pollInterval);
+        if (order.payment_status === 'PAYMENT_PENDING') {
+          setError('Payment verification is taking longer than expected. Please check your order status later.');
+        }
+        return;
+      }
+
       try {
+        setVerifying(true);
         const status = await getPaymentStatusApi(orderId);
+        setPollCount(prev => prev + 1);
+
         if (status.payment_status === 'PAID') {
+          console.log('Payment verified as PAID');
           setOrder(prev => prev ? { ...prev, payment_status: 'PAID', order_status: 'PAID' } : prev);
           clearCart();
           fetchCart();
           setPolling(false);
+          setVerifying(false);
           clearInterval(pollInterval);
+        } else if (status.payment_status === 'FAILED' || status.payment_status === 'CANCELLED') {
+          console.log('Payment failed or cancelled');
+          setOrder(prev => prev ? { ...prev, payment_status: status.payment_status, order_status: 'PAYMENT_FAILED' } : prev);
+          setPolling(false);
+          setVerifying(false);
+          clearInterval(pollInterval);
+        } else if (status.payment_status === 'PAYMENT_PENDING' || status.cf_order_status === 'ACTIVE' || status.cf_order_status === 'PENDING') {
+          console.log(`Payment still pending (poll ${pollCount + 1}/${MAX_POLL_COUNT})`);
+          // Continue polling
         }
       } catch (err) {
         console.error('Payment status poll error:', err);
+        setPollCount(prev => prev + 1);
+        if (pollCount >= MAX_POLL_COUNT - 1) {
+          setPolling(false);
+          setVerifying(false);
+          clearInterval(pollInterval);
+          setError('Unable to verify payment status. Please try again later.');
+        }
+      } finally {
+        setVerifying(false);
       }
     };
 
-    if (!polling) {
+    if (!polling && pollCount < MAX_POLL_COUNT) {
       setPolling(true);
-      pollInterval = setInterval(pollPaymentStatus, 5000); // Poll every 5 seconds
+      pollInterval = setInterval(pollPaymentStatus, POLL_INTERVAL);
     }
 
-    return () => clearInterval(pollInterval);
-  }, [orderId, order, polling, clearCart, fetchCart]);
+    return () => {
+      clearInterval(pollInterval);
+      setPolling(false);
+      setPollCount(0);
+    };
+  }, [orderId, order, pollCount, polling, clearCart, fetchCart]);
 
   const copyUpiId = async () => {
     if (!settings?.upi_id) return;
@@ -417,9 +504,9 @@ export default function Payment() {
                 <p style={{ margin: '0.5rem 0 0', color: '#666' }}>
                   Supported payment methods include UPI (PhonePe, Google Pay, Paytm), Cards, Net Banking, and more.
                 </p>
-                {polling && (
+                {verifying && (
                   <p style={{ margin: '1rem 0 0', color: '#4a90e2', fontWeight: 500 }}>
-                    Waiting for payment confirmation...
+                    Verifying payment status... ({pollCount}/20)
                   </p>
                 )}
               </div>

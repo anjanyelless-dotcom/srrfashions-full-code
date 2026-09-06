@@ -285,6 +285,31 @@ const getPaymentStatus = async (req, res) => {
   }
 };
 
+const verifyWebhookSignature = (payload, signature, secret) => {
+  const crypto = require('crypto');
+  
+  try {
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(payload)
+      .digest('base64');
+    
+    // Cashfree signatures are base64 encoded
+    // Compare using timing-safe comparison
+    const expectedBuffer = Buffer.from(expectedSignature, 'base64');
+    const receivedBuffer = Buffer.from(signature, 'base64');
+    
+    if (expectedBuffer.length !== receivedBuffer.length) {
+      return false;
+    }
+    
+    return crypto.timingSafeEqual(expectedBuffer, receivedBuffer);
+  } catch (error) {
+    console.error('Webhook signature verification error:', error);
+    return false;
+  }
+};
+
 const handleWebhook = async (req, res) => {
   const signature = req.headers['x-webhook-signature'] || req.headers['x-cf-webhook-signature'];
 
@@ -300,12 +325,20 @@ const handleWebhook = async (req, res) => {
     return res.status(500).json({ error: 'Webhook not configured' });
   }
 
-  // Note: In production, implement proper signature verification here
-  // This is a simplified version for development
-  console.log('Webhook received (signature verification skipped in development)');
+  // Get raw body for signature verification
+  const rawBody = req.body;
+  const payload = typeof rawBody === 'string' ? rawBody : JSON.stringify(rawBody);
+
+  // Verify signature
+  if (!verifyWebhookSignature(payload, signature, webhookSecret)) {
+    console.error('Webhook signature verification failed');
+    return res.status(401).json({ error: 'Invalid signature' });
+  }
+
+  console.log('Webhook signature verified successfully');
 
   try {
-    const event = req.body;
+    const event = typeof rawBody === 'string' ? JSON.parse(rawBody) : rawBody;
 
     if (!event || !event.data || !event.data.order) {
       return res.status(400).json({ error: 'Invalid webhook payload' });
