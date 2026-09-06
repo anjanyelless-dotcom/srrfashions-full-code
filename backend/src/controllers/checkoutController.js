@@ -275,6 +275,8 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
 
     console.log(`Cashfree request to: ${url}`);
     console.log(`Cashfree order_id: ${requestBody.order_id}, amount: ${requestBody.order_amount}`);
+    console.log(`[PAYMENT] Cashfree return URL: ${requestBody.order_meta.return_url}`);
+    console.log(`[PAYMENT] Internal order ID: ${customerDetails.internal_order_id}`);
 
     const response = await fetch(url, {
       method: 'POST',
