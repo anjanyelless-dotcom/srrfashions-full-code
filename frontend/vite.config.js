@@ -31,6 +31,13 @@ export default defineConfig({
           }
         }
 
+        // Copy payment-return.html from public to dist
+        const paymentReturnSrc = path.resolve(projectDir, 'public/payment-return.html');
+        const paymentReturnDest = path.resolve(outDir, 'payment-return.html');
+        if (fs.existsSync(paymentReturnSrc)) {
+          fs.cpSync(paymentReturnSrc, paymentReturnDest);
+        }
+
         // Preserve the original feed and XML files if they exist
         const extraFiles = ['feed', 'comments', 'xmlrpc0db0.php'];
         for (const item of extraFiles) {
