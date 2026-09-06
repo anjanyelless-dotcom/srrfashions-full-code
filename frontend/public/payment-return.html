@@ -45,10 +45,16 @@
         // Extract orderId from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('orderId');
+        const fromCashfree = urlParams.get('from');
         
         if (orderId) {
-            // Redirect to the hash-based payment page
-            window.location.href = `/#/payment?orderId=${orderId}`;
+            // Redirect to the hash-based payment page with return indicator
+            const hashParams = new URLSearchParams();
+            hashParams.set('orderId', orderId);
+            if (fromCashfree === 'cashfree') {
+                hashParams.set('from', 'cashfree');
+            }
+            window.location.href = `/#/payment?${hashParams.toString()}`;
         } else {
             // No orderId found, redirect to home
             window.location.href = '/#/';

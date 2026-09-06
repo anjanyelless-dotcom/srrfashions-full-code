@@ -78,8 +78,12 @@ function getPaymentSessionIdFromHash() {
 }
 
 function isReturningFromCashfree() {
+  // Check both URL search params and hash params since the bridge redirects
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.has('from') && urlParams.get('from') === 'cashfree';
+  const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+  
+  return (urlParams.has('from') && urlParams.get('from') === 'cashfree') ||
+         (hashParams.has('from') && hashParams.get('from') === 'cashfree');
 }
 
 function formatOrderStatus(status) {
