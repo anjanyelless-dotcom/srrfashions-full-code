@@ -1,7 +1,7 @@
 {
   "name": "srfashion-react",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "scripts": {
     "dev": "node ./node_modules/vite/bin/vite.js",
@@ -10,8 +10,8 @@
     "convert": "node convert.js"
   },
   "dependencies": {
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

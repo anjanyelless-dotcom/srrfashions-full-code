@@ -76,7 +76,7 @@ function getPaymentSessionIdFromHash() {
   console.log('No payment session ID found in sessionStorage or URL');
   return null;
 }
-
+ 
 function isReturningFromCashfree() {
   try {
     // Check both URL search params and hash params since the bridge redirects
