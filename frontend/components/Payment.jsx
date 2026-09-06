@@ -78,12 +78,17 @@ function getPaymentSessionIdFromHash() {
 }
 
 function isReturningFromCashfree() {
-  // Check both URL search params and hash params since the bridge redirects
-  const urlParams = new URLSearchParams(window.location.search);
-  const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-  
-  return (urlParams.has('from') && urlParams.get('from') === 'cashfree') ||
-         (hashParams.has('from') && hashParams.get('from') === 'cashfree');
+  try {
+    // Check both URL search params and hash params since the bridge redirects
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    
+    return (urlParams.has('from') && urlParams.get('from') === 'cashfree') ||
+           (hashParams.has('from') && hashParams.get('from') === 'cashfree');
+  } catch (error) {
+    console.error('Error checking return from Cashfree:', error);
+    return false;
+  }
 }
 
 function formatOrderStatus(status) {
@@ -113,8 +118,12 @@ export default function Payment() {
 
   useEffect(() => {
     const handleHashChange = () => {
-      setOrderId(getOrderIdFromHash);
-      setPaymentSessionId(getPaymentSessionIdFromHash);
+      try {
+        setOrderId(getOrderIdFromHash);
+        setPaymentSessionId(getPaymentSessionIdFromHash);
+      } catch (error) {
+        console.error('Hash change error:', error);
+      }
     };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
@@ -154,6 +163,7 @@ export default function Payment() {
           }
         }
       } catch (err) {
+        console.error('Error loading payment details:', err);
         if (!cancelled) setError(err.message || 'Failed to load payment details.');
       } finally {
         if (!cancelled) setLoading(false);
