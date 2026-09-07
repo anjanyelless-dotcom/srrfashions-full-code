@@ -35,7 +35,10 @@ export default defineConfig({
         const paymentReturnSrc = path.resolve(projectDir, 'public/payment-return.html');
         const paymentReturnDest = path.resolve(outDir, 'payment-return.html');
         if (fs.existsSync(paymentReturnSrc)) {
+          console.log('Copying payment-return.html to dist');
           fs.cpSync(paymentReturnSrc, paymentReturnDest);
+        } else {
+          console.log('payment-return.html not found in public/');
         }
 
         // Preserve the original feed and XML files if they exist
@@ -59,8 +62,12 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    minify: false,
     rollupOptions: {
-      input: './index.html'
+      input: './index.html',
+      output: {
+        manualChunks: undefined
+      }
     }
   }
 });

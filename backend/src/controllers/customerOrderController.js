@@ -187,63 +187,47 @@ const getPaymentStatus = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    // Get order with ownership check
-    const order = await pool.query(
-      `SELECT o.*, p.payment_status, p.cf_order_status, p.cashfree_order_id, p.payment_session_id
-       FROM orders o
-       LEFT JOIN payments p ON o.id = p.order_id
-       WHERE o.id = $1 AND o.user_id = $2`,
+    // First verify the order belongs to this user
+    const orderCheck = await pool.query(
+      'SELECT id FROM orders WHERE id = $1 AND user_id = $2',
       [id, userId]
     );
 
-    if (order.rows.length === 0) {
+    if (orderCheck.rows.length === 0) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    const orderData = order.rows[0];
+    // Call the central sync function — this queries Cashfree server-side
+    // (both Get Order API and Get Payments API) and updates the DB.
+    const { syncCashfreePaymentStatus } = require('./cashfreeController');
+    const syncResult = await syncCashfreePaymentStatus(Number(id));
 
-    // If payment has Cashfree order ID and is not paid, verify with Cashfree
-    if (orderData.cashfree_order_id && orderData.payment_status !== 'PAID') {
-      try {
-        const { verifyPaymentStatus, processSuccessfulPayment } = require('./cashfreeController');
-        const cashfreeOrder = await verifyPaymentStatus(orderData.cashfree_order_id);
+    // Read the now-updated payment + order record
+    const paymentResult = await pool.query(
+      `SELECT p.*, o.order_number, o.order_status, o.final_amount
+       FROM payments p
+       JOIN orders o ON p.order_id = o.id
+       WHERE p.order_id = $1`,
+      [id]
+    );
 
-        // Update local status based on Cashfree status
-        if (cashfreeOrder.order_status === 'PAID' || cashfreeOrder.order_status === 'SUCCESS') {
-          if (orderData.payment_status !== 'PAID') {
-            await processSuccessfulPayment(orderData.id, cashfreeOrder.cf_payment_id || cashfreeOrder.payment_id);
-            orderData.payment_status = 'PAID';
-            orderData.cf_order_status = 'SUCCESS';
-          }
-        } else if (cashfreeOrder.order_status === 'FAILED' || cashfreeOrder.order_status === 'CANCELLED') {
-          await pool.query(
-            `UPDATE payments
-             SET payment_status = 'FAILED',
-                 cf_order_status = $1,
-                 updated_at = NOW()
-             WHERE order_id = $2`,
-            [cashfreeOrder.order_status, id]
-          );
-          orderData.payment_status = 'FAILED';
-          orderData.cf_order_status = cashfreeOrder.order_status;
-        } else {
-          orderData.cf_order_status = cashfreeOrder.order_status;
-        }
-      } catch (verifyError) {
-        console.error('Error verifying payment with Cashfree:', verifyError);
-        // Return local status if verification fails
-      }
+    if (paymentResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Payment not found' });
     }
 
+    const payment = paymentResult.rows[0];
+
     res.json({
-      order_id: id,
-      order_number: orderData.order_number,
-      order_status: orderData.order_status,
-      payment_status: orderData.payment_status,
-      cf_order_status: orderData.cf_order_status,
-      final_amount: orderData.final_amount,
-      cashfree_order_id: orderData.cashfree_order_id,
-      payment_session_id: orderData.payment_session_id
+      order_id: Number(id),
+      order_number: payment.order_number,
+      order_status: payment.order_status,
+      payment_status: payment.payment_status,
+      cf_order_status: payment.cf_order_status,
+      final_amount: payment.final_amount,
+      cashfree_order_id: payment.cashfree_order_id,
+      cashfree_payment_id: payment.cashfree_payment_id,
+      payment_session_id: payment.payment_session_id,
+      synced: syncResult.synced || false
     });
   } catch (error) {
     console.error('Get payment status error:', error);

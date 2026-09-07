@@ -33,20 +33,41 @@ const cashfreeRouter = require('./routes/cashfree');
 const app = express();
 
 app.use(cors({
-  origin: ['https://www.srrfashions.in', 'https://srrfashions.in'],
+  origin: [
+    'https://www.srrfashions.in',
+    'https://srrfashions.in',
+    'http://localhost:5173',
+    'http://localhost:3001'
+  ],
   credentials: true
 }));
+
+// Configure raw body parsing for Cashfree webhook endpoint
+app.use('/api/cashfree/webhook', express.raw({ type: 'application/json' }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
-// Serve payment-return.html for Cashfree return handling
-app.use('/payment-return', express.static(path.join(__dirname, '../../frontend/public/payment-return.html')));
-
-// Also serve it from root for direct access
-app.use(express.static(path.join(__dirname, '../../../frontend')));
+// Serve payment-return.html for Cashfree return handling (redirect to frontend)
+app.get('/payment-return', (req, res) => {
+  const orderId = req.query.orderId;
+  const fromCashfree = req.query.from;
+  
+  if (orderId) {
+    // Redirect directly to frontend payment page with return parameters
+    const frontendUrl = process.env.FRONTEND_URL || 'https://www.srrfashions.in';
+    const redirectUrl = `${frontendUrl}/#/payment?orderId=${orderId}&from=${fromCashfree || 'cashfree'}`;
+    console.log('Payment return redirect to:', redirectUrl);
+    res.redirect(redirectUrl);
+  } else {
+    // No orderId, redirect to frontend home
+    const frontendUrl = process.env.FRONTEND_URL || 'https://www.srrfashions.in';
+    res.redirect(`${frontendUrl}/#/`);
+  }
+});
 
 app.use('/api/health', healthRouter);
 app.use('/api/auth/customer', customerAuthRouter);

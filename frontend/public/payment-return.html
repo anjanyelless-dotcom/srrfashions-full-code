@@ -42,10 +42,17 @@
         <p>Processing your payment...</p>
     </div>
     <script>
+        console.log('=== PAYMENT RETURN BRIDGE DEBUG ===');
+        console.log('Current URL:', window.location.href);
+        console.log('window.location.search:', window.location.search);
+        
         // Extract orderId from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('orderId');
         const fromCashfree = urlParams.get('from');
+        
+        console.log('Parsed orderId:', orderId);
+        console.log('Parsed fromCashfree:', fromCashfree);
         
         if (orderId) {
             // Redirect to the hash-based payment page with return indicator
@@ -54,11 +61,16 @@
             if (fromCashfree === 'cashfree') {
                 hashParams.set('from', 'cashfree');
             }
-            window.location.href = `/#/payment?${hashParams.toString()}`;
+            
+            const targetUrl = `https://www.srrfashions.in/#/payment?${hashParams.toString()}`;
+            console.log('Redirecting to:', targetUrl);
+            window.location.href = targetUrl;
         } else {
+            console.log('No orderId found, redirecting to home');
             // No orderId found, redirect to home
-            window.location.href = '/#/';
+            window.location.href = 'https://www.srrfashions.in/#/';
         }
+        console.log('=== END PAYMENT RETURN BRIDGE DEBUG ===');
     </script>
 </body>
 </html>

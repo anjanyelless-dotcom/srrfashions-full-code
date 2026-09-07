@@ -80,9 +80,6 @@ const getProducts = async (req, res) => {
 
     query += ` WHERE ${conditions.join(' AND ')}`;
 
-    // Only include products that have at least one variant (business rule)
-    query += ` AND EXISTS (SELECT 1 FROM product_variants WHERE product_id = p.id)`;
-
     // Sorting - must include sort column in SELECT when using DISTINCT
     let sortColumn = 'p.created_at';
     let sortOrder = 'DESC';
@@ -206,7 +203,6 @@ const getProducts = async (req, res) => {
     }
 
     countQuery += ` WHERE ${countConditions.join(' AND ')}`;
-    countQuery += ` AND EXISTS (SELECT 1 FROM product_variants WHERE product_id = p.id)`;
 
     const countResult = await pool.query(countQuery, countValues);
     const total = parseInt(countResult.rows[0].total);
