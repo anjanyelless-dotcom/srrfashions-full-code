@@ -237,7 +237,11 @@ export default function Checkout() {
               <button
                 type="button"
                 className="srfashion-checkout-btn srfashion-checkout-secondary"
-                onClick={() => { window.location.hash = '#my-account'; }}
+                onClick={() => {
+                  sessionStorage.setItem('goToAddresses', 'true');
+                  sessionStorage.setItem('returnToCheckout', 'true');
+                  window.location.hash = '#my-account';
+                }}
                 style={{ width: 'auto', padding: '0.5rem 1rem', fontSize: '0.875rem' }}
               >
                 Add Address in My Account

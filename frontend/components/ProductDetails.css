@@ -1,5 +1,214 @@
 /* Product Details page */
 
+/* Image Lightbox */
+.srfashion-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: lightboxFadeIn 0.2s ease;
+}
+
+@keyframes lightboxFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.srfashion-lightbox-content {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.srfashion-lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  z-index: 10;
+}
+
+.srfashion-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.srfashion-lightbox-image-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 60px;
+}
+
+.srfashion-lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: imageFadeIn 0.3s ease;
+}
+
+@keyframes imageFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.srfashion-lightbox-prev,
+.srfashion-lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  z-index: 10;
+}
+
+.srfashion-lightbox-prev:hover,
+.srfashion-lightbox-next:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.srfashion-lightbox-prev:disabled,
+.srfashion-lightbox-next:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.srfashion-lightbox-prev {
+  left: 16px;
+}
+
+.srfashion-lightbox-next {
+  right: 16px;
+}
+
+.srfashion-lightbox-indicators {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.srfashion-lightbox-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.srfashion-lightbox-dot:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.srfashion-lightbox-dot.active {
+  background: #fff;
+  transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .srfashion-lightbox-content {
+    width: 95%;
+    height: 75vh;
+  }
+
+  .srfashion-lightbox-image-wrapper {
+    padding: 0 50px;
+  }
+
+  .srfashion-lightbox-prev,
+  .srfashion-lightbox-next {
+    width: 40px;
+    height: 40px;
+    font-size: 28px;
+  }
+
+  .srfashion-lightbox-prev {
+    left: 8px;
+  }
+
+  .srfashion-lightbox-next {
+    right: 8px;
+  }
+
+  .srfashion-lightbox-close {
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+
+  .srfashion-lightbox-indicators {
+    bottom: -32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .srfashion-lightbox-content {
+    width: 100%;
+    height: 70vh;
+  }
+
+  .srfashion-lightbox-image-wrapper {
+    padding: 0 45px;
+  }
+}
+
+/* Product Details page */
+
 .srfashion-qv-content {
   position: relative;
   width: 100%;

@@ -252,7 +252,7 @@
   color: #ffffff;
 }
 
-/* Mobile */
+/* Mobile responsive cart drawer */
 @media (max-width: 480px) {
   .taiowc-cart-model {
     max-width: 100%;
@@ -271,6 +271,193 @@
   .taiowc-cart-actions {
     grid-template-columns: 1fr;
   }
+}
+
+/* Small mobile (320-414px) */
+@media (max-width: 414px) {
+  .taiowc-cart-model {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .taiowc-cart-close {
+    width: 44px;
+    height: 44px;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .taiowc-cart-close:after {
+    font-size: 1.5rem;
+  }
+
+  .back-toshop-wrap {
+    padding: 2rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  }
+
+  .back-toshop-wrap .svg-wrapper {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+  }
+
+  .back-toshop-wrap .svg-wrapper svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .woocommerce-mini-cart__empty-message {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .woocommerce-back-to-shop {
+    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .taiowc-continue-shop {
+    padding: 1rem;
+    font-size: 0.875rem;
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Tablet (768-1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .taiowc-cart-model {
+    max-width: 400px;
+  }
+}
+
+/* Z-index hierarchy: Mobile menu (1000/1001) > Cart drawer (900/901) > Header > Page content */
+.taiowc-model-wrap {
+  z-index: 900 !important;
+}
+
+.taiowc-cart-model {
+  z-index: 901 !important;
+}
+
+/* Close button touch target improvement */
+.taiowc-cart-close {
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #111;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.taiowc-cart-close:hover {
+  opacity: 0.7;
+}
+
+/* Override theme's pseudo-element close button */
+.taiowc-cart-close:after {
+  content: none !important;
+}
+
+/* Empty cart vertical centering */
+.taiowc-cart-model-body {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.back-toshop-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  min-height: 300px;
+}
+
+.back-toshop-wrap .svg-wrapper {
+  background-color: #f3f4f6;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.back-toshop-wrap .svg-wrapper svg {
+  width: 32px;
+  height: 32px;
+  color: #9ca3af;
+}
+
+.woocommerce-mini-cart__empty-message {
+  text-align: center;
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 1.5rem;
+}
+
+.woocommerce-back-to-shop {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #111;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #111;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.woocommerce-back-to-shop:hover {
+  background-color: #111;
+  color: #fff;
+}
+
+/* Continue shopping button at bottom */
+.taiowc-cart-model-body .taiowc-continue-shop {
+  margin-top: auto;
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  position: sticky;
+  bottom: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #111;
+  text-decoration: none;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
 }
 
 /* Header cart count / total helpers (loaded with bundle) */

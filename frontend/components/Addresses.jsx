@@ -8,13 +8,15 @@ import {
 } from '../services/addressApi.js';
 
 const initialForm = {
-  name: '',
+  first_name: '',
+  last_name: '',
   mobile_number: '',
   house_flat: '',
   street_area: '',
   city: '',
   state: '',
   pincode: '',
+  country: 'India',
   landmark: '',
 };
 
@@ -90,7 +92,7 @@ export default function Addresses() {
   };
 
   const validate = () => {
-    const required = ['name', 'mobile_number', 'house_flat', 'street_area', 'city', 'state', 'pincode'];
+    const required = ['first_name', 'last_name', 'mobile_number', 'house_flat', 'street_area', 'city', 'state', 'pincode'];
     for (const field of required) {
       if (!String(form[field] || '').trim()) {
         setError(`${field.replace('_', ' ')} is required.`);
@@ -114,7 +116,7 @@ export default function Addresses() {
     if (!validate()) return;
 
     const payload = {
-      name: form.name.trim(),
+      name: `${form.first_name.trim()} ${form.last_name.trim()}`,
       mobile_number: form.mobile_number.trim(),
       house_flat: form.house_flat.trim(),
       street_area: form.street_area.trim(),
@@ -136,6 +138,13 @@ export default function Addresses() {
       setForm(initialForm);
       setEditingId(null);
       await fetchAddresses();
+
+      // Return to checkout if flag is set
+      const returnToCheckout = sessionStorage.getItem('returnToCheckout');
+      if (returnToCheckout === 'true') {
+        sessionStorage.removeItem('returnToCheckout');
+        window.location.hash = '#checkout';
+      }
     } catch (err) {
       if (isUnauthorized(err)) {
         clearCustomerAuth();
@@ -149,14 +158,19 @@ export default function Addresses() {
   };
 
   const handleEdit = (addr) => {
+    const nameParts = (addr.name || '').split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
     setForm({
-      name: addr.name || '',
+      first_name: firstName,
+      last_name: lastName,
       mobile_number: addr.mobile_number || '',
       house_flat: addr.house_flat || '',
       street_area: addr.street_area || '',
       city: addr.city || '',
       state: addr.state || '',
       pincode: addr.pincode || '',
+      country: addr.country || 'India',
       landmark: addr.landmark || '',
     });
     setEditingId(addr.id);
@@ -239,14 +253,28 @@ export default function Addresses() {
 
       <form className="woocommerce-form" onSubmit={handleSubmit} noValidate>
         <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="addr_name">
-            Full name <span className="required" aria-hidden="true">*</span>
+          <label htmlFor="addr_first_name">
+            First Name <span className="required" aria-hidden="true">*</span>
           </label>
           <input
-            id="addr_name"
-            name="name"
+            id="addr_first_name"
+            name="first_name"
             className="woocommerce-Input woocommerce-Input--text input-text"
-            value={form.name}
+            value={form.first_name}
+            onChange={handleChange}
+            disabled={saving}
+            required
+          />
+        </p>
+        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+          <label htmlFor="addr_last_name">
+            Last Name <span className="required" aria-hidden="true">*</span>
+          </label>
+          <input
+            id="addr_last_name"
+            name="last_name"
+            className="woocommerce-Input woocommerce-Input--text input-text"
+            value={form.last_name}
             onChange={handleChange}
             disabled={saving}
             required
@@ -324,7 +352,7 @@ export default function Addresses() {
         </p>
         <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
           <label htmlFor="addr_pincode">
-            Pincode <span className="required" aria-hidden="true">*</span>
+            PIN/ZIP Code <span className="required" aria-hidden="true">*</span>
           </label>
           <input
             id="addr_pincode"
@@ -337,7 +365,21 @@ export default function Addresses() {
           />
         </p>
         <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-          <label htmlFor="addr_landmark">Landmark</label>
+          <label htmlFor="addr_country">
+            Country <span className="required" aria-hidden="true">*</span>
+          </label>
+          <input
+            id="addr_country"
+            name="country"
+            className="woocommerce-Input woocommerce-Input--text input-text"
+            value={form.country}
+            onChange={handleChange}
+            disabled={saving}
+            required
+          />
+        </p>
+        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+          <label htmlFor="addr_landmark">Landmark (optional)</label>
           <input
             id="addr_landmark"
             name="landmark"

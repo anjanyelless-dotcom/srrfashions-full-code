@@ -27,7 +27,7 @@ function getProductFromButton(button) {
   const id = dataId ? String(dataId) : (productEl?.className.match(/post-(\d+)/)?.[1] || '0');
 
   const aria = button.getAttribute('aria-label') || '';
-  const nameMatch = aria.match(/(?:Add to cart|Select options for):\s*["“”]([^"”]+)["”"]/);
+  const nameMatch = aria.match(/(?:Add to cart|Buy now|Select options for|Out of stock):\s*["“”]([^"”]+)["”"]/);
   const titleEl = productEl?.querySelector(
     '.th-shopable-product-link .title, .th-shopable-cnt .title, .woocommerce-loop-product__title, .elemento-product-title a, .th-shopable-product-title, .product-title a, h2.woocommerce-loop-product__title'
   );
@@ -108,7 +108,7 @@ function App() {
         e.stopImmediatePropagation();
         const product = getProductFromButton(addButton);
         const buttonText = addButton.textContent?.trim() || '';
-        if (buttonText === 'Select options' || buttonText === 'Read more') {
+        if (buttonText === 'Select options' || buttonText === 'Read more' || buttonText === 'Out of stock') {
           goToProductPage(product);
           return;
         }
@@ -119,7 +119,11 @@ function App() {
           product.price > 0
         ) {
           addToCart(product);
-          openCart();
+          if (buttonText === 'Buy now') {
+            window.location.hash = '#checkout';
+          } else {
+            openCart();
+          }
         }
         return;
       }

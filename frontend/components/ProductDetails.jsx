@@ -32,6 +32,7 @@ export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [qty, setQty] = useState(1);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -149,6 +150,42 @@ export default function ProductDetails() {
     }
     return !!selectedVariant;
   }, [details, selectedVariant]);
+
+  const openLightbox = (index) => {
+    if (!details?.images?.length) return;
+    setLightboxIndex(index);
+  };
+
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+  };
+
+  const showPrevImage = () => {
+    if (lightboxIndex === null) return;
+    setLightboxIndex((prev) => (prev - 1 + details.images.length) % details.images.length);
+  };
+
+  const showNextImage = () => {
+    if (lightboxIndex === null) return;
+    setLightboxIndex((prev) => (prev + 1) % details.images.length);
+  };
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        showPrevImage();
+      } else if (e.key === 'ArrowRight') {
+        showNextImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIndex, details]);
 
   const discountPercent = useMemo(() => {
     if (!details || details.regularPrice <= 0 || details.sellingPrice >= details.regularPrice) return 0;
@@ -268,7 +305,7 @@ export default function ProductDetails() {
       >
         <div className="srfashion-qv-inner">
           <div className="srfashion-qv-gallery" style={{ background: '#fafafa' }}>
-            <div className="srfashion-qv-main-image">
+            <div className="srfashion-qv-main-image" onClick={() => openLightbox(details.images.indexOf(mainImage))} style={{ cursor: 'zoom-in' }}>
               {mainImage ? (
                 <img src={mainImage} alt={details.title} />
               ) : (
@@ -281,7 +318,7 @@ export default function ProductDetails() {
                   <button
                     key={i}
                     type="button"
-                    className="srfashion-qv-thumb"
+                    className={`srfashion-qv-thumb ${mainImage === img ? 'active' : ''}`}
                     onClick={() => setMainImage(img)}
                     aria-label={`View image ${i + 1}`}
                   >
@@ -433,6 +470,68 @@ export default function ProductDetails() {
           </div>
         </div>
       </div>
+
+      {lightboxIndex !== null && details?.images?.length > 0 && (
+        <div
+          className="srfashion-lightbox"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeLightbox();
+          }}
+        >
+          <div className="srfashion-lightbox-content">
+            <button
+              type="button"
+              className="srfashion-lightbox-close"
+              onClick={closeLightbox}
+              aria-label="Close preview"
+            >
+              ×
+            </button>
+
+            <button
+              type="button"
+              className="srfashion-lightbox-prev"
+              onClick={showPrevImage}
+              aria-label="Previous image"
+              disabled={details.images.length <= 1}
+            >
+              ‹
+            </button>
+
+            <div className="srfashion-lightbox-image-wrapper">
+              <img
+                src={details.images[lightboxIndex]}
+                alt={details.title}
+                className="srfashion-lightbox-image"
+              />
+            </div>
+
+            <button
+              type="button"
+              className="srfashion-lightbox-next"
+              onClick={showNextImage}
+              aria-label="Next image"
+              disabled={details.images.length <= 1}
+            >
+              ›
+            </button>
+
+            {details.images.length > 1 && (
+              <div className="srfashion-lightbox-indicators">
+                {details.images.map((img, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={`srfashion-lightbox-dot ${i === lightboxIndex ? 'active' : ''}`}
+                    onClick={() => setLightboxIndex(i)}
+                    aria-label={`Go to image ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -137,29 +137,23 @@ function productCardHtml(product) {
     : '';
 
   const isVariable = (product.variants || []).length > 1 || product.available_colors?.length > 1 || product.available_sizes?.length > 1;
-  const btnLink = isVariable
-    ? `product/${slug}/index.html`
-    : `index.html?add-to-cart=${id}`;
-  const btnClass = isVariable
-    ? 'button product_type_variable add_to_cart_button'
-    : inStock
-      ? 'button product_type_simple add_to_cart_button ajax_add_to_cart'
-      : 'button product_type_simple';
-  const btnText = isVariable ? 'Select options' : inStock ? 'Add to cart' : 'Read more';
-  const ariaLabel = isVariable
-    ? `Select options for &ldquo;${name}&rdquo;`
-    : inStock
-      ? `Add to cart: &ldquo;${name}&rdquo;`
-      : `Read more about &ldquo;${name}&rdquo;`;
-  const successAttr = inStock && !isVariable
-    ? `data-success_message="&ldquo;${name}&rdquo; has been added to your cart"`
-    : '';
-  const describedById = isVariable
-    ? `woocommerce_loop_add_to_cart_link_describedby_${id}`
-    : `woocommerce_loop_add_to_cart_link_describedby_${id}`;
-  const screenReaderText = isVariable
-    ? `<span id="${describedById}" class="screen-reader-text">This product has multiple variants. The options may be chosen on the product page</span>`
-    : '';
+  const firstVariant = (product.variants || [])[0];
+  const firstVariantId = firstVariant?.id || '';
+  const describedById = `woocommerce_loop_add_to_cart_link_describedby_${id}`;
+
+  const variableScreenReader = `<span id="${describedById}" class="screen-reader-text">This product has multiple variants. The options may be chosen on the product page</span>`;
+
+  let actionsHtml = '';
+
+  if (isVariable) {
+    actionsHtml = `<a href="product/${slug}/index.html" aria-describedby="${describedById}" data-quantity="1" class="button product_type_variable add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" aria-label="Select options for &ldquo;${name}&rdquo;" rel="nofollow" role="button">Select options</a> ${variableScreenReader}`;
+  } else if (inStock) {
+    actionsHtml = `
+      <a href="product/${slug}/index.html" data-quantity="1" class="button product_type_simple add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" data-variant_id="${firstVariantId}" aria-label="Add to cart: &ldquo;${name}&rdquo;" rel="nofollow" role="button" style="margin-right:8px;">Add to cart</a>
+      <a href="product/${slug}/index.html" data-quantity="1" class="button product_type_simple add_to_cart_button buy_now_button" data-product_id="${id}" data-product_sku="${sku}" data-variant_id="${firstVariantId}" aria-label="Buy now: &ldquo;${name}&rdquo;" rel="nofollow" role="button">Buy now</a>`;
+  } else {
+    actionsHtml = `<a href="product/${slug}/index.html" aria-describedby="${describedById}" class="button product_type_simple add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" aria-label="Out of stock: &ldquo;${name}&rdquo;" rel="nofollow" role="button" aria-disabled="true" style="pointer-events:none;opacity:0.6;">Out of stock</a>`;
+  }
 
   return `<div class="elemento-addons-advance-product thunk-woo-product-list opn-qv-enable th-shop-mania-woo-hover-zoom open-single-product-tab-horizontal open-shadow- open-shadow-hover- th-shop-mania-single-product-content-left product type-product post-${id} status-publish ${stockClass} ${categoryClass} has-post-thumbnail ${saleClass} shipping-taxable ${inStock ? 'purchasable' : ''} product-type-${isVariable ? 'variable has-default-attributes' : 'simple'}">
     <div class="elemento-addons-advance-product-info">
@@ -193,8 +187,8 @@ function productCardHtml(product) {
         </div>
         <div class="elemento-product-price">${priceHtml}</div>
         <div class="elemento-product-add-to-cart-button">
-          <p class="product woocommerce add_to_cart_inline elemento-product-add-to-cart" style="">
-            <a href="${btnLink}" aria-describedby="${describedById}" data-quantity="1" class="${btnClass}" data-product_id="${id}" data-product_sku="${sku}" aria-label="${ariaLabel}" rel="nofollow" ${successAttr} role="button">${btnText}</a> ${screenReaderText}
+          <p class="product woocommerce add_to_cart_inline elemento-product-add-to-cart" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+            ${actionsHtml}
           </p>
         </div>
       </div>

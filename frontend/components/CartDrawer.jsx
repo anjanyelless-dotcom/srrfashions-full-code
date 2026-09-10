@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCart } from './CartContext.jsx';
 import { formatPrice } from '../services/price.js';
 import './CartDrawer.css';
@@ -13,6 +13,44 @@ const bagIcon = (
 
 const CartDrawer = () => {
   const { cart, isOpen, closeCart, removeFromCart, updateQuantity, subtotal, clearCart } = useCart();
+
+  // Lock body scroll when cart is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      // Dispatch event to close mobile menu if open
+      document.dispatchEvent(new CustomEvent('cart-opened'));
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [isOpen]);
+
+  // Close cart when mobile menu is opened (prevent stacking)
+  useEffect(() => {
+    const handleMenuOpen = () => closeCart();
+    document.addEventListener('menu-opened', handleMenuOpen);
+    return () => document.removeEventListener('menu-opened', handleMenuOpen);
+  }, [closeCart]);
+
+  // Handle Escape key to close cart
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        closeCart();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, closeCart]);
 
   const handleContinueShopping = (e) => {
     e.preventDefault();
@@ -37,7 +75,14 @@ const CartDrawer = () => {
               {bagIcon}
               <h4>Your Cart</h4>
             </div>
-            <a className="taiowc-cart-close" href="#" onClick={(e) => { e.preventDefault(); closeCart(); }} aria-label="Close cart" role="button"> </a>
+            <button
+              type="button"
+              className="taiowc-cart-close"
+              onClick={closeCart}
+              aria-label="Close cart"
+            >
+              ×
+            </button>
           </div>
 
           <div className="taiowc-cart-model-body">

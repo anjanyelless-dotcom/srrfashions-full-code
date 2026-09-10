@@ -51,6 +51,17 @@ const MyAccount = () => {
   }, []);
 
   useEffect(() => {
+    // If user is authenticated and there's a flag to go to addresses, switch to addresses tab
+    if (currentUser) {
+      const goToAddresses = sessionStorage.getItem('goToAddresses');
+      if (goToAddresses === 'true') {
+        sessionStorage.removeItem('goToAddresses');
+        setActiveTab('addresses');
+      }
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
     const page = document.getElementById('page');
     if (page) {
       page.classList.add('srfashion-my-account-page');

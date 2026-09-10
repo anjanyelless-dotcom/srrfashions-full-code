@@ -2,8 +2,111 @@ require('dotenv-flow/config');
 const pool = require('../config/database');
 const { deleteFile, getFileUrl } = require('../storage/storageAdapter');
 
+function validateVariant(variant, index) {
+  const errors = [];
+  if (!variant.size || String(variant.size).trim().length === 0) {
+    errors.push(`Variant ${index + 1}: Size is required`);
+  }
+  if (!variant.color || String(variant.color).trim().length === 0) {
+    errors.push(`Variant ${index + 1}: Color is required`);
+  }
+  if (!variant.sku || String(variant.sku).trim().length === 0) {
+    errors.push(`Variant ${index + 1}: SKU is required`);
+  }
+  const stock = Number(variant.stock_quantity);
+  if (Number.isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
+    errors.push(`Variant ${index + 1}: Stock quantity must be a non-negative integer`);
+  }
+  return { errors, size: variant.size ? String(variant.size).trim() : '', color: variant.color ? String(variant.color).trim() : '', sku: variant.sku ? String(variant.sku).trim() : '', stock };
+}
+
+async function saveProductVariants(client, productId, variants, existingIds = []) {
+  const warnings = [];
+
+  if (!Array.isArray(variants) || variants.length === 0) {
+    return { warnings };
+  }
+
+  // Validate each variant
+  const normalized = [];
+  for (let i = 0; i < variants.length; i++) {
+    const v = variants[i];
+    const { errors, size, color, sku, stock } = validateVariant(v, i);
+    if (errors.length > 0) {
+      throw { validationErrors: errors };
+    }
+    normalized.push({ id: v.id ? Number(v.id) : null, size, color, sku, stock });
+  }
+
+  // Check duplicate color+size within the submitted list
+  const combinationSet = new Set();
+  for (const v of normalized) {
+    const key = `${v.color}|${v.size}`;
+    if (combinationSet.has(key)) {
+      throw { validationErrors: [`Duplicate color/size combination: ${v.color} / ${v.size}`] };
+    }
+    combinationSet.add(key);
+  }
+
+  // Fetch existing variants for this product
+  const existing = await client.query(
+    'SELECT id, color, size, sku FROM product_variants WHERE product_id = $1',
+    [productId]
+  );
+  const existingById = new Map(existing.rows.map((r) => [r.id, r]));
+
+  const newIds = new Set(normalized.filter((v) => v.id).map((v) => v.id));
+
+  // Check SKU uniqueness across all variants (except for updates of same variant)
+  for (const v of normalized) {
+    const skuQuery = v.id
+      ? await client.query('SELECT id FROM product_variants WHERE sku = $1 AND id != $2', [v.sku, v.id])
+      : await client.query('SELECT id FROM product_variants WHERE sku = $1', [v.sku]);
+    if (skuQuery.rows.length > 0) {
+      throw { validationErrors: [`SKU must be unique: ${v.sku}`] };
+    }
+  }
+
+  // Delete existing variants not in the new list (only if not referenced)
+  for (const row of existing.rows) {
+    if (newIds.has(row.id)) continue;
+
+    const cartRefs = await client.query('SELECT COUNT(*) as count FROM cart_items WHERE variant_id = $1', [row.id]);
+    const orderRefs = await client.query('SELECT COUNT(*) as count FROM order_items WHERE variant_id = $1', [row.id]);
+
+    if (parseInt(cartRefs.rows[0].count) > 0 || parseInt(orderRefs.rows[0].count) > 0) {
+      warnings.push(`Cannot delete variant ${row.color}/${row.size} because it is referenced in cart or orders`);
+      continue;
+    }
+
+    await client.query('DELETE FROM product_variants WHERE id = $1', [row.id]);
+  }
+
+  // Insert or update variants
+  for (const v of normalized) {
+    if (v.id && existingById.has(v.id)) {
+      // Update
+      await client.query(
+        `UPDATE product_variants
+         SET color = $1, size = $2, sku = $3, stock_quantity = $4, updated_at = $5
+         WHERE id = $6`,
+        [v.color, v.size, v.sku, v.stock, new Date(), v.id]
+      );
+    } else {
+      // Insert
+      await client.query(
+        `INSERT INTO product_variants (product_id, color, size, sku, stock_quantity)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [productId, v.color, v.size, v.sku, v.stock]
+      );
+    }
+  }
+
+  return { warnings };
+}
+
 const createProduct = async (req, res) => {
-  const { name, description, category_id, regular_price, selling_price, discount, images, video_url } = req.body;
+  const { name, description, category_id, regular_price, selling_price, discount, images, video_url, variants } = req.body;
 
   if (!name || name.trim().length === 0) {
     return res.status(400).json({ error: 'Product name is required' });
@@ -99,25 +202,33 @@ const createProduct = async (req, res) => {
       savedImages.push(imgRes.rows[0]);
     }
 
+    const variantResult = await saveProductVariants(client, product.id, variants).catch((err) => {
+      throw err;
+    });
+
     await client.query('COMMIT');
     client.release();
 
     res.status(201).json({
       message: 'Product created successfully',
       product,
-      images: savedImages
+      images: savedImages,
+      warnings: variantResult.warnings
     });
   } catch (error) {
     await client.query('ROLLBACK').catch(() => {});
     client.release();
     console.error('Create product error:', error);
+    if (error.validationErrors) {
+      return res.status(400).json({ errors: error.validationErrors });
+    }
     res.status(500).json({ error: 'Failed to create product' });
   }
 };
 
 const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, description, category_id, regular_price, selling_price, discount, images, video_url } = req.body;
+  const { name, description, category_id, regular_price, selling_price, discount, images, video_url, variants } = req.body;
 
   const client = await pool.connect();
 
@@ -262,6 +373,15 @@ const updateProduct = async (req, res) => {
       }
     }
 
+    // Handle variants if provided
+    let variantWarnings = [];
+    if (variants !== undefined) {
+      const variantResult = await saveProductVariants(client, id, variants).catch((err) => {
+        throw err;
+      });
+      variantWarnings = variantResult.warnings;
+    }
+
     await client.query('COMMIT');
     client.release();
 
@@ -272,12 +392,16 @@ const updateProduct = async (req, res) => {
 
     res.json({
       message: 'Product updated successfully',
-      product
+      product,
+      warnings: variantWarnings
     });
   } catch (error) {
     await client.query('ROLLBACK').catch(() => {});
     client.release();
     console.error('Update product error:', error);
+    if (error.validationErrors) {
+      return res.status(400).json({ errors: error.validationErrors });
+    }
     res.status(500).json({ error: 'Failed to update product' });
   }
 };

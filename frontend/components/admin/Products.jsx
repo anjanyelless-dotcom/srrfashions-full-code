@@ -49,6 +49,7 @@ function Products({ onAuthError }) {
   const [images, setImages] = useState(['']);
   const [videoUrl, setVideoUrl] = useState('');
   const [editingId, setEditingId] = useState(null);
+  const [variants, setVariants] = useState([]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -117,6 +118,12 @@ function Products({ onAuthError }) {
       return false;
     }
 
+    const variantErrors = validateVariants();
+    if (variantErrors.length > 0) {
+      setError(variantErrors.join(' '));
+      return false;
+    }
+
     return true;
   };
 
@@ -131,6 +138,7 @@ function Products({ onAuthError }) {
     });
     setImages(['']);
     setVideoUrl('');
+    setVariants([]);
     setEditingId(null);
   };
 
@@ -152,6 +160,13 @@ function Products({ onAuthError }) {
         .filter(Boolean)
         .map((url, i) => ({ image_url: url, display_order: i + 1 })),
       video_url: videoUrl.trim() || null,
+      variants: variants.map((v) => ({
+        id: v.id || null,
+        color: v.color.trim(),
+        size: v.size.trim(),
+        sku: v.sku.trim(),
+        stock_quantity: Number(v.stock_quantity) || 0,
+      })),
     };
 
     try {
@@ -207,6 +222,7 @@ function Products({ onAuthError }) {
           : ['']
       );
       setVideoUrl(p.video_url || '');
+      setVariants(res.variants || []);
       setEditingId(product.id);
     } catch (err) {
       handleError(err);
@@ -227,6 +243,58 @@ function Products({ onAuthError }) {
 
   const updateImageField = (index, value) => {
     setImages((prev) => prev.map((url, i) => (i === index ? value : url)));
+  };
+
+  const variantSizeOptions = ['S', 'M', 'L', 'XL', 'XXL', 'Free Size'];
+
+  const addVariant = () => {
+    setVariants((prev) => [
+      ...prev,
+      { id: null, color: '', size: '', sku: '', stock_quantity: 0 },
+    ]);
+  };
+
+  const removeVariant = (index) => {
+    setVariants((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateVariant = (index, field, value) => {
+    setVariants((prev) =>
+      prev.map((v, i) =>
+        i === index
+          ? {
+              ...v,
+              [field]:
+                field === 'stock_quantity'
+                  ? value === ''
+                    ? ''
+                    : Math.max(0, Math.floor(Number(value) || 0))
+                  : value,
+            }
+          : v
+      )
+    );
+  };
+
+  const validateVariants = () => {
+    const errors = [];
+    const seen = new Set();
+    for (let i = 0; i < variants.length; i++) {
+      const v = variants[i];
+      if (!String(v.color || '').trim()) errors.push(`Variant ${i + 1}: Color is required.`);
+      if (!String(v.size || '').trim()) errors.push(`Variant ${i + 1}: Size is required.`);
+      if (!String(v.sku || '').trim()) errors.push(`Variant ${i + 1}: SKU is required.`);
+      const stock = Number(v.stock_quantity);
+      if (v.stock_quantity === '' || Number.isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
+        errors.push(`Variant ${i + 1}: Stock quantity must be a non-negative integer.`);
+      }
+      const key = `${(v.color || '').trim().toLowerCase()}|${(v.size || '').trim().toLowerCase()}`;
+      if (key && seen.has(key)) {
+        errors.push(`Variant ${i + 1}: Duplicate color/size combination.`);
+      }
+      seen.add(key);
+    }
+    return errors;
   };
 
   const getCategoryName = (product) => {
@@ -367,6 +435,70 @@ function Products({ onAuthError }) {
               style={{ display: 'block', marginTop: 8, borderRadius: 4 }}
             />
           )}
+        </div>
+
+        <div style={{ marginBottom: 12 }}>
+          <h5 style={{ margin: '0 0 8px' }}>Product Variants / Inventory</h5>
+          {variants.length === 0 && <p style={{ fontSize: '0.875rem', color: '#666' }}>No variants added. Add at least one variant with size, color, SKU, and stock.</p>}
+          {variants.map((v, i) => (
+            <div
+              key={i}
+              style={{
+                marginBottom: 12,
+                border: '1px solid #eee',
+                padding: 12,
+                borderRadius: 6,
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr 1fr 1fr auto',
+                gap: 8,
+                alignItems: 'center',
+              }}
+            >
+              <input
+                style={{ ...inputStyle, marginBottom: 0 }}
+                list="size-options"
+                placeholder="Size *"
+                value={v.size}
+                onChange={(e) => updateVariant(i, 'size', e.target.value)}
+              />
+              <input
+                style={{ ...inputStyle, marginBottom: 0 }}
+                placeholder="Color *"
+                value={v.color}
+                onChange={(e) => updateVariant(i, 'color', e.target.value)}
+              />
+              <input
+                style={{ ...inputStyle, marginBottom: 0 }}
+                placeholder="SKU *"
+                value={v.sku}
+                onChange={(e) => updateVariant(i, 'sku', e.target.value)}
+              />
+              <input
+                style={{ ...inputStyle, marginBottom: 0 }}
+                type="number"
+                min="0"
+                step="1"
+                placeholder="Stock *"
+                value={v.stock_quantity}
+                onChange={(e) => updateVariant(i, 'stock_quantity', e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => removeVariant(i)}
+                style={{ ...btnStyle, color: '#c00', whiteSpace: 'nowrap' }}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          <datalist id="size-options">
+            {variantSizeOptions.map((s) => (
+              <option key={s} value={s} />
+            ))}
+          </datalist>
+          <button type="button" onClick={addVariant} style={btnStyle}>
+            + Add Variant
+          </button>
         </div>
 
         <button type="submit" style={btnStyle}>

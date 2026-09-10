@@ -13,7 +13,7 @@ const validateMobileNumber = (mobile) => {
 };
 
 const addAddress = async (req, res) => {
-  const { name, mobile_number, house_flat, street_area, city, state, pincode, landmark, is_default } = req.body;
+  const { name, mobile_number, house_flat, street_area, city, state, pincode, landmark, is_default, country } = req.body;
   const userId = req.user.id;
 
   // Validation
@@ -56,8 +56,8 @@ const addAddress = async (req, res) => {
 
     // Add new address
     const result = await pool.query(
-      `INSERT INTO addresses (user_id, name, mobile_number, house_flat, street_area, city, state, pincode, landmark, is_default)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      `INSERT INTO addresses (user_id, name, mobile_number, house_flat, street_area, city, state, pincode, landmark, is_default, country)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
        RETURNING *`,
       [
         userId,
@@ -69,7 +69,8 @@ const addAddress = async (req, res) => {
         state.trim(),
         pincode,
         landmark || null,
-        is_default || false
+        is_default || false,
+        country || 'India'
       ]
     );
 
@@ -85,7 +86,7 @@ const addAddress = async (req, res) => {
 
 const updateAddress = async (req, res) => {
   const { id } = req.params;
-  const { name, mobile_number, house_flat, street_area, city, state, pincode, landmark } = req.body;
+  const { name, mobile_number, house_flat, street_area, city, state, pincode, landmark, country } = req.body;
   const userId = req.user.id;
 
   try {
@@ -178,6 +179,10 @@ const updateAddress = async (req, res) => {
     if (landmark !== undefined) {
       updates.push(`landmark = $${paramCount++}`);
       values.push(landmark);
+    }
+    if (country !== undefined) {
+      updates.push(`country = $${paramCount++}`);
+      values.push(country);
     }
 
     if (updates.length === 0) {
