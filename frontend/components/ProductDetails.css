@@ -235,9 +235,28 @@
   border-right: 1px solid #f0f0f0;
 }
 
-.srfashion-qv-media-grid {
+.srfashion-qv-hero-media {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.srfashion-qv-hero-content {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.srfashion-qv-media-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
@@ -452,8 +471,13 @@
     padding: 1.25rem;
   }
 
-  .srfashion-qv-media-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  .srfashion-qv-hero-media {
+    aspect-ratio: 4 / 5;
+    margin-bottom: 0.75rem;
+  }
+
+  .srfashion-qv-media-row {
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.75rem;
   }
 
@@ -476,7 +500,12 @@
 }
 
 @media (max-width: 480px) {
-  .srfashion-qv-media-grid {
+  .srfashion-qv-hero-media {
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .srfashion-qv-media-row {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
   }

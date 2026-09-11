@@ -314,36 +314,61 @@ export default function ProductDetails() {
       >
         {/* Product Media Gallery */}
         <div className="srfashion-qv-media-gallery">
-          <div className="srfashion-qv-media-grid">
-            {details.mediaItems.map((media, i) => (
-              <div
-                key={i}
-                className="srfashion-qv-media-item"
-                onClick={() => openLightbox(i)}
-              >
-                {media.type === 'image' ? (
-                  <img
-                    src={media.url}
-                    alt={`${details.title} ${i + 1}`}
-                    className="srfashion-qv-media-content"
-                  />
-                ) : (
-                  <div className="srfashion-qv-video-wrapper">
-                    <video
+          {/* Hero Image - First media item spans full width */}
+          {details.mediaItems.length > 0 && (
+            <div className="srfashion-qv-hero-media">
+              {details.mediaItems[0].type === 'image' ? (
+                <img
+                  src={details.mediaItems[0].url}
+                  alt={details.title}
+                  className="srfashion-qv-hero-content"
+                  onClick={() => openLightbox(0)}
+                />
+              ) : (
+                <video
+                  src={details.mediaItems[0].url}
+                  className="srfashion-qv-hero-content"
+                  controls
+                  playsInline
+                  preload="metadata"
+                />
+              )}
+            </div>
+          )}
+
+          {/* Remaining Media - Single row below hero */}
+          {details.mediaItems.length > 1 && (
+            <div className="srfashion-qv-media-row">
+              {details.mediaItems.slice(1).map((media, i) => (
+                <div
+                  key={i + 1}
+                  className="srfashion-qv-media-item"
+                  onClick={() => openLightbox(i + 1)}
+                >
+                  {media.type === 'image' ? (
+                    <img
                       src={media.url}
+                      alt={`${details.title} ${i + 2}`}
                       className="srfashion-qv-media-content"
-                      controls
-                      playsInline
-                      preload="metadata"
                     />
-                    <div className="srfashion-qv-video-overlay">
-                      <span className="srfashion-qv-video-icon">▶</span>
+                  ) : (
+                    <div className="srfashion-qv-video-wrapper">
+                      <video
+                        src={media.url}
+                        className="srfashion-qv-media-content"
+                        controls
+                        playsInline
+                        preload="metadata"
+                      />
+                      <div className="srfashion-qv-video-overlay">
+                        <span className="srfashion-qv-video-icon">▶</span>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
