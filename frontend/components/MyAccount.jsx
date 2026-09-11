@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { loginCustomer, registerCustomer } from '../services/authApi.js';
+import { loginCustomer, registerCustomer, getCustomerProfile, updateCustomerProfile } from '../services/authApi.js';
 import { useCart } from './CartContext.jsx';
+import { useOffers } from './OffersContext.jsx';
 import Addresses from './Addresses.jsx';
 import CustomerOrders from './CustomerOrders.jsx';
 import './MyAccount.css';
@@ -26,10 +27,20 @@ function removeCustomerAuth() {
   localStorage.removeItem('customer_token');
 }
 
+function toDateInputValue(value) {
+  if (!value) return '';
+  const s = String(value);
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? `${m[1]}-${m[2]}-${m[3]}` : '';
+}
+
+const today = new Date().toLocaleDateString('en-CA');
+
 const MyAccount = () => {
   const [activeTab, setActiveTab] = useState('login');
   const [currentUser, setCurrentUser] = useState(null);
   const { fetchCart, clearCart } = useCart();
+  const { refresh } = useOffers();
 
   const [login, setLogin] = useState({ identifier: '', password: '', remember: false });
   const [loginErrors, setLoginErrors] = useState([]);
@@ -46,6 +57,11 @@ const MyAccount = () => {
   const [registerSuccess, setRegisterSuccess] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
 
+  const [dob, setDob] = useState('');
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState('');
+  const [profileSuccess, setProfileSuccess] = useState('');
+
   useEffect(() => {
     setCurrentUser(getCustomerUser());
   }, []);
@@ -57,9 +73,11 @@ const MyAccount = () => {
       if (goToAddresses === 'true') {
         sessionStorage.removeItem('goToAddresses');
         setActiveTab('addresses');
+      } else if (activeTab === 'login' || activeTab === 'register') {
+        setActiveTab('profile');
       }
     }
-  }, [currentUser]);
+  }, [currentUser, activeTab]);
 
   useEffect(() => {
     const page = document.getElementById('page');
@@ -68,6 +86,50 @@ const MyAccount = () => {
       return () => page.classList.remove('srfashion-my-account-page');
     }
   }, []);
+
+  useEffect(() => {
+    if (!currentUser) {
+      setDob('');
+      return;
+    }
+    (async () => {
+      try {
+        const data = await getCustomerProfile();
+        if (data?.user) {
+          setDob(toDateInputValue(data.user.date_of_birth));
+        }
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      }
+    })();
+  }, [currentUser]);
+
+  const handleDobSave = async (e) => {
+    e.preventDefault();
+    setProfileError('');
+    setProfileSuccess('');
+    if (dob && dob > today) {
+      setProfileError('Date of birth cannot be in the future.');
+      return;
+    }
+    setProfileLoading(true);
+    try {
+      const data = await updateCustomerProfile({
+        date_of_birth: dob || null,
+      });
+      if (data?.user) {
+        const token = localStorage.getItem('customer_token') || '';
+        saveCustomerAuth(data.user, token);
+        setCurrentUser(data.user);
+      }
+      await refresh();
+      setProfileSuccess('Date of birth saved successfully.');
+    } catch (err) {
+      setProfileError(err.message || 'Failed to save date of birth.');
+    } finally {
+      setProfileLoading(false);
+    }
+  };
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -355,6 +417,60 @@ const MyAccount = () => {
     </>
   );
 
+  const renderProfile = () => (
+    <>
+      <h2 className="srfashion-form-title">My Profile</h2>
+      {currentUser && (
+        <div style={{ marginBottom: '1rem', color: '#555' }}>
+          <strong>{currentUser.full_name || currentUser.email}</strong>
+          {currentUser.email ? ` (${currentUser.email})` : ''}
+        </div>
+      )}
+      <form
+        className="woocommerce-form"
+        onSubmit={handleDobSave}
+        noValidate
+      >
+        <p className="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+          <label htmlFor="customer_dob">
+            DATE OF BIRTH
+          </label>
+          <input
+            type="date"
+            id="customer_dob"
+            name="date_of_birth"
+            className="woocommerce-Input woocommerce-Input--text input-text"
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
+            max={today}
+            disabled={profileLoading}
+          />
+        </p>
+
+        {profileError && (
+          <ul className="woocommerce-error" role="alert">
+            <li>{profileError}</li>
+          </ul>
+        )}
+        {profileSuccess && (
+          <div className="woocommerce-message" role="status">
+            {profileSuccess}
+          </div>
+        )}
+
+        <p className="form-row">
+          <button
+            type="submit"
+            className="woocommerce-button button"
+            disabled={profileLoading}
+          >
+            {profileLoading ? 'Saving…' : 'Save Date of Birth'}
+          </button>
+        </p>
+      </form>
+    </>
+  );
+
   return (
     <div className="srfashion-my-account">
       <div id="content" className="page-content thunk-page no-sidebar">
@@ -385,12 +501,7 @@ const MyAccount = () => {
                               Logged in as <strong>{currentUser.full_name || currentUser.email}</strong>
                               {currentUser.email ? ` (${currentUser.email})` : ''}
                             </span>
-                            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('orders'); }} className="srfashion-my-orders">
-                              My Orders
-                            </a>
-                            <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('addresses'); }} className="srfashion-manage-addresses">
-                              Manage Addresses
-                            </a>
+                       
                             <a href="#" onClick={handleLogout} className="srfashion-logout">
                               Log out
                             </a>
@@ -426,24 +537,54 @@ const MyAccount = () => {
                           </div>
 
                           <div className="thsm-popup-header">
-                            <button
-                              type="button"
-                              className={`col-1 th-popup-tab ${activeTab === 'login' ? 'active' : ''}`}
-                              onClick={() => { setActiveTab('login'); setLoginErrors([]); setLoginSuccess(''); }}
-                            >
-                              Login
-                            </button>
-                            <button
-                              type="button"
-                              className={`col-2 th-popup-tab ${activeTab === 'register' ? 'active' : ''}`}
-                              onClick={() => { setActiveTab('register'); setRegisterErrors([]); setRegisterSuccess(''); }}
-                            >
-                              Sign Up
-                            </button>
+                            {currentUser ? (
+                              <>
+                                <button
+                                  type="button"
+                                  className={`th-popup-tab ${activeTab === 'profile' ? 'active' : ''}`}
+                                  onClick={() => { setActiveTab('profile'); setProfileError(''); setProfileSuccess(''); }}
+                                >
+                                  My Profile
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`th-popup-tab ${activeTab === 'orders' ? 'active' : ''}`}
+                                  onClick={() => { setActiveTab('orders'); }}
+                                >
+                                  My Orders
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`th-popup-tab ${activeTab === 'addresses' ? 'active' : ''}`}
+                                  onClick={() => { setActiveTab('addresses'); }}
+                                >
+                                  Manage Addresses
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  type="button"
+                                  className={`col-1 th-popup-tab ${activeTab === 'login' ? 'active' : ''}`}
+                                onClick={() => { setActiveTab('login'); setLoginErrors([]); setLoginSuccess(''); }}
+                                >
+                                  Login
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`col-2 th-popup-tab ${activeTab === 'register' ? 'active' : ''}`}
+                                onClick={() => { setActiveTab('register'); setRegisterErrors([]); setRegisterSuccess(''); }}
+                                >
+                                  Sign Up
+                                </button>
+                              </>
+                            )}
                           </div>
 
                           <div className="thsm-popup-content">
-                            {activeTab === 'addresses' ? (
+                            {activeTab === 'profile' ? (
+                              renderProfile()
+                            ) : activeTab === 'addresses' ? (
                               <Addresses />
                             ) : activeTab === 'orders' ? (
                               <CustomerOrders />

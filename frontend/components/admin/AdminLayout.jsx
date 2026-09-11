@@ -10,6 +10,7 @@ const SIDEBAR = [
   { key: 'customers', label: 'Customers' },
   { key: 'inventory', label: 'Inventory' },
   { key: 'banners', label: 'Banners' },
+  { key: 'sms-campaigns', label: 'SMS Campaigns' },
 ];
 
 function AdminLayout({ view, user, onLogout, onNavigate, children }) {

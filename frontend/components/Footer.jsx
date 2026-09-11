@@ -90,8 +90,8 @@ const Footer = () => {
 
           <div className="veloura-footer-column veloura-footer-contact">
             <h4 className="veloura-footer-column-title">Connect</h4>
-            <a className="veloura-footer-email" href="mailto:hello@veloura.com">
-              hello@veloura.com
+            <a className="veloura-footer-email" href="mailto:anjanyelless@gmail.com">
+              anjanyelless@gmail.com
             </a>
             <div className="veloura-footer-social">
               <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">

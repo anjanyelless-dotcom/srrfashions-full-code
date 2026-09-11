@@ -1,0 +1,136 @@
+/* Refer a Friend view inside the Offers Drawer */
+
+.sroffers-refer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem 0.25rem 1.5rem;
+}
+
+.sroffers-refer-emoji {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.sroffers-refer-title {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0 0 0.75rem 0;
+}
+
+.sroffers-refer-desc {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  line-height: 1.6;
+  margin: 0 0 1.75rem 0;
+  max-width: 320px;
+}
+
+.sroffers-refer-desc strong {
+  color: #111;
+  font-weight: 600;
+}
+
+.sroffers-refer-label {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+
+.sroffers-refer-code-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: 280px;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.75rem;
+  background: #fafafa;
+  margin-bottom: 1.5rem;
+}
+
+.sroffers-refer-code {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 1px;
+}
+
+.sroffers-refer-copy {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: #111;
+  border: 1px solid #111;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sroffers-refer-copy:hover {
+  background: #8B9E7A;
+  border-color: #8B9E7A;
+}
+
+.sroffers-refer-copy.copied {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+.sroffers-refer-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 280px;
+  padding: 0.9rem 1.25rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(0.75rem, 3vw, 0.85rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  color: #fff;
+  background: #25D366;
+  border: 1px solid #25D366;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.sroffers-refer-whatsapp:hover {
+  background: #1ebe5a;
+  border-color: #1ebe5a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.25);
+}
+
+.sroffers-refer-whatsapp svg {
+  flex-shrink: 0;
+  fill: #fff;
+}
+
+.sroffers-refer-whatsapp-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

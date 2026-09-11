@@ -3,6 +3,7 @@ import { getProductDetails } from '../services/productApi.js';
 import { addToCartApi } from '../services/cartApi.js';
 import { useCart } from './CartContext.jsx';
 import { CURRENCY_SYMBOL, formatMoney } from '../services/price.js';
+import WhatsAppButton from './WhatsAppButton.jsx';
 import './ProductDetails.css';
 
 function resolveUrl(src) {
@@ -298,178 +299,142 @@ export default function ProductDetails() {
         style={{
           maxWidth: 980,
           margin: '0 auto',
-          maxHeight: 'none',
-          overflow: 'visible',
-          boxShadow: 'none',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '40px',
         }}
       >
-        <div className="srfashion-qv-inner">
-          <div className="srfashion-qv-gallery" style={{ background: '#fafafa' }}>
-            <div className="srfashion-qv-main-image" onClick={() => openLightbox(details.images.indexOf(mainImage))} style={{ cursor: 'zoom-in' }}>
-              {mainImage ? (
-                <img src={mainImage} alt={details.title} />
-              ) : (
-                <div className="srfashion-qv-no-image" />
-              )}
+        {/* Product Images */}
+        <div className="srfashion-qv-images">
+          <div className="srfashion-qv-main-image">
+            <img
+              src={mainImage}
+              alt={details.title}
+              onClick={() => openLightbox(0)}
+              style={{ cursor: 'pointer', width: '100%', height: 'auto' }}
+            />
+          </div>
+          {details.images.length > 1 && (
+            <div className="srfashion-qv-thumbnails">
+              {details.images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt={`${details.title} thumbnail ${i + 1}`}
+                  onClick={() => setMainImage(img)}
+                  className={mainImage === img ? 'active' : ''}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    objectFit: 'cover',
+                    cursor: 'pointer',
+                    border: mainImage === img ? '2px solid #111' : '1px solid #ddd',
+                  }}
+                />
+              ))}
             </div>
-            {details.images.length > 1 && (
-              <div className="srfashion-qv-thumbs">
-                {details.images.map((img, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`srfashion-qv-thumb ${mainImage === img ? 'active' : ''}`}
-                    onClick={() => setMainImage(img)}
-                    aria-label={`View image ${i + 1}`}
-                  >
-                    <img src={img} alt="" />
-                  </button>
-                ))}
-              </div>
+          )}
+        </div>
+
+        {/* Product Info */}
+        <div className="srfashion-qv-info">
+          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem', fontFamily: 'Cormorant Garamond, serif' }}>
+            {details.title}
+          </h1>
+          <p style={{ color: '#666', marginBottom: '1rem' }}>{details.category}</p>
+
+          <div style={{ marginBottom: '1rem' }}>
+            {details.discount > 0 && (
+              <span style={{ textDecoration: 'line-through', color: '#999', marginRight: '0.5rem' }}>
+                {CURRENCY_SYMBOL}{formatMoney(details.regularPrice)}
+              </span>
             )}
+            <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111' }}>
+              {CURRENCY_SYMBOL}{formatMoney(details.sellingPrice)}
+            </span>
           </div>
 
-          <div className="srfashion-qv-summary">
-            <h1 className="product_title entry-title">{details.title}</h1>
+          <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>{details.description}</p>
 
-            {details.category && (
-              <p className="srfashion-qv-category">Category: {details.category}</p>
-            )}
-
-            <p className="price">
-              {details.sellingPrice < details.regularPrice ? (
-                <>
-                  <del aria-hidden="true">
-                    <span className="woocommerce-Price-amount amount">
-                      <span className="woocommerce-Price-currencySymbol">{CURRENCY_SYMBOL}</span>
-                      {formatMoney(details.regularPrice)}
-                    </span>
-                  </del>{' '}
-                  <ins aria-hidden="true">
-                    <span className="woocommerce-Price-amount amount">
-                      <span className="woocommerce-Price-currencySymbol">{CURRENCY_SYMBOL}</span>
-                      {formatMoney(details.sellingPrice)}
-                    </span>
-                  </ins>
-                </>
-              ) : (
-                <span className="woocommerce-Price-amount amount">
-                  <span className="woocommerce-Price-currencySymbol">{CURRENCY_SYMBOL}</span>
-                  {formatMoney(details.sellingPrice)}
-                </span>
+          {details.isVariable && (
+            <>
+              {details.colors.length > 0 && (
+                <div className="srfashion-qv-variation">
+                  <label htmlFor="srfashion-pd-color">
+                    Color <span className="required">*</span>
+                  </label>
+                  <select
+                    id="srfashion-pd-color"
+                    value={selectedColor}
+                    onChange={(e) => setSelectedColor(e.target.value)}
+                  >
+                    <option value="">Choose a color…</option>
+                    {enabledColors.map((color) => (
+                      <option key={color} value={color}>
+                        {color}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
-            </p>
 
-            {discountPercent > 0 && (
-              <p className="srfashion-qv-discount">
-                Save {discountPercent}%
-              </p>
-            )}
+              {details.sizes.length > 0 && (
+                <div className="srfashion-qv-variation">
+                  <label htmlFor="srfashion-pd-size">
+                    Size <span className="required">*</span>
+                  </label>
+                  <select
+                    id="srfashion-pd-size"
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                    disabled={enabledColors.length > 0 && !selectedColor}
+                  >
+                    <option value="">Choose a size…</option>
+                    {enabledSizes.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </>
+          )}
 
-            {details.discount > 0 && discountPercent === 0 && (
-              <p className="srfashion-qv-discount">
-                You save:{' '}
-                <span className="woocommerce-Price-amount amount">
-                  <span className="woocommerce-Price-currencySymbol">{CURRENCY_SYMBOL}</span>
-                  {formatMoney(details.discount)}
-                </span>
-              </p>
-            )}
+          <div className="srfashion-qv-qty-row">
+            <label htmlFor="srfashion-pd-qty">Quantity</label>
+            <input
+              id="srfashion-pd-qty"
+              type="number"
+              min="1"
+              max="99"
+              value={qty}
+              onChange={(e) => setQty(Math.max(1, parseInt(e.target.value, 10) || 1))}
+              className="input-text qty text"
+            />
+          </div>
 
-            <p className={`stock ${isAvailable ? 'in-stock' : 'out-of-stock'}`}>
-              {!details.hasStock
-                ? 'Out of stock'
-                : details.isVariable && (!selectedColor || !selectedSize)
-                  ? 'Select color and size'
-                  : isAvailable
-                    ? `In stock (${selectedVariant ? selectedVariant.stock_quantity : details.totalStock} available)`
-                    : 'Out of stock'}
-            </p>
-
-            {details.description && (
-              <div className="woocommerce-product-details__short-description">
-                <p>{details.description}</p>
-              </div>
-            )}
-
-            {details.isVariable && (
-              <>
-                {details.colors.length > 0 && (
-                  <div className="srfashion-qv-variation">
-                    <label htmlFor="srfashion-pd-color">
-                      Color <span className="required">*</span>
-                    </label>
-                    <select
-                      id="srfashion-pd-color"
-                      value={selectedColor}
-                      onChange={(e) => setSelectedColor(e.target.value)}
-                    >
-                      <option value="">Choose a color…</option>
-                      {enabledColors.map((color) => (
-                        <option key={color} value={color}>
-                          {color}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                {details.sizes.length > 0 && (
-                  <div className="srfashion-qv-variation">
-                    <label htmlFor="srfashion-pd-size">
-                      Size <span className="required">*</span>
-                    </label>
-                    <select
-                      id="srfashion-pd-size"
-                      value={selectedSize}
-                      onChange={(e) => setSelectedSize(e.target.value)}
-                      disabled={enabledColors.length > 0 && !selectedColor}
-                    >
-                      <option value="">Choose a size…</option>
-                      {enabledSizes.map((size) => (
-                        <option key={size} value={size}>
-                          {size}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </>
-            )}
-
-            <div className="srfashion-qv-qty-row">
-              <label htmlFor="srfashion-pd-qty">Quantity</label>
-              <input
-                id="srfashion-pd-qty"
-                type="number"
-                min="1"
-                max="99"
-                value={qty}
-                onChange={(e) => setQty(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                className="input-text qty text"
-              />
+          {error && <div className="woocommerce-error srfashion-qv-error" style={{ marginBottom: '0.75rem' }}>{error}</div>}
+          {success && (
+            <div style={{ marginBottom: '0.75rem', padding: '0.75rem 1rem', background: '#f0f7f0', color: '#2d5f2e' }}>
+              {success}
             </div>
+          )}
 
-            {error && <div className="woocommerce-error srfashion-qv-error" style={{ marginBottom: '0.75rem' }}>{error}</div>}
-            {success && (
-              <div style={{ marginBottom: '0.75rem', padding: '0.75rem 1rem', background: '#f0f7f0', color: '#2d5f2e' }}>
-                {success}
-              </div>
-            )}
-
-            <div className="srfashion-qv-actions">
-              <button
-                type="button"
-                className="single_add_to_cart_button button alt"
-                onClick={handleAddToCart}
-                disabled={!isAvailable || adding}
-              >
-                {adding ? 'Adding…' : 'Add to Cart'}
-              </button>
-            </div>
+          <div className="srfashion-qv-actions">
+            <button
+              type="button"
+              className="single_add_to_cart_button button alt"
+              onClick={handleAddToCart}
+              disabled={!isAvailable || adding}
+            >
+              {adding ? 'Adding…' : 'Add to Cart'}
+            </button>
           </div>
         </div>
       </div>
+
+      <WhatsAppButton productName={details.title} />
 
       {lightboxIndex !== null && details?.images?.length > 0 && (
         <div

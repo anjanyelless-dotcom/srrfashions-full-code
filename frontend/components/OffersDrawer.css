@@ -1,0 +1,227 @@
+/* Offers drawer overlay, animations, and card styling — mirrors CartDrawer.css */
+
+.sroffers-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sroffers-wrap.sroffers-active {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+.sroffers-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.sroffers-model {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 420px;
+  background-color: #fff;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 2;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.sroffers-active .sroffers-model {
+  transform: translateX(0);
+}
+
+.sroffers-model-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sroffers-model-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.sroffers-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sroffers-heading h4 {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+}
+
+.sroffers-close {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: #f5f5f5;
+  color: #111;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.sroffers-close:hover {
+  background: #e5e5e5;
+}
+
+.sroffers-back {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: #f5f5f5;
+  color: #111;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.sroffers-back:hover {
+  background: #e5e5e5;
+}
+
+.sroffers-model-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+.sroffers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sroffers-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sroffers-card:hover {
+  border-color: #8b9e7a;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.sroffers-referral {
+  cursor: pointer;
+}
+
+.sroffers-referral:focus-visible {
+  outline: 2px solid #8b9e7a;
+  outline-offset: 2px;
+}
+
+.sroffers-card-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.sroffers-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sroffers-card-title {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.sroffers-card-desc {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Mobile width: leave a small margin for a polished look */
+@media (max-width: 480px) {
+  .sroffers-model {
+    max-width: calc(100% - 24px);
+    right: 12px;
+    border-radius: 1rem 0 0 1rem;
+  }
+}
+
+/* Header offers icon styling to match Wishlist/Account/Cart */
+.srfashion-offers-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  vertical-align: middle;
+  padding: 0.35rem;
+  margin-right: 0.25rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.srfashion-offers-trigger:hover {
+  color: #8B9E7A;
+}
+
+.srfashion-offers-trigger svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Prevent header or page content from appearing inside the offers drawer */
+.sroffers-model .thsm-header,
+.sroffers-model .main-header,
+.sroffers-model .responsive-main-header,
+.sroffers-model .desktop-main-header,
+.sroffers-model .below-header,
+.sroffers-model .thunk-icon-market,
+.sroffers-model .menu-toggle,
+.sroffers-model .cart-contents,
+.sroffers-model .taiowc-wrap,
+.sroffers-model .srfashion-offers-trigger {
+  display: none !important;
+}

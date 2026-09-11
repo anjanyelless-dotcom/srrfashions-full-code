@@ -5,6 +5,7 @@ import { getPaymentSettings } from '../services/paymentSettingsApi.js';
 import { getPaymentStatusApi } from '../services/paymentStatusApi.js';
 import { formatPrice } from '../services/price.js';
 import { useCart } from './CartContext.jsx';
+import { useOffers } from './OffersContext.jsx';
 import './Checkout.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -103,6 +104,7 @@ export default function Payment() {
   const [polling, setPolling] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const { clearCart, fetchCart } = useCart();
+  const { clearOffer } = useOffers();
   const cashfreeInitialized = useRef(false);
   const isPollingRef = useRef(null);
   const isCashfreeReturnRef = useRef(null);
@@ -333,10 +335,11 @@ export default function Payment() {
         if (status.payment_status === 'PAID' || status.payment_status === 'CONFIRMED') {
           setOrder(prev => prev ? { ...prev, payment_status: status.payment_status, order_status: status.order_status } : prev);
           
-          // Clear cart and redirect to orders page
+          // Clear cart, offer state and redirect to orders page
           try {
             clearCart();
             fetchCart();
+            clearOffer();
           } catch (err) {
             console.error('Error clearing cart:', err);
           }

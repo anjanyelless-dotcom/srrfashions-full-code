@@ -10,6 +10,7 @@ import Payments from './Payments.jsx';
 import Customers from './Customers.jsx';
 import Inventory from './Inventory.jsx';
 import Banners from './Banners.jsx';
+import SmsCampaigns from './SmsCampaigns.jsx';
 
 function getAdminView(hash) {
   const parts = hash.replace(/^#/, '').split('/').filter(Boolean);
@@ -90,6 +91,9 @@ function Admin({ hash }) {
     }
     if (view === 'banners') {
       return <Banners onAuthError={logout} />;
+    }
+    if (view === 'sms-campaigns') {
+      return <SmsCampaigns onAuthError={logout} />;
     }
     return (
       <div style={{ padding: 24, background: '#ffffff', borderRadius: 12 }}>

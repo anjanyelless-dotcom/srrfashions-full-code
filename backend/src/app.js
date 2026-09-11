@@ -27,8 +27,11 @@ const adminDashboardRouter = require('./routes/adminDashboard');
 const adminCustomerRouter = require('./routes/adminCustomer');
 const adminBannerRouter = require('./routes/adminBanner');
 const homeRouter = require('./routes/home');
+const referralsRouter = require('./routes/referrals');
 const paymentSettingsRouter = require('./routes/paymentSettings');
 const cashfreeRouter = require('./routes/cashfree');
+const offersRouter = require('./routes/offers');
+const smsRouter = require('./routes/sms');
 
 const app = express();
 
@@ -94,8 +97,11 @@ app.use('/api/admin/dashboard', adminDashboardRouter);
 app.use('/api/admin/customers', adminCustomerRouter);
 app.use('/api/admin/banners', adminBannerRouter);
 app.use('/api/home', homeRouter);
+app.use('/api/referrals', referralsRouter);
 app.use('/api/payment-settings', paymentSettingsRouter);
 app.use('/api/cashfree', cashfreeRouter);
+app.use('/api/offers', offersRouter);
+app.use('/api/admin/sms', smsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import RawHtmlTag from './RawHtmlTag.jsx';
 
 const NAV_ITEMS = [
@@ -18,8 +19,8 @@ const mobileMenuStyles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 1000,
+    background: 'rgba(0, 0, 0, 0.55)',
+    zIndex: 11000,
     display: 'flex',
     justifyContent: 'flex-end',
     animation: 'overlayFadeIn 0.25s ease'
@@ -28,20 +29,22 @@ const mobileMenuStyles = {
     width: '80%',
     maxWidth: '320px',
     height: '100%',
+    minHeight: '100vh',
     background: '#fff',
     display: 'flex',
     flexDirection: 'column',
     boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
     animation: 'slideIn 0.25s ease',
     overflowY: 'auto',
-    zIndex: 1001
+    zIndex: 11001
   },
   header: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '1.25rem',
-    borderBottom: '1px solid #f0f0f0'
+    borderBottom: '1px solid #f0f0f0',
+    flexShrink: 0
   },
   title: {
     fontFamily: '"Cormorant Garamond", Georgia, "Times New Roman", serif',
@@ -50,8 +53,8 @@ const mobileMenuStyles = {
     color: '#111'
   },
   close: {
-    width: '36px',
-    height: '36px',
+    width: '44px',
+    height: '44px',
     border: 'none',
     background: '#f5f5f5',
     color: '#111',
@@ -67,7 +70,8 @@ const mobileMenuStyles = {
   nav: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '0.75rem 0'
+    padding: '0.75rem 0',
+    flex: '1 1 auto'
   },
   link: {
     fontFamily: '"Montserrat", sans-serif',
@@ -77,7 +81,7 @@ const mobileMenuStyles = {
     textDecoration: 'none',
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
-    padding: '1rem 1.25rem',
+    padding: '1.1rem 1.25rem',
     borderBottom: '1px solid #f5f5f5',
     transition: 'background-color 0.2s ease, color 0.2s ease',
     outline: 'none'
@@ -129,9 +133,9 @@ function MobileMenu({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  return (
-    <div style={mobileMenuStyles.overlay} role="dialog" aria-modal="true" aria-label="Mobile navigation">
-      <div style={mobileMenuStyles.menu} ref={menuRef}>
+  return createPortal(
+    <div style={mobileMenuStyles.overlay} role="dialog" aria-modal="true" aria-label="Mobile navigation" onClick={onClose}>
+      <div style={mobileMenuStyles.menu} ref={menuRef} onClick={(e) => e.stopPropagation()}>
         <div style={mobileMenuStyles.header}>
           <span style={mobileMenuStyles.title}>Menu</span>
           <button
@@ -164,7 +168,8 @@ function MobileMenu({ isOpen, onClose }) {
           ))}
         </nav>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -239,6 +244,18 @@ export default function Header() {
                                             <circle cx="12" cy="7" r="4"></circle>
                                         </svg>
                                     </a>
+                                    <a class="srfashion-offers-trigger" href="#" aria-label="Offers &amp; Rewards" title="Offers &amp; Rewards">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-gift w-6 h-6 stroke-[1.5px]" aria-hidden="true">
+                                            <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                                            <rect x="2" y="7" width="20" height="5" rx="1"></rect>
+                                            <path d="M12 22v-7"></path>
+                                            <path d="M12 7V2"></path>
+                                            <path d="M8 7a4 4 0 0 1 4-4 4 4 0 0 1 4 4"></path>
+                                        </svg>
+                                    </a>
                                     <div class="cart-contents">
                                         <div id="1" class="taiowc-wrap  taiowc-slide-right  fxd-right ">
                                             <a class="taiowc-content taiowc_cart_empty" href="#" aria-label="Cart">
@@ -307,6 +324,18 @@ export default function Header() {
                     </div>
                     <div class="main-header-col3">
                         <div class="thunk-icon-market">
+                            <a class="srfashion-offers-trigger" href="#" aria-label="Offers &amp; Rewards" title="Offers &amp; Rewards">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-gift w-6 h-6 stroke-[1.5px]" aria-hidden="true">
+                                    <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                                    <rect x="2" y="7" width="20" height="5" rx="1"></rect>
+                                    <path d="M12 22v-7"></path>
+                                    <path d="M12 7V2"></path>
+                                    <path d="M8 7a4 4 0 0 1 4-4 4 4 0 0 1 4 4"></path>
+                                </svg>
+                            </a>
                             <div class="cart-contents">
                                 <div id="2" class="taiowc-wrap  taiowc-slide-right  fxd-right ">
                                     <a class="taiowc-content taiowc_cart_empty" href="#" aria-label="Cart">
@@ -383,11 +412,15 @@ export default function Header() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // Close mobile menu when cart is opened (prevent stacking)
+  // Close mobile menu when cart or offers drawer is opened (prevent stacking)
   useEffect(() => {
-    const handleCartOpen = () => setIsMenuOpen(false);
-    document.addEventListener('cart-opened', handleCartOpen);
-    return () => document.removeEventListener('cart-opened', handleCartOpen);
+    const handleDrawerOpen = () => setIsMenuOpen(false);
+    document.addEventListener('cart-opened', handleDrawerOpen);
+    document.addEventListener('offers-opened', handleDrawerOpen);
+    return () => {
+      document.removeEventListener('cart-opened', handleDrawerOpen);
+      document.removeEventListener('offers-opened', handleDrawerOpen);
+    };
   }, []);
 
   return (
@@ -428,31 +461,64 @@ export default function Header() {
         }
         @media (max-width: 1024px) {
           .responsive-main-header .main-header-bar {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
+            position: relative !important;
+            height: 60px !important;
+            display: block !important;
           }
           .responsive-main-header .main-header-col1 {
+            position: absolute !important;
+            left: 15px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
             width: auto !important;
             max-width: none !important;
-            order: 1 !important;
-            flex: 0 0 auto !important;
+            z-index: 10 !important;
           }
           .responsive-main-header .main-header-col2 {
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
             width: auto !important;
-            order: 2 !important;
-            flex: 1 1 auto !important;
+            max-width: 60% !important;
             text-align: center !important;
+            z-index: 5 !important;
+          }
+          .responsive-main-header .main-header-col2 img {
+            max-width: 150px !important;
+            height: auto !important;
           }
           .responsive-main-header .main-header-col3 {
+            position: absolute !important;
+            right: 15px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
             width: auto !important;
             max-width: none !important;
-            order: 3 !important;
-            flex: 0 0 auto !important;
+            z-index: 10 !important;
           }
           .responsive-main-header .logo-content {
             display: flex !important;
             justify-content: center !important;
+          }
+        }
+        @media (max-width: 375px) {
+          .responsive-main-header .main-header-col2 img {
+            max-width: 120px !important;
+          }
+        }
+        @media (max-width: 320px) {
+          .responsive-main-header .main-header-col2 img {
+            max-width: 100px !important;
+          }
+          .responsive-main-header .main-header-bar {
+            padding: 0 10px !important;
+          }
+          .responsive-main-header .main-header-col1 {
+            left: 10px !important;
+          }
+          .responsive-main-header .main-header-col3 {
+            right: 10px !important;
           }
         }
       `}</style>

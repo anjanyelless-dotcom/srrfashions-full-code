@@ -11,12 +11,21 @@ const {
 
 const generateReferralCode = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = 'FASHION-';
-  for (let i = 0; i < 5; i++) {
+  let code = 'SRR50';
+  for (let i = 0; i < 4; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return code;
 };
+
+function formatISODate(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 const generateToken = (userId, role) => {
   return jwt.sign(
@@ -55,15 +64,21 @@ const customerRegister = async (req, res) => {
 
     // Handle referral code if provided
     let referred_by_user_id = null;
+    let referrerCode = null;
     if (referralCode) {
+      const cleanCode = referralCode.toUpperCase().trim();
       const referralUser = await pool.query(
-        'SELECT id FROM users WHERE referral_code = $1',
-        [referralCode.toUpperCase()]
+        'SELECT id, email FROM users WHERE referral_code = $1',
+        [cleanCode]
       );
       if (referralUser.rows.length === 0) {
         return res.status(400).json({ error: 'Invalid referral code' });
       }
+      if (referralUser.rows[0].email === email.toLowerCase()) {
+        return res.status(400).json({ error: 'You cannot refer yourself' });
+      }
       referred_by_user_id = referralUser.rows[0].id;
+      referrerCode = cleanCode;
     }
 
     // Hash password
@@ -93,6 +108,25 @@ const customerRegister = async (req, res) => {
     );
 
     const user = result.rows[0];
+
+    // Persist the referral relationship if a valid referral code was used
+    if (referred_by_user_id) {
+      try {
+        await pool.query(
+          `INSERT INTO referrals (referrer_user_id, referred_user_id, referral_code_used, status)
+           VALUES ($1, $2, $3, 'REGISTERED')`,
+          [referred_by_user_id, user.id, referrerCode]
+        );
+      } catch (referralError) {
+        // If a referral already exists for this referred user, do not fail registration
+        if (referralError.code === '23505') {
+          console.warn('Duplicate referral attempt for user:', user.id);
+        } else {
+          throw referralError;
+        }
+      }
+    }
+
     const token = generateToken(user.id, user.role);
 
     res.status(201).json({
@@ -170,7 +204,7 @@ const customerLogin = async (req, res) => {
 const getProfile = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, full_name, email, mobile_number, role, referral_code, is_active, created_at
+      `SELECT id, full_name, email, mobile_number, date_of_birth, role, referral_code, is_active, created_at
        FROM users WHERE id = $1`,
       [req.user.id]
     );
@@ -179,7 +213,7 @@ const getProfile = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    res.json({ user: result.rows[0] });
+    res.json({ user: { ...result.rows[0], date_of_birth: formatISODate(result.rows[0].date_of_birth) } });
   } catch (error) {
     console.error('Get profile error:', error);
     res.status(500).json({ error: 'Failed to fetch profile' });
@@ -187,7 +221,7 @@ const getProfile = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { full_name, email, mobile_number } = req.body;
+  const { full_name, email, mobile_number, date_of_birth } = req.body;
 
   const validationErrors = validateProfileUpdate(req.body);
   if (validationErrors.length > 0) {
@@ -234,6 +268,11 @@ const updateProfile = async (req, res) => {
       values.push(mobile_number);
     }
 
+    if (date_of_birth !== undefined) {
+      updates.push(`date_of_birth = $${paramCount++}`);
+      values.push(date_of_birth);
+    }
+
     updates.push(`updated_at = $${paramCount++}`);
     values.push(new Date());
 
@@ -243,14 +282,14 @@ const updateProfile = async (req, res) => {
       UPDATE users
       SET ${updates.join(', ')}
       WHERE id = $${paramCount}
-      RETURNING id, full_name, email, mobile_number, role, updated_at
+      RETURNING id, full_name, email, mobile_number, date_of_birth, role, updated_at
     `;
 
     const result = await pool.query(query, values);
 
     res.json({
       message: 'Profile updated successfully',
-      user: result.rows[0]
+      user: { ...result.rows[0], date_of_birth: formatISODate(result.rows[0].date_of_birth) }
     });
   } catch (error) {
     console.error('Update profile error:', error);

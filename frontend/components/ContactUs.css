@@ -1,10 +1,80 @@
-/* Contact Us page — styled to match the Veloura reference design */
+/* Contact Us page — styled to match the SRRreference design */
 
 .veloura-contact-page {
   width: 100%;
   background-color: #ffffff;
   color: #000000;
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Contact Us page header visibility: solid background, relative positioning */
+.srfashion-contact-page > header.zta-transparent-header,
+.srfashion-contact-page > header.thsm-header,
+.srfashion-contact-page header.zta-transparent-header,
+.srfashion-contact-page header.thsm-header {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  z-index: 100 !important;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.srfashion-contact-page .main-header,
+.srfashion-contact-page .below-header,
+.srfashion-contact-page .responsive-main-header {
+  position: relative !important;
+  background-color: #ffffff !important;
+}
+
+.srfashion-contact-page .th-shop-mania-menu li a,
+.srfashion-contact-page .th-shop-mania-menu li a span,
+.srfashion-contact-page .th-shop-mania-menu-link {
+  color: #111111 !important;
+}
+
+.srfashion-contact-page .thunk-icon-market a,
+.srfashion-contact-page .taiowc-content,
+.srfashion-contact-page .taiowc-content h4,
+.srfashion-contact-page .taiowc-icon svg,
+.srfashion-contact-page .whishlist svg,
+.srfashion-contact-page .account svg,
+.srfashion-contact-page .taiowc-cart-total-wrap,
+.srfashion-contact-page .thw-wishlist-count,
+.srfashion-contact-page .menu-btn,
+.srfashion-contact-page .menu-btn svg,
+.srfashion-contact-page .menu-toggle button {
+  color: #111111 !important;
+  fill: none !important;
+  stroke: #111111 !important;
+}
+
+.srfashion-contact-page .taiowc-wrap {
+  background: transparent !important;
+}
+
+.srfashion-contact-page .th-icon-searchview input {
+  color: #111111 !important;
+  border-color: #e5e5e5 !important;
+  background-color: #ffffff !important;
+}
+
+.srfashion-contact-page .th-icon-searchview input::placeholder {
+  color: #999999 !important;
+}
+
+/* Active Contact Us navigation item */
+.srfashion-contact-page .th-shop-mania-menu li a:hover,
+.srfashion-contact-page .th-shop-mania-menu li a:hover span,
+.srfashion-contact-page .th-shop-mania-menu li a[href="#contact-us"],
+.srfashion-contact-page .th-shop-mania-menu li a[href="#contact-us"] span {
+  color: #8B9E7A !important;
+}
+
+.srfashion-contact-page .th-shop-mania-menu li a[href="#contact-us"] .th-shop-mania-menu-link {
+  color: #8B9E7A !important;
 }
 
 /* Hero */

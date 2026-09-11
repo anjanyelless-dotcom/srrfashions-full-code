@@ -76,6 +76,20 @@ const validateProfileUpdate = (data) => {
     errors.push('Invalid mobile number format. Must be 10 digits starting with 6-9');
   }
 
+  if (data.date_of_birth !== undefined && data.date_of_birth !== null) {
+    const dobRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dobRegex.test(data.date_of_birth)) {
+      errors.push('Invalid date of birth format. Use YYYY-MM-DD');
+    } else {
+      const dob = new Date(data.date_of_birth);
+      if (isNaN(dob.getTime())) {
+        errors.push('Invalid date of birth');
+      } else if (dob > new Date()) {
+        errors.push('Date of birth cannot be in the future');
+      }
+    }
+  }
+
   return errors;
 };
 

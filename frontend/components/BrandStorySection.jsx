@@ -36,7 +36,7 @@ const BrandStorySectionHtml = `
                         <div class="elementor-element elementor-element-ffbf1ec elementor-widget elementor-widget-heading"
                             data-id="ffbf1ec" data-element_type="widget" data-e-type="widget"
                             data-widget_type="heading.default">
-                            <h2 class="elementor-heading-title elementor-size-default">Veloura was born from a simple
+                            <h2 class="elementor-heading-title elementor-size-default">SRRwas born from a simple
                                 belief: that truly beautiful clothing should feel like a second skin — effortless to
                                 wear, impossible to forget. Every piece is designed with intention, not trend.</h2>
                         </div>

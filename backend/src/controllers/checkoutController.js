@@ -1,5 +1,6 @@
 require('dotenv-flow/config');
 const pool = require('../config/database');
+const { getOfferDiscount } = require('../controllers/offersController');
 
 // Configuration constants
 const SHIPPING_FEE = 50; // Flat shipping fee
@@ -313,7 +314,7 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
 };
 
 const createOrder = async (req, res) => {
-  const { address_id, payment_method, coupon_code, use_referral_reward } = req.body;
+  const { address_id, payment_method, coupon_code, use_referral_reward, offer_type } = req.body;
   const userId = req.user.id;
 
   // Validation
@@ -375,6 +376,24 @@ const createOrder = async (req, res) => {
 
     subtotal = parseFloat(subtotal.toFixed(2));
 
+    // Calculate first order offer discount
+    let offerDiscount = 0;
+    let offerId = null;
+
+    if (['FIRST_ORDER', 'REFERRAL', 'NEXT_ORDER', 'BIRTHDAY', 'SPECIAL'].includes(offer_type)) {
+      const offerPreview = await getOfferDiscount(offer_type, userId, subtotal, pool);
+
+      if (offerPreview.error) {
+        return res.status(400).json({
+          error: offerPreview.error,
+          details: offerPreview.minimum_order_value ? { minimum_order_value: offerPreview.minimum_order_value } : undefined
+        });
+      }
+
+      offerDiscount = offerPreview.discount;
+      offerId = offerPreview.offer.id;
+    }
+
     // Calculate coupon discount
     const couponResult = await calculateCouponDiscount(coupon_code, subtotal, userId);
 
@@ -401,10 +420,10 @@ const createOrder = async (req, res) => {
     const referralDiscount = referralResult.discount;
 
     // Calculate shipping fee
-    const shippingFee = calculateShippingFee(subtotal - couponDiscount - referralDiscount);
+    const shippingFee = calculateShippingFee(subtotal - couponDiscount - referralDiscount - offerDiscount);
 
     // Calculate final amount
-    const finalAmount = subtotal - couponDiscount - referralDiscount + shippingFee;
+    const finalAmount = subtotal - couponDiscount - referralDiscount - offerDiscount + shippingFee;
 
     if (finalAmount <= 0) {
       return res.status(400).json({ error: 'Order total cannot be zero or negative' });
@@ -413,24 +432,66 @@ const createOrder = async (req, res) => {
     // Generate order number
     const orderNumber = await generateOrderNumber();
 
-    // Create order
-    const orderResult = await pool.query(
-      `INSERT INTO orders (user_id, address_id, order_number, subtotal, coupon_discount, referral_discount, shipping_fee, final_amount, order_status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDING')
-       RETURNING *`,
-      [
-        userId,
-        address_id,
-        orderNumber,
-        subtotal,
-        couponDiscount,
-        referralDiscount,
-        shippingFee,
-        finalAmount
-      ]
-    );
+    let order;
+    const client = await pool.connect();
 
-    const order = orderResult.rows[0];
+    try {
+      await client.query('BEGIN');
+
+      // Serialize first-order applications per user to prevent concurrent abuse
+      await client.query('SELECT pg_advisory_xact_lock($1)', [userId]);
+
+      // Re-check eligibility inside the transaction
+      let transactionOfferDiscount = 0;
+      let transactionOfferId = null;
+
+      if (['FIRST_ORDER', 'REFERRAL', 'NEXT_ORDER', 'BIRTHDAY', 'SPECIAL'].includes(offer_type)) {
+        const offerRecheck = await getOfferDiscount(offer_type, userId, subtotal, client);
+
+        if (offerRecheck.error) {
+          await client.query('ROLLBACK');
+          client.release();
+          return res.status(400).json({
+            error: offerRecheck.error,
+            details: offerRecheck.minimum_order_value ? { minimum_order_value: offerRecheck.minimum_order_value } : undefined
+          });
+        }
+
+        transactionOfferDiscount = offerRecheck.discount;
+        transactionOfferId = offerRecheck.offer.id;
+      }
+
+      const transactionFinalAmount = subtotal - couponDiscount - referralDiscount - transactionOfferDiscount + shippingFee;
+
+      const orderResult = await client.query(
+        `INSERT INTO orders (user_id, address_id, order_number, subtotal, coupon_discount, referral_discount, offer_discount, offer_id, shipping_fee, final_amount, order_status)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'PENDING')
+         RETURNING *`,
+        [
+          userId,
+          address_id,
+          orderNumber,
+          subtotal,
+          couponDiscount,
+          referralDiscount,
+          transactionOfferDiscount,
+          transactionOfferId,
+          shippingFee,
+          transactionFinalAmount
+        ]
+      );
+
+      order = orderResult.rows[0];
+      offerDiscount = transactionOfferDiscount;
+      offerId = transactionOfferId;
+
+      await client.query('COMMIT');
+    } catch (transactionError) {
+      await client.query('ROLLBACK');
+      throw transactionError;
+    } finally {
+      client.release();
+    }
 
     // Store coupon and referral IDs for later use
     let couponId = couponResult.coupon ? couponResult.coupon.id : null;
@@ -536,8 +597,10 @@ const createOrder = async (req, res) => {
         subtotal,
         coupon_discount: couponDiscount,
         referral_discount: referralDiscount,
+        offer_discount: offerDiscount,
+        offer_id: offerId,
         shipping_fee: shippingFee,
-        final_amount: finalAmount,
+        final_amount: order.final_amount,
         order_status: 'PENDING'
       },
       payment: {

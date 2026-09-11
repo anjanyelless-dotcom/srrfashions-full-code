@@ -78,7 +78,11 @@ const CartDrawer = () => {
             <button
               type="button"
               className="taiowc-cart-close"
-              onClick={closeCart}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                closeCart();
+              }}
               aria-label="Close cart"
             >
               ×

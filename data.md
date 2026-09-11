@@ -307,7 +307,7 @@ curl -X POST https://api.srrfashions.in/api/checkout \
 }
 ```
 
-### 5. Test on Website
+### 5. Test on WebApp
 1. Go to `https://www.srrfashions.in/#/login`
 2. Login with: `aarav.sharma@example.com` / `TestPass@123`
 3. Add a product to cart

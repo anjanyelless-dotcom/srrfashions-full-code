@@ -17,7 +17,12 @@ async function recordExists(tableName, whereClause, values) {
 
 // Helper to generate unique referral code
 function generateReferralCode() {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = 'SRR50';
+  for (let i = 0; i < 4; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
 }
 
 // Helper to generate SKU
@@ -394,7 +399,33 @@ async function seed() {
       }
     }
     
-    // 9. Seed Referral Settings
+    // 9. Seed Offers
+    console.log('\nSeeding offers...');
+    const offers = [
+      { title: '₹100 OFF', description: 'On Your First Order', offer_type: 'FIRST_ORDER', discount_type: 'FIXED', discount_value: 100, minimum_order_value: 0, maximum_discount: 100, coupon_code: null, is_active: true, start_date: new Date(), end_date: null, usage_limit: null, per_user_limit: null },
+      { title: '₹50 OFF', description: 'Refer a Friend', offer_type: 'REFERRAL', discount_type: 'FIXED', discount_value: 50, minimum_order_value: 0, maximum_discount: 50, coupon_code: null, is_active: true, start_date: new Date(), end_date: null, usage_limit: null, per_user_limit: null },
+      { title: '₹50 OFF', description: 'On Your Next Order', offer_type: 'NEXT_ORDER', discount_type: 'FIXED', discount_value: 50, minimum_order_value: 0, maximum_discount: 50, coupon_code: null, is_active: true, start_date: new Date(), end_date: null, usage_limit: null, per_user_limit: null },
+      { title: '₹100 OFF', description: 'Special Offers', offer_type: 'SPECIAL', discount_type: 'FIXED', discount_value: 100, minimum_order_value: 0, maximum_discount: 100, coupon_code: null, is_active: true, start_date: new Date(), end_date: null, usage_limit: null, per_user_limit: null },
+      { title: '₹50 OFF', description: 'Birthday Reward', offer_type: 'BIRTHDAY', discount_type: 'FIXED', discount_value: 50, minimum_order_value: 0, maximum_discount: 50, coupon_code: null, is_active: true, start_date: new Date(), end_date: null, usage_limit: null, per_user_limit: null }
+    ];
+    
+    for (const offer of offers) {
+      const existingOffer = await client.query(
+        'SELECT id FROM offers WHERE offer_type = $1',
+        [offer.offer_type]
+      );
+      
+      if (existingOffer.rows.length === 0) {
+        await client.query(
+          `INSERT INTO offers (title, description, offer_type, discount_type, discount_value, minimum_order_value, maximum_discount, coupon_code, is_active, start_date, end_date, usage_limit, per_user_limit)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+          [offer.title, offer.description, offer.offer_type, offer.discount_type, offer.discount_value, offer.minimum_order_value, offer.maximum_discount, offer.coupon_code, offer.is_active, offer.start_date, offer.end_date, offer.usage_limit, offer.per_user_limit]
+        );
+        console.log(`Offer ${offer.offer_type} created`);
+      }
+    }
+    
+    // 10. Seed Referral Settings
     console.log('\nSeeding referral settings...');
     const existingReferralSettings = await client.query('SELECT id FROM referral_settings');
     
@@ -501,6 +532,7 @@ async function seed() {
     console.log(`- Product variants: ${variantIds.length}`);
     console.log(`- Banners: 5`);
     console.log(`- Coupons: 5`);
+    console.log(`- Offers: 5`);
     console.log(`- Orders: 10`);
     
   } catch (error) {
@@ -554,6 +586,7 @@ async function reset() {
       'referral_settings',
       'coupon_usages',
       'coupons',
+      'offers',
       'payments',
       'order_items',
       'orders',

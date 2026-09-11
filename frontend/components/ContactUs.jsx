@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ContactUs.css';
 
 const initialForm = {
@@ -27,6 +27,14 @@ const ContactUs = () => {
   const [touched, setTouched] = useState(initialTouched);
   const [submitted, setSubmitted] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const page = document.getElementById('page');
+    if (page) {
+      page.classList.add('srfashion-contact-page');
+      return () => page.classList.remove('srfashion-contact-page');
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -112,22 +120,22 @@ const ContactUs = () => {
           <div className="veloura-contact-card">
             <div className="veloura-contact-icon">{icons.email}</div>
             <h3 className="veloura-card-title">Email Us</h3>
-            <p className="veloura-card-text"><a href="mailto:hello@veloura.com">hello@veloura.com</a></p>
+            <p className="veloura-card-text"><a href="mailto:anjanyelless@gmail.com">anjanyelless@gmail.com</a></p>
           </div>
           <div className="veloura-contact-card">
             <div className="veloura-contact-icon">{icons.phone}</div>
             <h3 className="veloura-card-title">Call Us</h3>
-            <p className="veloura-card-text"><a href="tel:+919876543210">+91 987 654 3210</a></p>
+            <p className="veloura-card-text"><a href="tel:+919876543210">+91 9032666032</a></p>
           </div>
           <div className="veloura-contact-card">
             <div className="veloura-contact-icon">{icons.location}</div>
             <h3 className="veloura-card-title">Visit Us</h3>
-            <p className="veloura-card-text">Veloura Studio, Bandra West<br />Mumbai, Maharashtra 400050</p>
+            <p className="veloura-card-text">Lakshmi Apartment, Venkata Ramana Colony, <br /> Hafeezpet, Hyderabad, Telangana 500085.</p>
           </div>
           <div className="veloura-contact-card">
             <div className="veloura-contact-icon">{icons.hours}</div>
             <h3 className="veloura-card-title">Business Hours</h3>
-            <p className="veloura-card-text">Monday – Friday<br />9:00 AM – 6:00 PM</p>
+            <p className="veloura-card-text">Monday –Satday<br />9:00 AM – 9:00 PM</p>
           </div>
         </div>
       </section>
@@ -268,10 +276,12 @@ const ContactUs = () => {
               <span className="veloura-help-title">Shipping &amp; Delivery</span>
               <span className="veloura-help-desc">Track, delivery times, and shipping options.</span>
             </a>
-            <a href="#returns" className="veloura-help-card">
-              <span className="veloura-help-title">Returns &amp; Exchanges</span>
-              <span className="veloura-help-desc">Easy returns, refunds, and exchange policies.</span>
-            </a>
+          <a href="#returns" className="veloura-help-card">
+  <span className="veloura-help-title">No Return</span>
+  <span className="veloura-help-desc">
+    All purchases are final and cannot be returned or exchanged.
+  </span>
+</a>
             <a href="#size-guide" className="veloura-help-card">
               <span className="veloura-help-title">Size Guide</span>
               <span className="veloura-help-desc">Find your perfect fit across all collections.</span>

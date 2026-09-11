@@ -3,6 +3,41 @@
 .taiowc-cart-model {
   display: flex !important;
   flex-direction: column !important;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  max-width: 450px !important;
+  background-color: #fff !important;
+  transform: translateX(100%) !important;
+  transition: transform 0.3s ease !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.model-cart-active .taiowc-cart-model {
+  transform: translateX(0) !important;
+}
+
+/* Prevent header elements from appearing inside cart drawer */
+.taiowc-cart-model .thsm-header,
+.taiowc-cart-model .main-header,
+.taiowc-cart-model .responsive-main-header,
+.taiowc-cart-model .desktop-main-header,
+.taiowc-cart-model .below-header,
+.taiowc-cart-model .thunk-icon-market,
+.taiowc-cart-model .menu-toggle,
+.taiowc-cart-model .cart-contents,
+.taiowc-cart-model .taiowc-wrap {
+  display: none !important;
+}
+
+/* Hide any duplicate icons that might appear */
+.taiowc-cart-model .whishlist,
+.taiowc-cart-model .account,
+.taiowc-cart-model .th-icon-searchview {
+  display: none !important;
 }
 
 .taiowc-cart-model-body {
@@ -33,11 +68,12 @@
 .taiowc-model-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(0, 0, 0, 0.5);
   cursor: pointer;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 1;
 }
 
 .model-cart-active .taiowc-model-overlay {
@@ -344,13 +380,13 @@
   }
 }
 
-/* Z-index hierarchy: Mobile menu (1000/1001) > Cart drawer (900/901) > Header > Page content */
+/* Z-index hierarchy: Cart drawer (10000/10001) > Mobile menu (1000/1001) > Header > Page content */
 .taiowc-model-wrap {
-  z-index: 900 !important;
+  z-index: 10000 !important;
 }
 
 .taiowc-cart-model {
-  z-index: 901 !important;
+  z-index: 10001 !important;
 }
 
 /* Close button touch target improvement */
@@ -365,18 +401,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
   opacity: 1 !important;
   visibility: visible !important;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: auto !important;
 }
 
 .taiowc-cart-close:hover {
   opacity: 0.7;
+  background-color: #f5f5f5;
+}
+
+.taiowc-cart-close:active {
+  background-color: #e5e5e5;
+}
+
+/* Ensure close button is always clickable */
+.taiowc-cart-close * {
+  pointer-events: none;
 }
 
 /* Override theme's pseudo-element close button */
 .taiowc-cart-close:after {
   content: none !important;
+}
+
+/* Ensure header is positioned correctly */
+.taiowc-cart-model-header {
+  position: relative;
+  z-index: 5;
 }
 
 /* Empty cart vertical centering */

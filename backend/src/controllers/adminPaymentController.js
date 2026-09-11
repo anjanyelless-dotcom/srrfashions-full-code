@@ -1,6 +1,7 @@
 require('dotenv-flow/config');
 const pool = require('../config/database');
 const { qualifyReferral } = require('../controllers/adminReferralTrackingController');
+const { completeReferralOffer } = require('../controllers/offersController');
 
 const getPendingPayments = async (req, res) => {
   try {
@@ -152,8 +153,14 @@ const approvePayment = async (req, res) => {
       await client.query('COMMIT');
       client.release();
 
-      // Trigger referral qualification logic after successful commit
-      if (orderData.referral_discount === 0) {
+      // Complete the offers-based referral reward first
+      const offersReferralResult = await completeReferralOffer(orderData.user_id, orderData.offer_id);
+      if (offersReferralResult.success) {
+        console.log('Offers referral completed:', offersReferralResult);
+      }
+
+      // Trigger legacy referral qualification logic only when the order did not use the offers referral
+      if (!offersReferralResult.success && orderData.referral_discount === 0) {
         const referralResult = await qualifyReferral(orderData.user_id, paymentData.order_id, orderData.final_amount);
         if (referralResult.success) {
           console.log('Referral qualified:', referralResult);

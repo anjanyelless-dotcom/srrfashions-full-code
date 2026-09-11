@@ -1,14 +1,336 @@
-.srfashion-about-us-page {
-  padding: 140px 0 80px;
-  min-height: 60vh;
-  background: #fff;
+/* About Us Page - Clean Responsive Implementation */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.srfashion-about-content {
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.srfashion-about-us-page {
+  min-height: 60vh;
+  background: #fff;
+  padding-top: 140px;
+  padding-bottom: 80px;
+}
+
+/* Main Container - Single Source of Truth */
+.srfashion-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: clamp(16px, 3vw, 40px);
+  padding-right: clamp(16px, 3vw, 40px);
+}
+
+/* Intro Section */
+.srfashion-intro-section {
+  max-width: 850px;
+  margin-bottom: 80px;
+}
+
+.srfashion-eyebrow {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #8B9E7A;
+  margin-bottom: 16px;
+}
+
+.srfashion-heading {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 600;
+  color: #111;
+  line-height: 1.2;
+  margin: 0 0 24px 0;
+}
+
+.srfashion-description {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  font-weight: 400;
+  color: #666;
+  line-height: 1.7;
+  margin: 0 0 32px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.srfashion-button {
+  display: inline-block;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+  background: #111;
+  padding: 14px 36px;
+  text-decoration: none;
+  border: none;
+  border-radius: 0;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  white-space: nowrap;
+}
+
+.srfashion-button:hover {
+  background: #8B9E7A;
+  color: #fff;
+}
+
+.srfashion-button:focus {
+  outline: 2px solid #8B9E7A;
+  outline-offset: 2px;
+}
+
+/* Hero Image Section */
+.srfashion-hero-section {
+  margin-bottom: 80px;
   width: 100%;
 }
 
-.srfashion-about-content h1,
-.srfashion-about-content h2 {
+.srfashion-hero-image-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.srfashion-hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center top;
+  max-height: 700px;
+}
+
+/* Secondary Content Section */
+.srfashion-secondary-section {
+  margin-bottom: 80px;
+  width: 100%;
+}
+
+.srfashion-secondary-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
+  gap: 60px;
+  align-items: center;
+  width: 100%;
+}
+
+.srfashion-secondary-image-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.srfashion-secondary-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center top;
+  max-height: 500px;
+}
+
+.srfashion-secondary-text {
+  max-width: 100%;
+}
+
+.srfashion-secondary-heading {
   font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  color: #111;
+  line-height: 1.2;
+  margin: 0 0 20px 0;
+}
+
+.srfashion-secondary-description {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  font-weight: 400;
+  color: #666;
+  line-height: 1.7;
+  margin: 0 0 32px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Browse by Style Section */
+.srfashion-browse-section {
+  margin-bottom: 80px;
+  width: 100%;
+}
+
+.srfashion-section-heading {
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  color: #111;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+}
+
+.srfashion-section-description {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  font-weight: 400;
+  color: #666;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Responsive Breakpoints */
+
+/* Tablet (768px - 1023px) */
+@media (max-width: 1024px) {
+  .srfashion-about-us-page {
+    padding-top: 120px;
+    padding-bottom: 60px;
+  }
+
+  .srfashion-intro-section {
+    margin-bottom: 60px;
+  }
+
+  .srfashion-hero-section {
+    margin-bottom: 60px;
+  }
+
+  .srfashion-secondary-section {
+    margin-bottom: 60px;
+  }
+
+  .srfashion-secondary-content {
+    gap: 40px;
+  }
+
+  .srfashion-hero-image {
+    max-height: 500px;
+  }
+
+  .srfashion-secondary-image {
+    max-height: 400px;
+  }
+}
+
+/* Mobile (320px - 767px) */
+@media (max-width: 768px) {
+  .srfashion-about-us-page {
+    padding-top: 100px;
+    padding-bottom: 50px;
+  }
+
+  .srfashion-intro-section {
+    max-width: 100%;
+    margin-bottom: 50px;
+  }
+
+  .srfashion-eyebrow {
+    font-size: 0.7rem;
+    margin-bottom: 12px;
+  }
+
+  .srfashion-heading {
+    margin-bottom: 20px;
+  }
+
+  .srfashion-description {
+    margin-bottom: 24px;
+  }
+
+  .srfashion-button {
+    padding: 12px 28px;
+    font-size: 0.7rem;
+  }
+
+  .srfashion-hero-section {
+    margin-bottom: 50px;
+  }
+
+  .srfashion-hero-image {
+    max-height: 400px;
+  }
+
+  .srfashion-secondary-section {
+    margin-bottom: 50px;
+  }
+
+  .srfashion-secondary-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .srfashion-secondary-text {
+    max-width: 100%;
+  }
+
+  .srfashion-secondary-image {
+    max-height: 350px;
+  }
+
+  .srfashion-browse-section {
+    margin-bottom: 50px;
+  }
+}
+
+/* Small Mobile (320px - 375px) */
+@media (max-width: 375px) {
+  .srfashion-about-us-page {
+    padding-top: 80px;
+    padding-bottom: 40px;
+  }
+
+  .srfashion-intro-section {
+    margin-bottom: 40px;
+  }
+
+  .srfashion-hero-section {
+    margin-bottom: 40px;
+  }
+
+  .srfashion-hero-image {
+    max-height: 300px;
+  }
+
+  .srfashion-secondary-section {
+    margin-bottom: 40px;
+  }
+
+  .srfashion-secondary-content {
+    gap: 24px;
+  }
+
+  .srfashion-secondary-image {
+    max-height: 280px;
+  }
+
+  .srfashion-browse-section {
+    margin-bottom: 40px;
+  }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .srfashion-container {
+    max-width: 1400px;
+  }
+}
+
+/* Laptop (1024px - 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .srfashion-container {
+    max-width: 1200px;
+  }
 }

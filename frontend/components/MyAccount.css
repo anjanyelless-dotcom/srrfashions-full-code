@@ -3,10 +3,11 @@
 .srfashion-my-account {
   background-color: #f9f9f9;
   padding: 0 0 3rem;
+  min-height: calc(100vh - 200px);
 }
 
 .srfashion-my-account .page-content {
-  padding-top: 2.5rem;
+  padding-top: 3rem;
   padding-bottom: 2.5rem;
 }
 
@@ -103,20 +104,47 @@
 
 .srfashion-my-account .woocommerce {
   max-width: 720px;
+  width: 100%;
   margin: 0 auto;
   background: #fff;
   border: 1px solid #e5e5e5;
   padding: 1.5rem;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Override theme's 50% width for login/register forms to ensure full-width consistent layout */
+.srfashion-my-account .woocommerce form.login,
+.srfashion-my-account .woocommerce form.register {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .thsm-popup-header {
   display: flex;
   margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+  flex: 0 0 auto;
 }
 
 .thsm-popup-content {
   max-width: 100%;
   margin: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.thsm-popup-content > * {
+  width: 100%;
 }
 
 .th-popup-tab {
@@ -154,8 +182,12 @@
   margin: 0 0 1.25rem;
 }
 
-.woocommerce-form {
+.woocommerce-form,
+.woocommerce-form-login,
+.woocommerce-form-register {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .woocommerce-form .form-row {
@@ -305,10 +337,22 @@
     padding: 0 0 2rem;
   }
 
+  .srfashion-my-account .page-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
   .srfashion-my-account .woocommerce {
     max-width: 100%;
     margin: 0 1rem;
     padding: 1.25rem;
+    min-height: 540px;
+  }
+
+  .srfashion-my-account .woocommerce form.login,
+  .srfashion-my-account .woocommerce form.register {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   .thsm-popup-header {
@@ -330,16 +374,62 @@
     align-items: flex-start;
     margin: 0 1rem 1.25rem;
   }
+
+  /* Ensure header is properly positioned on mobile My Account page */
+  .srfashion-my-account-page header {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .srfashion-my-account-page .responsive-main-header {
+    position: relative !important;
+  }
+}
+
+/* Tablet responsive styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .srfashion-my-account .page-content {
+    padding-top: 2.5rem;
+  }
+
+  .srfashion-my-account-page header {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .srfashion-my-account .woocommerce {
+    min-height: 480px;
+  }
 }
 
 /* On the My Account page the header should take up normal document flow
    so the page title sits below it instead of sliding underneath the
    absolutely-positioned transparent header. */
 .srfashion-my-account-page > header.zta-transparent-header,
-.srfashion-my-account-page > header.thsm-header {
-  position: relative;
+.srfashion-my-account-page > header.thsm-header,
+.srfashion-my-account-page header.zta-transparent-header,
+.srfashion-my-account-page header.thsm-header {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: auto !important;
 }
 
 .srfashion-my-account-page .srfashion-my-account .page-content {
-  padding-top: 1.5rem;
+  padding-top: 3rem;
+}
+
+/* Ensure header has proper height on My Account page */
+.srfashion-my-account-page header {
+  min-height: auto;
+}
+
+/* Add spacing between header and page content on My Account page */
+.srfashion-my-account-page #page {
+  padding-top: 0;
+}
+
+.srfashion-my-account-page .main-header,
+.srfashion-my-account-page .below-header {
+  position: relative !important;
 }

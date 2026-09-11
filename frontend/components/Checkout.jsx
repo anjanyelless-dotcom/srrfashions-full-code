@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useCart } from './CartContext.jsx';
+import { useOffers } from './OffersContext.jsx';
 import { createOrder, getPaymentSettings } from '../services/checkoutApi.js';
 import { getAddresses } from '../services/addressApi.js';
 import { formatPrice } from '../services/price.js';
@@ -11,6 +12,7 @@ function isValidAddressId(value) {
 
 export default function Checkout() {
   const { cart, subtotal, closeCart, fetchCart, clearCart } = useCart();
+  const { appliedOffer } = useOffers();
 
   const [loading, setLoading] = useState(true);
   const [cartLoading, setCartLoading] = useState(true);
@@ -73,9 +75,14 @@ export default function Checkout() {
     return filtered;
   }, [cart]);
 
-  const total = useMemo(() => {
+  const cartTotal = useMemo(() => {
     return finalCart.reduce((sum, item) => sum + (Number(item.price) || 0) * item.quantity, 0);
   }, [finalCart]);
+
+  const discount = appliedOffer?.discount || 0;
+  const discountedSubtotal = cartTotal - discount;
+  const shippingFee = discountedSubtotal >= 999 ? 0 : 50;
+  const total = discountedSubtotal + shippingFee;
 
   const disabledReason = useMemo(() => {
     if (placing) return 'Please wait while your order is being placed…';
@@ -102,7 +109,8 @@ export default function Checkout() {
     try {
       const res = await createOrder({
         address_id: Number(selectedAddress),
-        payment_method: 'UPI'
+        payment_method: 'UPI',
+        offer_type: appliedOffer?.offer?.type || appliedOffer?.offerType || undefined
       });
 
       console.log('Checkout response:', res);
@@ -220,6 +228,16 @@ export default function Checkout() {
               <span>Subtotal</span>
               <span>{formatPrice(subtotal)}</span>
             </div>
+            {appliedOffer && (
+              <div className="srfashion-checkout-row srfashion-checkout-discount">
+                <span>{appliedOffer.offer.title} discount</span>
+                <span>-{formatPrice(appliedOffer.discount)}</span>
+              </div>
+            )}
+            <div className="srfashion-checkout-row">
+              <span>Shipping</span>
+              <span>{shippingFee === 0 ? 'Free' : formatPrice(shippingFee)}</span>
+            </div>
             <div className="srfashion-checkout-row srfashion-checkout-total">
               <span>Total</span>
               <span>{formatPrice(total)}</span>
@@ -278,8 +296,8 @@ export default function Checkout() {
         <button
           className="srfashion-checkout-btn"
           onClick={handlePlaceOrder}
-          disabled={!!disabledReason}
-          title={disabledReason || 'Click to place your order and proceed to payment'}
+          disabled={!!disabledReason || placing}
+          title={placing ? 'Placing your order…' : (disabledReason || 'Click to place your order and proceed to payment')}
         >
           {placing ? 'Placing Order…' : 'Place Order & Proceed to Payment'}
         </button>

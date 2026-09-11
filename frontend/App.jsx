@@ -10,10 +10,13 @@ import ProductDetails from './components/ProductDetails.jsx';
 import Checkout from './components/Checkout.jsx';
 import Payment from './components/Payment.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
+import OffersDrawer from './components/OffersDrawer.jsx';
+import { useOffers } from './components/OffersContext.jsx';
 import Admin from './components/admin/index.jsx';
 import Wishlist from './components/Wishlist.jsx';
 import AboutUs from './components/AboutUs.jsx';
 import CashfreeTest from './components/CashfreeTest.jsx';
+import WhatsAppButton from './components/WhatsAppButton.jsx';
 import { useCart } from './components/CartContext.jsx';
 import { useWishlist } from './components/WishlistContext.jsx';
 import { formatPrice } from './services/price.js';
@@ -58,6 +61,7 @@ function App() {
   const [hash, setHash] = useState(window.location.hash);
   const { addToCart, openCart, totalQuantity, subtotal } = useCart();
   const { wishlist, wishlistCount, toggleWishlist } = useWishlist();
+  const { openOffers } = useOffers();
 
   useEffect(() => {
     const handleHashChange = () => setHash(window.location.hash);
@@ -78,12 +82,21 @@ function App() {
         'a[href*="product/"], a.woocommerce-LoopProduct-link, a.th-shopable-product-link, .elemento-product-title a'
       );
 
+      const offersTrigger = e.target.closest('.srfashion-offers-trigger');
+
       function goToProductPage(product) {
         if (product.id && product.id !== '0') {
           const slugMatch = (product.link || '').match(/product\/([^\/]+)\/index\.html/);
           const slug = slugMatch ? slugMatch[1] : `product-${product.id}`;
           window.location.hash = `#/product/${encodeURIComponent(slug)}/?id=${product.id}`;
         }
+      }
+
+      if (offersTrigger) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        openOffers();
+        return;
       }
 
       if (cartTrigger) {
@@ -212,6 +225,8 @@ function App() {
       </div>
       <Overlays />
       <CartDrawer />
+      <OffersDrawer />
+      <WhatsAppButton />
     </>
   );
 }
