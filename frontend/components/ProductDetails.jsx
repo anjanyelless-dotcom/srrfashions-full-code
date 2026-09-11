@@ -75,10 +75,18 @@ export default function ProductDetails() {
           .filter((v) => v.available)
           .reduce((sum, v) => sum + Number(v.stock_quantity || 0), 0);
 
+        const videoUrl = productData.video_url || '';
+        const mediaItems = [
+          ...resolvedImages.map((url, index) => ({ type: 'image', url, index })),
+          ...(videoUrl ? [{ type: 'video', url: videoUrl, index: resolvedImages.length }] : [])
+        ];
+
         setDetails({
           id: productData.id,
           title: productData.name || 'Product',
           images: resolvedImages,
+          videoUrl,
+          mediaItems,
           description: productData.description || '',
           category: productData.category_name || '',
           regularPrice: Number(productData.regular_price || productData.selling_price || 0),
@@ -153,7 +161,7 @@ export default function ProductDetails() {
   }, [details, selectedVariant]);
 
   const openLightbox = (index) => {
-    if (!details?.images?.length) return;
+    if (!details?.mediaItems?.length) return;
     setLightboxIndex(index);
   };
 
@@ -163,12 +171,12 @@ export default function ProductDetails() {
 
   const showPrevImage = () => {
     if (lightboxIndex === null) return;
-    setLightboxIndex((prev) => (prev - 1 + details.images.length) % details.images.length);
+    setLightboxIndex((prev) => (prev - 1 + details.mediaItems.length) % details.mediaItems.length);
   };
 
   const showNextImage = () => {
     if (lightboxIndex === null) return;
-    setLightboxIndex((prev) => (prev + 1) % details.images.length);
+    setLightboxIndex((prev) => (prev + 1) % details.mediaItems.length);
   };
 
   useEffect(() => {
@@ -304,36 +312,38 @@ export default function ProductDetails() {
           gap: '40px',
         }}
       >
-        {/* Product Images */}
-        <div className="srfashion-qv-images">
-          <div className="srfashion-qv-main-image">
-            <img
-              src={mainImage}
-              alt={details.title}
-              onClick={() => openLightbox(0)}
-              style={{ cursor: 'pointer', width: '100%', height: 'auto' }}
-            />
+        {/* Product Media Gallery */}
+        <div className="srfashion-qv-media-gallery">
+          <div className="srfashion-qv-media-grid">
+            {details.mediaItems.map((media, i) => (
+              <div
+                key={i}
+                className="srfashion-qv-media-item"
+                onClick={() => openLightbox(i)}
+              >
+                {media.type === 'image' ? (
+                  <img
+                    src={media.url}
+                    alt={`${details.title} ${i + 1}`}
+                    className="srfashion-qv-media-content"
+                  />
+                ) : (
+                  <div className="srfashion-qv-video-wrapper">
+                    <video
+                      src={media.url}
+                      className="srfashion-qv-media-content"
+                      controls
+                      playsInline
+                      preload="metadata"
+                    />
+                    <div className="srfashion-qv-video-overlay">
+                      <span className="srfashion-qv-video-icon">▶</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          {details.images.length > 1 && (
-            <div className="srfashion-qv-thumbnails">
-              {details.images.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt={`${details.title} thumbnail ${i + 1}`}
-                  onClick={() => setMainImage(img)}
-                  className={mainImage === img ? 'active' : ''}
-                  style={{
-                    width: '60px',
-                    height: '60px',
-                    objectFit: 'cover',
-                    cursor: 'pointer',
-                    border: mainImage === img ? '2px solid #111' : '1px solid #ddd',
-                  }}
-                />
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Product Info */}
@@ -436,7 +446,7 @@ export default function ProductDetails() {
 
       <WhatsAppButton productName={details.title} />
 
-      {lightboxIndex !== null && details?.images?.length > 0 && (
+      {lightboxIndex !== null && details?.mediaItems?.length > 0 && (
         <div
           className="srfashion-lightbox"
           onClick={(e) => {
@@ -457,39 +467,49 @@ export default function ProductDetails() {
               type="button"
               className="srfashion-lightbox-prev"
               onClick={showPrevImage}
-              aria-label="Previous image"
-              disabled={details.images.length <= 1}
+              aria-label="Previous media"
+              disabled={details.mediaItems.length <= 1}
             >
               ‹
             </button>
 
             <div className="srfashion-lightbox-image-wrapper">
-              <img
-                src={details.images[lightboxIndex]}
-                alt={details.title}
-                className="srfashion-lightbox-image"
-              />
+              {details.mediaItems[lightboxIndex].type === 'image' ? (
+                <img
+                  src={details.mediaItems[lightboxIndex].url}
+                  alt={details.title}
+                  className="srfashion-lightbox-image"
+                />
+              ) : (
+                <video
+                  src={details.mediaItems[lightboxIndex].url}
+                  className="srfashion-lightbox-video"
+                  controls
+                  playsInline
+                  autoPlay
+                />
+              )}
             </div>
 
             <button
               type="button"
               className="srfashion-lightbox-next"
               onClick={showNextImage}
-              aria-label="Next image"
-              disabled={details.images.length <= 1}
+              aria-label="Next media"
+              disabled={details.mediaItems.length <= 1}
             >
               ›
             </button>
 
-            {details.images.length > 1 && (
+            {details.mediaItems.length > 1 && (
               <div className="srfashion-lightbox-indicators">
-                {details.images.map((img, i) => (
+                {details.mediaItems.map((media, i) => (
                   <button
                     key={i}
                     type="button"
                     className={`srfashion-lightbox-dot ${i === lightboxIndex ? 'active' : ''}`}
                     onClick={() => setLightboxIndex(i)}
-                    aria-label={`Go to image ${i + 1}`}
+                    aria-label={`Go to media ${i + 1}`}
                   />
                 ))}
               </div>
