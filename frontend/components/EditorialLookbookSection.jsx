@@ -49,22 +49,12 @@ const EditorialLookbookSectionHtml = `
                                 <div class="elementor-element elementor-element-7f37be8 elementor-widget elementor-widget-button"
                                     data-id="7f37be8" data-element_type="widget" data-e-type="widget"
                                     data-widget_type="button.default">
-                                    <a class="elementor-button elementor-button-link elementor-size-sm elementor-animation-shrink"
-                                        href="shop/index.html">
-                                        <span class="elementor-button-content-wrapper">
-                                            <span class="elementor-button-text">SHOP NOW</span>
-                                        </span>
-                                    </a>
+                                 
                                 </div>
                                 <div class="elementor-element elementor-element-7daebab elementor-widget elementor-widget-button"
                                     data-id="7daebab" data-element_type="widget" data-e-type="widget"
                                     data-widget_type="button.default">
-                                    <a class="elementor-button elementor-button-link elementor-size-sm elementor-animation-shrink"
-                                        href="product-category/dresses/index.html">
-                                        <span class="elementor-button-content-wrapper">
-                                            <span class="elementor-button-text">VIEW LOOKBOOK</span>
-                                        </span>
-                                    </a>
+                                
                                 </div>
                             </div>
                         </div>

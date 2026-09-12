@@ -60,7 +60,7 @@ const FeaturedSeasonSectionHtml = `
                             <div class="elementor-element elementor-element-0afab70 elementor-widget elementor-widget-heading"
                                 data-id="0afab70" data-element_type="widget" data-e-type="widget"
                                 data-widget_type="heading.default">
-                                <h2 class="elementor-heading-title elementor-size-default">Start From ₹89</h2>
+                                <h2 class="elementor-heading-title elementor-size-default">Start From ₹589</h2>
                             </div>
                         </div>
                         <div class="elementor-element elementor-element-b9e2592 e-con-full e-flex e-con e-child"
@@ -86,7 +86,7 @@ const FeaturedSeasonSectionHtml = `
                                     <div class="elementor-element elementor-element-3bb71a6 elementor-widget elementor-widget-heading"
                                         data-id="3bb71a6" data-element_type="widget" data-e-type="widget"
                                         data-widget_type="heading.default">
-                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹49</h2>
+                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹549</h2>
                                     </div>
                                 </div>
                                 <div class="elementor-element elementor-element-7e4bfe0 e-con-full e-flex e-con e-child"
@@ -108,7 +108,7 @@ const FeaturedSeasonSectionHtml = `
                                     <div class="elementor-element elementor-element-6d54fa5 elementor-widget elementor-widget-heading"
                                         data-id="6d54fa5" data-element_type="widget" data-e-type="widget"
                                         data-widget_type="heading.default">
-                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹79</h2>
+                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹679</h2>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@ const FeaturedSeasonSectionHtml = `
                                     <div class="elementor-element elementor-element-2b7b403 elementor-widget elementor-widget-heading"
                                         data-id="2b7b403" data-element_type="widget" data-e-type="widget"
                                         data-widget_type="heading.default">
-                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹75</h2>
+                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹475</h2>
                                     </div>
                                 </div>
                                 <div class="elementor-element elementor-element-e2ca40f e-con-full e-flex e-con e-child"
@@ -152,7 +152,7 @@ const FeaturedSeasonSectionHtml = `
                                     <div class="elementor-element elementor-element-8d3a96c elementor-widget elementor-widget-heading"
                                         data-id="8d3a96c" data-element_type="widget" data-e-type="widget"
                                         data-widget_type="heading.default">
-                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹59</h2>
+                                        <h2 class="elementor-heading-title elementor-size-default">Start From ₹459</h2>
                                     </div>
                                 </div>
                             </div>

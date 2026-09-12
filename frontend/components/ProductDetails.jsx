@@ -456,7 +456,7 @@ export default function ProductDetails() {
             </div>
           )}
 
-          <div className="srfashion-qv-actions">
+          <div className="srfashion-qv-actions" style={{marginTop:'10px'}}>
             <button
               type="button"
               className="single_add_to_cart_button button alt"

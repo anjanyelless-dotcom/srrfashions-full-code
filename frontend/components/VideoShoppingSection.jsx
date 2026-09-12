@@ -2,54 +2,54 @@ import React, { useEffect } from 'react';
 import RawHtmlTag from './RawHtmlTag.jsx';
 
 function initVideoSwipers() {
-  if (window.__thShopableSliderInited) return;
-  if (typeof window.Swiper === 'undefined') {
-    // Swiper library not loaded yet; retry shortly
-    setTimeout(initVideoSwipers, 100);
-    return;
-  }
+    if (window.__thShopableSliderInited) return;
+    if (typeof window.Swiper === 'undefined') {
+        // Swiper library not loaded yet; retry shortly
+        setTimeout(initVideoSwipers, 100);
+        return;
+    }
 
-  const slider = document.querySelector('.th-shopable-slider');
-  if (!slider) return;
+    const slider = document.querySelector('.th-shopable-slider');
+    if (!slider) return;
 
-  const slides = Number(slider.dataset.slides) || 5;
-  const gap = Number(slider.dataset.gap) || 15;
-  const hasNav = slider.dataset.nav === 'true';
-  const shouldAutoplay = slider.dataset.autoplay === 'true';
+    const slides = Number(slider.dataset.slides) || 5;
+    const gap = Number(slider.dataset.gap) || 15;
+    const hasNav = slider.dataset.nav === 'true';
+    const shouldAutoplay = slider.dataset.autoplay === 'true';
 
-  new window.Swiper(slider, {
-    slidesPerView: slides,
-    spaceBetween: gap,
-    loop: true,
-    speed: 800,
-    cssMode: false,
-    observer: true,
-    observeParents: true,
-    observeSlideChildren: true,
-    watchOverflow: true,
-    updateOnWindowResize: true,
-    autoplay: shouldAutoplay
-      ? { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }
-      : false,
-    navigation: hasNav
-      ? {
-          nextEl: slider.querySelector('.swiper-button-next'),
-          prevEl: slider.querySelector('.swiper-button-prev'),
-        }
-      : false,
-    breakpoints: {
-      0: { slidesPerView: 1.2 },
-      640: { slidesPerView: Math.min(slides, 2) },
-      1024: { slidesPerView: slides },
-    },
-    on: {
-      init(e) {
-        requestAnimationFrame(() => e.update());
-      },
-    },
-  });
+    new window.Swiper(slider, {
+        slidesPerView: slides,
+        spaceBetween: gap,
+        loop: true,
+        speed: 800,
+        cssMode: false,
+        observer: true,
+        observeParents: true,
+        observeSlideChildren: true,
+        watchOverflow: true,
+        updateOnWindowResize: true,
+        autoplay: shouldAutoplay
+            ? { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }
+            : false,
+        navigation: hasNav
+            ? {
+                nextEl: slider.querySelector('.swiper-button-next'),
+                prevEl: slider.querySelector('.swiper-button-prev'),
+            }
+            : false,
+        breakpoints: {
+            0: { slidesPerView: 1.2 },
+            640: { slidesPerView: Math.min(slides, 2) },
+            1024: { slidesPerView: slides },
+        },
+        on: {
+            init(e) {
+                requestAnimationFrame(() => e.update());
+            },
+        },
+    });
 
-  window.__thShopableSliderInited = true;
+    window.__thShopableSliderInited = true;
 }
 
 const VideoShoppingSectionHtml = `
@@ -108,7 +108,7 @@ const VideoShoppingSectionHtml = `
                                                     <video class="th-shopable-video" playsinline muted
                                                         preload="metadata">
                                                         <source
-                                                            src="wp-content/uploads/sites/383/2026/07/Woman-with-hair-in-bun-wearing-black-sunglasses-and-white-crop-top.mp4"
+                                                            src="https://res.cloudinary.com/xs2v2pnq/video/upload/v1789143957/Create_live_video_showing_address_20260911214802.mp4"
                                                             type="video/mp4">
                                                     </video>
                                                     <div class="th-video-mute-toggle is-muted">
@@ -143,69 +143,7 @@ const VideoShoppingSectionHtml = `
                                                 </div>
                                                 <div class="th-shopable-product-bar swiper th-product-swiper">
 
-                                                    <div class="swiper-wrapper">
-
-
-                                                        <div class="swiper-slide">
-
-
-
-                                                            <div class="th-shopable-product-content">
-
-                                                                <div class="th-shopable-cnt">
-
-                                                                    <a href="product/poly-neck-tee/index.html"
-                                                                        class="th-shopable-product-link">
-                                                                        <span class="title">
-                                                                            Poly Neck Tee </span>
-                                                                    </a>
-
-                                                                    <span class="price">
-                                                                        <span
-                                                                            class="woocommerce-Price-amount amount"><span
-                                                                                class="woocommerce-Price-currencySymbol">&#8377;</span>119.00</span>
-                                                                    </span>
-
-                                                                </div>
-
-                                                                <div class="th-shopable-btn-wrap">
-
-                                                                    <a href="product/poly-neck-tee/index.html"
-                                                                        data-product_id="90" data-product_sku="tee34f"
-                                                                        data-quantity="1"
-                                                                        class="product_type_simple add_to_cart_button ajax_add_to_cart th-shopable-btn"
-                                                                        rel="nofollow">
-
-                                                                        <span class="cart-icon">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="18" height="18"
-                                                                                viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor" stroke-width="2">
-                                                                                <circle cx="9" cy="21" r="1"></circle>
-                                                                                <circle cx="20" cy="21" r="1"></circle>
-                                                                                <path
-                                                                                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </span>
-
-                                                                        <span class="check-icon">
-                                                                            <svg viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor">
-                                                                                <path d="M20 6L9 17L4 12" />
-                                                                            </svg>
-                                                                        </span>
-
-                                                                    </a>
-
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-
-                                                    </div>
+                                              
 
 
 
@@ -232,7 +170,7 @@ const VideoShoppingSectionHtml = `
                                                     <video class="th-shopable-video" playsinline muted
                                                         preload="metadata">
                                                         <source
-                                                            src="wp-content/uploads/sites/383/2026/07/Woman-with-wavy-brown-hair-wearing-teal-ribbed-crop-top-and-distressed-denim-shorts-with-brown-bag.mp4"
+                                                            src="https://res.cloudinary.com/xs2v2pnq/video/upload/v1789205838/Woman_standing_on_woven_mat_20260912145927.mp4"
                                                             type="video/mp4">
                                                     </video>
                                                     <div class="th-video-mute-toggle is-muted">
@@ -267,66 +205,7 @@ const VideoShoppingSectionHtml = `
                                                 </div>
                                                 <div class="th-shopable-product-bar swiper th-product-swiper">
 
-                                                    <div class="swiper-wrapper">
-
-
-                                                        <div class="swiper-slide">
-                                                            <div class="th-shopable-product-content">
-
-                                                                <div class="th-shopable-cnt">
-
-                                                                    <a href="product/sunset-tee/index.html"
-                                                                        class="th-shopable-product-link">
-                                                                        <span class="title">
-                                                                            Sunset Tee </span>
-                                                                    </a>
-
-                                                                    <span class="price">
-                                                                        <span
-                                                                            class="woocommerce-Price-amount amount"><span
-                                                                                class="woocommerce-Price-currencySymbol">&#8377;</span>99.00</span>
-                                                                    </span>
-
-                                                                </div>
-
-                                                                <div class="th-shopable-btn-wrap">
-
-                                                                    <a href="indexa847.html?add-to-cart=91"
-                                                                        data-product_id="91" data-product_sku="te23v"
-                                                                        data-quantity="1"
-                                                                        class="product_type_simple add_to_cart_button ajax_add_to_cart th-shopable-btn"
-                                                                        rel="nofollow">
-
-                                                                        <span class="cart-icon">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="18" height="18"
-                                                                                viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor" stroke-width="2">
-                                                                                <circle cx="9" cy="21" r="1"></circle>
-                                                                                <circle cx="20" cy="21" r="1"></circle>
-                                                                                <path
-                                                                                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </span>
-
-                                                                        <span class="check-icon">
-                                                                            <svg viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor">
-                                                                                <path d="M20 6L9 17L4 12" />
-                                                                            </svg>
-                                                                        </span>
-
-                                                                    </a>
-
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-
-                                                    </div>
+                                                 
 
 
 
@@ -353,7 +232,7 @@ const VideoShoppingSectionHtml = `
                                                     <video class="th-shopable-video" playsinline muted
                                                         preload="metadata">
                                                         <source
-                                                            src="wp-content/uploads/sites/383/2026/07/Woman-with-long-dark-hair-wearing-beige-ribbed-crop-top-with-buttons.mp4"
+                                                            src="https://res.cloudinary.com/xs2v2pnq/video/upload/v1789205831/Woman_smiling_in_anarkali_suit_20260912150511.mp4"
                                                             type="video/mp4">
                                                     </video>
                                                     <div class="th-video-mute-toggle is-muted">
@@ -388,75 +267,7 @@ const VideoShoppingSectionHtml = `
                                                 </div>
                                                 <div class="th-shopable-product-bar swiper th-product-swiper">
 
-                                                    <div class="swiper-wrapper">
-
-
-                                                        <div class="swiper-slide">
-
-
-
-                                                            <div class="th-shopable-product-content">
-
-                                                                <div class="th-shopable-cnt">
-
-                                                                    <a href="product/lounge-top/index.html"
-                                                                        class="th-shopable-product-link">
-                                                                        <span class="title">
-                                                                            Lounge Top </span>
-                                                                    </a>
-
-                                                                    <span class="price">
-                                                                        <span class="woocommerce-Price-amount amount"
-                                                                            aria-hidden="true"><span
-                                                                                class="woocommerce-Price-currencySymbol">&#8377;</span>49.00</span>
-                                                                        <span aria-hidden="true">&ndash;</span> <span
-                                                                            class="woocommerce-Price-amount amount"
-                                                                            aria-hidden="true"><span
-                                                                                class="woocommerce-Price-currencySymbol">&#8377;</span>99.00</span><span
-                                                                            class="screen-reader-text">Price range:
-                                                                            &#8377;49.00 through &#8377;99.00</span>
-                                                                    </span>
-
-                                                                </div>
-
-                                                                <div class="th-shopable-btn-wrap">
-
-                                                                    <a href="product/lounge-top/index.html"
-                                                                        data-product_id="130"
-                                                                        data-product_sku="Lounge444" data-quantity="1"
-                                                                        class="product_type_simple add_to_cart_button ajax_add_to_cart th-shopable-btn"
-                                                                        rel="nofollow">
-
-                                                                        <span class="cart-icon">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="18" height="18"
-                                                                                viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor" stroke-width="2">
-                                                                                <circle cx="9" cy="21" r="1"></circle>
-                                                                                <circle cx="20" cy="21" r="1"></circle>
-                                                                                <path
-                                                                                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </span>
-
-                                                                        <span class="check-icon">
-                                                                            <svg viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor">
-                                                                                <path d="M20 6L9 17L4 12" />
-                                                                            </svg>
-                                                                        </span>
-
-                                                                    </a>
-
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-
-                                                    </div>
+                                          
 
 
 
@@ -483,7 +294,7 @@ const VideoShoppingSectionHtml = `
                                                     <video class="th-shopable-video" playsinline muted
                                                         preload="metadata">
                                                         <source
-                                                            src="wp-content/uploads/sites/383/2026/07/Woman-with-blonde-curly-hair-wearing-blue-ribbed-crop-top.mp4"
+                                                            src="https://res.cloudinary.com/xs2v2pnq/video/upload/v1789206869/Woman_posing_in_traditional_outfit_20260912152356.mp4"
                                                             type="video/mp4">
                                                     </video>
                                                     <div class="th-video-mute-toggle is-muted">
@@ -517,80 +328,6 @@ const VideoShoppingSectionHtml = `
 
                                                 </div>
                                                 <div class="th-shopable-product-bar swiper th-product-swiper">
-
-                                                    <div class="swiper-wrapper">
-
-
-                                                        <div class="swiper-slide">
-
-
-
-
-                                                            <div class="th-shopable-product-content">
-
-                                                                <div class="th-shopable-cnt">
-
-                                                                    <a href="product/full-sleeve-tee/index.html"
-                                                                        class="th-shopable-product-link">
-                                                                        <span class="title">
-                                                                            Full Sleeve Tee </span>
-                                                                    </a>
-
-                                                                    <span class="price">
-                                                                        <del aria-hidden="true"><span
-                                                                                class="woocommerce-Price-amount amount"><span
-                                                                                    class="woocommerce-Price-currencySymbol">&#8377;</span>119.00</span></del>
-                                                                        <span class="screen-reader-text">Original price
-                                                                            was: &#8377;119.00.</span><ins
-                                                                            aria-hidden="true"><span
-                                                                                class="woocommerce-Price-amount amount"><span
-                                                                                    class="woocommerce-Price-currencySymbol">&#8377;</span>102.00</span></ins><span
-                                                                            class="screen-reader-text">Current price is:
-                                                                            &#8377;102.00.</span> </span>
-
-                                                                </div>
-
-                                                                <div class="th-shopable-btn-wrap">
-
-                                                                    <a href="indexeb71.html?add-to-cart=132"
-                                                                        data-product_id="132" data-product_sku="tee474"
-                                                                        data-quantity="1"
-                                                                        class="product_type_simple add_to_cart_button ajax_add_to_cart th-shopable-btn"
-                                                                        rel="nofollow">
-
-                                                                        <span class="cart-icon">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="18" height="18"
-                                                                                viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor" stroke-width="2">
-                                                                                <circle cx="9" cy="21" r="1"></circle>
-                                                                                <circle cx="20" cy="21" r="1"></circle>
-                                                                                <path
-                                                                                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </span>
-
-                                                                        <span class="check-icon">
-                                                                            <svg viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor">
-                                                                                <path d="M20 6L9 17L4 12" />
-                                                                            </svg>
-                                                                        </span>
-
-                                                                    </a>
-
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-
-                                                    </div>
-
-
-
 
                                                 </div>
 
@@ -614,7 +351,7 @@ const VideoShoppingSectionHtml = `
                                                     <video class="th-shopable-video" playsinline muted
                                                         preload="metadata">
                                                         <source
-                                                            src="wp-content/uploads/sites/383/2026/07/Woman-with-curly-hair-in-ponytail-wearing-gray-ribbed-halter-crop-top-and-black-bottoms.mp4"
+                                                            src="https://res.cloudinary.com/xs2v2pnq/video/upload/v1789204805/Woman_showcasing_maroon_ethnic_suit_20260912143515.mp4"
                                                             type="video/mp4">
                                                     </video>
                                                     <div class="th-video-mute-toggle is-muted">
@@ -649,77 +386,6 @@ const VideoShoppingSectionHtml = `
                                                 </div>
                                                 <div class="th-shopable-product-bar swiper th-product-swiper">
 
-                                                    <div class="swiper-wrapper">
-
-
-                                                        <div class="swiper-slide">
-
-
-
-
-                                                            <div class="th-shopable-product-content">
-
-                                                                <div class="th-shopable-cnt">
-
-                                                                    <a href="product/sculpt-high-top/index.html"
-                                                                        class="th-shopable-product-link">
-                                                                        <span class="title">
-                                                                            Sculpt High Top </span>
-                                                                    </a>
-
-                                                                    <span class="price">
-                                                                        <span class="woocommerce-Price-amount amount"
-                                                                            aria-hidden="true"><span
-                                                                                class="woocommerce-Price-currencySymbol">&#8377;</span>136.00</span>
-                                                                        <span aria-hidden="true">&ndash;</span> <span
-                                                                            class="woocommerce-Price-amount amount"
-                                                                            aria-hidden="true"><span
-                                                                                class="woocommerce-Price-currencySymbol">&#8377;</span>188.00</span><span
-                                                                            class="screen-reader-text">Price range:
-                                                                            &#8377;136.00 through &#8377;188.00</span>
-                                                                    </span>
-
-                                                                </div>
-
-                                                                <div class="th-shopable-btn-wrap">
-
-                                                                    <a href="product/sculpt-high-top/index.html"
-                                                                        data-product_id="94"
-                                                                        data-product_sku="highnecktop320"
-                                                                        data-quantity="1"
-                                                                        class="product_type_simple add_to_cart_button ajax_add_to_cart th-shopable-btn"
-                                                                        rel="nofollow">
-
-                                                                        <span class="cart-icon">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="18" height="18"
-                                                                                viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor" stroke-width="2">
-                                                                                <circle cx="9" cy="21" r="1"></circle>
-                                                                                <circle cx="20" cy="21" r="1"></circle>
-                                                                                <path
-                                                                                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </span>
-
-                                                                        <span class="check-icon">
-                                                                            <svg viewBox="0 0 24 24" fill="none"
-                                                                                stroke="currentColor">
-                                                                                <path d="M20 6L9 17L4 12" />
-                                                                            </svg>
-                                                                        </span>
-
-                                                                    </a>
-
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-
-                                                    </div>
 
 
 
@@ -746,35 +412,7 @@ const VideoShoppingSectionHtml = `
                             <div id="th-shopable-popup" class="th-shopable-popup">
                                 <button class="th-popup-close">&times;</button>
 
-                                <div class="th-popup-main">
-                                    <!-- Video Side -->
-                                    <div class="th-video-reel-container">
-                                        <div class="swiper th-video-swiper">
-                                            <div class="swiper-wrapper" id="th-video-wrapper"></div>
-                                        </div>
-
-                                        <div class="th-video-nav">
-                                            <button class="th-nav-arrow th-prev" type="button">
-                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M6 15L12 9L18 15" stroke="currentColor" stroke-width="2.5"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
-                                            <button class="th-nav-arrow th-next" type="button">
-                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2.5"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Content Side -->
-                                    <div class="th-side-panel"
-                                        style="--s1-bg-color: #ffffff91; --s1-border-style: solid; --s1-border-color: transparent; --s1-border-top: 0px; --s1-border-right: 0px; --s1-border-bottom: 0px; --s1-border-left: 0px; --s1-radius-top: 10px; --s1-radius-right: 10px; --s1-radius-bottom: 10px; --s1-radius-left: 10px; --s1-title-color: #111; --s1-price-color: #111; --s1-cart-bg: #000000; --s1-cart-color: #fff; --s1-play-bg: #00000073; --s1-play-color: #fff; --s1-progress-color: #fff;">
-                                        <div id="popup-content" class="th-product-content"></div>
-                                    </div>
-                                </div>
+                            
                             </div>
 
                         </div>
@@ -782,16 +420,16 @@ const VideoShoppingSectionHtml = `
                 </div>
             `;
 const VideoShoppingSectionAttribs = {
-  "className": "elementor-element elementor-element-4b58cde e-flex e-con-boxed e-con e-parent",
-  "data-id": "4b58cde",
-  "data-element_type": "container",
-  "data-e-type": "container"
+    "className": "elementor-element elementor-element-4b58cde e-flex e-con-boxed e-con e-parent",
+    "data-id": "4b58cde",
+    "data-element_type": "container",
+    "data-e-type": "container"
 };
 
 export default function VideoShoppingSection() {
-  useEffect(() => {
-    initVideoSwipers();
-  }, []);
+    useEffect(() => {
+        initVideoSwipers();
+    }, []);
 
-  return <RawHtmlTag tag="div" attribs={VideoShoppingSectionAttribs} html={VideoShoppingSectionHtml} />;
+    return <RawHtmlTag tag="div" attribs={VideoShoppingSectionAttribs} html={VideoShoppingSectionHtml} />;
 }
