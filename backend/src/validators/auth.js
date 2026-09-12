@@ -84,7 +84,9 @@ const validateProfileUpdate = (data) => {
       const dob = new Date(data.date_of_birth);
       if (isNaN(dob.getTime())) {
         errors.push('Invalid date of birth');
-      } else if (dob > new Date()) {
+      } else if (dob.getTime() > Date.now() + 14 * 60 * 60 * 1000) {
+        // +14h buffer: a YYYY-MM-DD dob is parsed as UTC midnight, so "today"
+        // in timezones ahead of UTC (e.g. IST +5:30) must not be rejected.
         errors.push('Date of birth cannot be in the future');
       }
     }
