@@ -1,7 +1,7 @@
 import React from 'react';
 import RawHtmlTag from './RawHtmlTag.jsx';
-
-const FeaturedSeasonSectionHtml = `
+const FeaturedSeasonSectionHtml = ``;
+const FeaturedSeasonSectionHtml1 = `
                 <div class="e-con-inner">
                     <div class="elementor-element elementor-element-576e0ba e-con-full e-flex e-con e-child"
                         data-id="576e0ba" data-element_type="container" data-e-type="container">
