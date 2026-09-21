@@ -16,10 +16,11 @@ export default function PageContent() {
   return (
     <div {...wpPageAttribs}>
       <HeroSection />
+           <JustLandedSection />
       <FeaturedSeasonSection />
       <VideoShoppingSection />
       <EditorialLookbookSection />
-      <JustLandedSection />
+ 
       <BrandStorySection />
     </div>
   );

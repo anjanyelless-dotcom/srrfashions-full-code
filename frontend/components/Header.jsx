@@ -8,9 +8,32 @@ const NAV_ITEMS = [
   { label: 'Contact Us', href: '#contact-us' },
 ];
 
-const headerAttribs = {
-  className: 'thsm-header zta-transparent-header'
-};
+const getHeaderAttribs = (isScrolled) => ({
+  className: `thsm-header zta-transparent-header ${
+    isScrolled ? 'scrolled' : ''
+  }`,
+  style: {
+    // Initial header — matches the warm banner tones
+    backgroundColor: isScrolled ? '#F3E1CC' : '#C99F78',
+
+    // Slightly darker border for the initial state
+    borderBottom: isScrolled
+      ? '1px solid #D8C2AA'
+      : '1px solid #B98B64',
+
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+
+    transition:
+      'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
+
+    // Soft shadow only after scrolling
+    boxShadow: isScrolled
+      ? '0 4px 18px rgba(80, 50, 30, 0.08)'
+      : 'none'
+  }
+});
 
 const mobileMenuStyles = {
   overlay: {
@@ -19,71 +42,112 @@ const mobileMenuStyles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0, 0, 0, 0.55)',
+    background: 'rgba(45, 28, 18, 0.55)',
     zIndex: 11000,
     display: 'flex',
     justifyContent: 'flex-end',
     animation: 'overlayFadeIn 0.25s ease'
   },
+
   menu: {
     width: '80%',
     maxWidth: '320px',
     height: '100%',
     minHeight: '100vh',
-    background: '#fff',
+
+    // Warm cream instead of pure white
+    background: '#F8F1E8',
+
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
+
+    boxShadow: '-4px 0 20px rgba(80, 50, 30, 0.15)',
+
     animation: 'slideIn 0.25s ease',
+
     overflowY: 'auto',
     zIndex: 11001
   },
+
   header: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+
     padding: '1.25rem',
-    borderBottom: '1px solid #f0f0f0',
+
+    borderBottom: '1px solid #E3D0BB',
+
     flexShrink: 0
   },
+
   title: {
-    fontFamily: '"Cormorant Garamond", Georgia, "Times New Roman", serif',
+    fontFamily:
+      '"Cormorant Garamond", Georgia, "Times New Roman", serif',
+
     fontSize: '1.25rem',
     fontWeight: 600,
-    color: '#111'
+
+    // Deep green to match SRR branding
+    color: '#173B35'
   },
+
   close: {
     width: '44px',
     height: '44px',
+
     border: 'none',
-    background: '#f5f5f5',
-    color: '#111',
+
+    // Soft warm beige
+    background: '#E8D2BB',
+
+    color: '#173B35',
+
     fontSize: '1.5rem',
     lineHeight: 1,
+
     cursor: 'pointer',
+
     borderRadius: '50%',
+
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'background-color 0.2s ease'
+
+    transition:
+      'background-color 0.2s ease, color 0.2s ease'
   },
+
   nav: {
     display: 'flex',
     flexDirection: 'column',
+
     padding: '0.75rem 0',
+
     flex: '1 1 auto'
   },
+
   link: {
     fontFamily: '"Montserrat", sans-serif',
+
     fontSize: '0.875rem',
     fontWeight: 500,
-    color: '#111',
+
+    // Same deep green used in the banner/logo
+    color: '#173B35',
+
     textDecoration: 'none',
     textTransform: 'uppercase',
+
     letterSpacing: '0.5px',
+
     padding: '1.1rem 1.25rem',
-    borderBottom: '1px solid #f5f5f5',
-    transition: 'background-color 0.2s ease, color 0.2s ease',
+
+    borderBottom: '1px solid #E9DCCF',
+
+    transition:
+      'background-color 0.2s ease, color 0.2s ease',
+
     outline: 'none'
   }
 };
@@ -175,10 +239,11 @@ function MobileMenu({ isOpen, onClose }) {
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const headerRef = useRef(null);
 
   const desktopHeaderHtml = `
-            <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
             <div class="main-header center-menu none cnv-none left-menu linkeffect-2 mhdrseven">
                 <div class="container">
                     <div class="desktop-main-header">
@@ -423,9 +488,19 @@ export default function Header() {
     };
   }, []);
 
+  // Handle scroll behavior for header background
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div ref={headerRef}>
-      <RawHtmlTag tag="header" attribs={headerAttribs} html={combinedHtml} />
+      <RawHtmlTag tag="header" attribs={getHeaderAttribs(isScrolled)} html={combinedHtml} />
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       <style>{`
         @keyframes overlayFadeIn {
