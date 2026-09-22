@@ -680,25 +680,6 @@ iframe {
     }
 }
 
-/* Hero section */
-@media (max-width: 480px) {
-    .srr-hero-section {
-        min-height: 280px !important;
-    }
-}
-
-@media (max-width: 360px) {
-    .srr-hero-section {
-        min-height: 240px !important;
-    }
-}
-
-@media (max-width: 320px) {
-    .srr-hero-section {
-        min-height: 220px !important;
-    }
-}
-
 /* Product grid */
 @media (max-width: 1024px) {
     .elementor-13 .elementor-element-a3af386 .elemento-addons-advance-product,
