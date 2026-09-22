@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { getProductDetails } from '../services/productApi.js';
 import { addToCartApi } from '../services/cartApi.js';
 import { useCart } from './CartContext.jsx';
@@ -12,6 +12,8 @@ function resolveUrl(src) {
   return src;
 }
 
+const PENDING_PRODUCT_KEY = 'srfashion_pendingProductSelection';
+
 function getProductIdFromHash() {
   const hash = window.location.hash || '';
   const queryStart = hash.indexOf('?');
@@ -20,9 +22,22 @@ function getProductIdFromHash() {
   return params.get('id');
 }
 
+function getPendingSelection() {
+  try {
+    const raw = sessionStorage.getItem(PENDING_PRODUCT_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
 export default function ProductDetails() {
   const productId = getProductIdFromHash();
   const { fetchCart } = useCart();
+  const pendingSelection = getPendingSelection();
+  const isPendingForProduct =
+    pendingSelection && String(pendingSelection.productId) === String(productId);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -30,9 +45,17 @@ export default function ProductDetails() {
   const [adding, setAdding] = useState(false);
   const [details, setDetails] = useState(null);
   const [mainImage, setMainImage] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
-  const [selectedSize, setSelectedSize] = useState('');
-  const [qty, setQty] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(
+    isPendingForProduct ? pendingSelection.color || '' : ''
+  );
+  const [selectedSize, setSelectedSize] = useState(
+    isPendingForProduct ? pendingSelection.size || '' : ''
+  );
+  const [qty, setQty] = useState(
+    isPendingForProduct && Number(pendingSelection.quantity) > 0
+      ? Number(pendingSelection.quantity)
+      : 1
+  );
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
@@ -55,9 +78,11 @@ export default function ProductDetails() {
     setLoading(true);
     setError('');
     setDetails(null);
-    setSelectedColor('');
-    setSelectedSize('');
-    setQty(1);
+    if (!isPendingForProduct) {
+      setSelectedColor('');
+      setSelectedSize('');
+      setQty(1);
+    }
 
     getProductDetails(productId)
       .then((data) => {
@@ -112,9 +137,25 @@ export default function ProductDetails() {
       });
   }, [productId]);
 
+  // When the color changes, keep the already-selected size if it is still
+  // valid for the new color. This preserves restored selections after login.
   useEffect(() => {
-    setSelectedSize('');
-  }, [selectedColor]);
+    if (!details || !selectedColor) return;
+    if (selectedSize && !enabledSizes.includes(selectedSize)) {
+      setSelectedSize('');
+    }
+  }, [selectedColor, selectedSize, enabledSizes, details]);
+
+  // Reset any restored selection that is no longer available for this product.
+  useEffect(() => {
+    if (!details) return;
+    if (selectedColor && !enabledColors.includes(selectedColor)) {
+      setSelectedColor('');
+    }
+    if (selectedSize && !enabledSizes.includes(selectedSize)) {
+      setSelectedSize('');
+    }
+  }, [details, enabledColors, enabledSizes, selectedColor, selectedSize]);
 
   const enabledColors = useMemo(() => {
     if (!details?.variants?.length) return [];
@@ -201,6 +242,32 @@ export default function ProductDetails() {
     return Math.round(((details.regularPrice - details.sellingPrice) / details.regularPrice) * 100);
   }, [details]);
 
+  const savePendingSelection = (action = 'addToCart') => {
+    try {
+      sessionStorage.setItem(
+        PENDING_PRODUCT_KEY,
+        JSON.stringify({
+          productId: String(productId),
+          color: selectedColor,
+          size: selectedSize,
+          quantity: qty,
+          action,
+        })
+      );
+      sessionStorage.setItem('redirectAfterLogin', window.location.hash);
+    } catch {
+      // ignore
+    }
+  };
+
+  const clearPendingSelection = () => {
+    try {
+      sessionStorage.removeItem(PENDING_PRODUCT_KEY);
+    } catch {
+      // ignore
+    }
+  };
+
   const handleAddToCart = async () => {
     setError('');
     setSuccess('');
@@ -208,11 +275,7 @@ export default function ProductDetails() {
     const token = localStorage.getItem('customer_token');
     if (!token) {
       setError('Please log in to add items to your cart.');
-      try {
-        sessionStorage.setItem('redirectAfterLogin', window.location.hash);
-      } catch {
-        // ignore
-      }
+      savePendingSelection('addToCart');
       setTimeout(() => {
         window.location.hash = '#my-account';
       }, 1500);
@@ -226,26 +289,31 @@ export default function ProductDetails() {
 
     if (details.colors.length > 0 && !selectedColor) {
       setError('Please select a color.');
+      clearPendingSelection();
       return;
     }
 
     if (details.sizes.length > 0 && !selectedSize) {
       setError('Please select a size.');
+      clearPendingSelection();
       return;
     }
 
     if (!selectedVariant || !selectedVariant.id) {
       setError('Selected variant is unavailable.');
+      clearPendingSelection();
       return;
     }
 
     if (selectedVariant.stock_quantity <= 0) {
       setError('Selected variant is out of stock.');
+      clearPendingSelection();
       return;
     }
 
     if (qty < 1) {
       setError('Quantity must be at least 1.');
+      clearPendingSelection();
       return;
     }
 
@@ -255,15 +323,12 @@ export default function ProductDetails() {
       const res = await addToCartApi(details.id, selectedVariant.id, qty);
       setSuccess(res?.message || `${details.title} added to cart`);
       await fetchCart();
+      clearPendingSelection();
     } catch (err) {
       const message = err.message || 'Failed to add item to cart.';
       if (message.includes('401') || message.toLowerCase().includes('unauthorized')) {
         localStorage.removeItem('customer_token');
-        try {
-          sessionStorage.setItem('redirectAfterLogin', window.location.hash);
-        } catch {
-          // ignore
-        }
+        savePendingSelection('addToCart');
         setError('Your session has expired. Please log in again.');
         setTimeout(() => {
           window.location.hash = '#my-account';
@@ -275,6 +340,29 @@ export default function ProductDetails() {
       setAdding(false);
     }
   };
+
+  const handleAddToCartRef = useRef(handleAddToCart);
+  handleAddToCartRef.current = handleAddToCart;
+
+  // If the user was redirected back after logging in, automatically continue
+  // the pending Add to Cart once the product details and variant are ready.
+  const hasAutoAdded = useRef(false);
+  useEffect(() => {
+    if (hasAutoAdded.current || !details || !selectedVariant || adding) return;
+
+    const pending = getPendingSelection();
+    if (
+      pending &&
+      String(pending.productId) === String(productId) &&
+      pending.action === 'addToCart' &&
+      selectedColor === pending.color &&
+      selectedSize === pending.size &&
+      localStorage.getItem('customer_token')
+    ) {
+      hasAutoAdded.current = true;
+      handleAddToCartRef.current();
+    }
+  }, [details, selectedVariant, productId, adding, selectedColor, selectedSize]);
 
   if (loading) {
     return (
