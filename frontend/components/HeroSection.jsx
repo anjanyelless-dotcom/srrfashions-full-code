@@ -61,31 +61,34 @@ export default function HeroSection() {
           }
         }
 
+        /* Mobile: explicit aspect-ratio so the banner always fills the
+           available width and the image never leaves empty space below it. */
         @media (max-width: 768px) {
           .srr-hero-section {
-            height: calc(82svh - 60px);
-            min-height: 420px;
+            height: auto;
+            min-height: 0;
+            aspect-ratio: 4 / 3;
+          }
+          .srr-hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% 30%;
           }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 430px) {
           .srr-hero-section {
-            height: calc(80svh - 55px);
-            min-height: 420px;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .srr-hero-section {
-            height: calc(78svh - 50px);
-            min-height: 400px;
+            aspect-ratio: 1 / 1;
           }
         }
 
         @media (max-width: 320px) {
           .srr-hero-section {
-            height: calc(76svh - 45px);
-            min-height: 380px;
+            aspect-ratio: 3 / 4;
           }
         }
       `}</style>
