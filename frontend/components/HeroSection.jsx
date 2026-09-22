@@ -63,29 +63,29 @@ export default function HeroSection() {
 
         @media (max-width: 768px) {
           .srr-hero-section {
-            height: calc(85svh - 60px);
-            min-height: 380px;
+            height: calc(82svh - 60px);
+            min-height: 420px;
           }
         }
 
         @media (max-width: 480px) {
           .srr-hero-section {
-            height: calc(78svh - 55px);
-            min-height: 320px;
+            height: calc(80svh - 55px);
+            min-height: 420px;
           }
         }
 
         @media (max-width: 360px) {
           .srr-hero-section {
-            height: calc(75svh - 50px);
-            min-height: 280px;
+            height: calc(78svh - 50px);
+            min-height: 400px;
           }
         }
 
         @media (max-width: 320px) {
           .srr-hero-section {
-            height: calc(70svh - 45px);
-            min-height: 240px;
+            height: calc(76svh - 45px);
+            min-height: 380px;
           }
         }
       `}</style>
