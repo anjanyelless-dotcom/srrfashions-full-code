@@ -582,18 +582,32 @@ export default function Header() {
             max-width: 120px !important;
           }
         }
-        @media (max-width: 320px) {
+        @media (max-width: 360px) {
           .responsive-main-header .main-header-col2 img {
-            max-width: 100px !important;
+            max-width: 90px !important;
           }
           .responsive-main-header .main-header-bar {
-            padding: 0 10px !important;
+            padding: 0 8px !important;
           }
           .responsive-main-header .main-header-col1 {
-            left: 10px !important;
+            left: 8px !important;
           }
           .responsive-main-header .main-header-col3 {
-            right: 10px !important;
+            right: 8px !important;
+          }
+        }
+        @media (max-width: 320px) {
+          .responsive-main-header .main-header-col2 img {
+            max-width: 80px !important;
+          }
+          .responsive-main-header .main-header-bar {
+            padding: 0 6px !important;
+          }
+          .responsive-main-header .main-header-col1 {
+            left: 6px !important;
+          }
+          .responsive-main-header .main-header-col3 {
+            right: 6px !important;
           }
         }
       `}</style>

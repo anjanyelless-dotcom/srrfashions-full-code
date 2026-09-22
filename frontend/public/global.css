@@ -611,3 +611,189 @@
     object-fit: cover;
     object-position: center;
 }
+
+/*
+ * SRR responsive overrides
+ * Targets 302/375/768 while keeping the desktop layout unchanged.
+ */
+
+html,
+body {
+    max-width: 100%;
+}
+
+img,
+video,
+svg,
+iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 1024px) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+}
+
+/* Header icons & layout on small screens */
+@media (max-width: 768px) {
+    .thunk-icon-market a svg,
+    .thunk-icon-market svg,
+    .th-icon svg,
+    .taiowc-icon svg {
+        width: 22px !important;
+        height: 22px !important;
+    }
+    .taiowc-content h4,
+    .taiowc-cart-total-wrap {
+        display: none !important;
+    }
+    .menu-btn svg,
+    .menu-toggle svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
+}
+
+@media (max-width: 430px) {
+    .thunk-icon-market a svg,
+    .thunk-icon-market svg,
+    .th-icon svg,
+    .taiowc-icon svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    .responsive-main-header .thunk-icon-market > * {
+        margin-left: 6px !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .thunk-icon-market a svg,
+    .thunk-icon-market svg,
+    .th-icon svg,
+    .taiowc-icon svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+}
+
+/* Hero section */
+@media (max-width: 480px) {
+    .srr-hero-section {
+        min-height: 280px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .srr-hero-section {
+        min-height: 240px !important;
+    }
+}
+
+@media (max-width: 320px) {
+    .srr-hero-section {
+        min-height: 220px !important;
+    }
+}
+
+/* Product grid */
+@media (max-width: 1024px) {
+    .elementor-13 .elementor-element-a3af386 .elemento-addons-advance-product,
+    .elemento-addons-advance-product-list-wrap .elemento-addons-advance-product {
+        width: 33.333% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .elementor-13 .elementor-element-a3af386 .elemento-addons-advance-product,
+    .elemento-addons-advance-product-list-wrap .elemento-addons-advance-product {
+        width: 50% !important;
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+    .elemento-addons-advance-product-list-wrap {
+        margin: 0 -0.25rem !important;
+    }
+    .elemento-product-add-to-cart {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        justify-content: center !important;
+    }
+    .elemento-product-add-to-cart a,
+    .add_to_cart_button,
+    .buy_now_button {
+        flex: 1 1 45% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        text-align: center !important;
+        font-size: 11px !important;
+        padding: 8px 4px !important;
+        margin: 0 !important;
+        display: inline-block !important;
+    }
+    .elemento-product-title a {
+        font-size: 14px !important;
+        line-height: 1.25 !important;
+    }
+    .elemento-product-price {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .elementor-13 .elementor-element-a3af386 .elemento-addons-advance-product,
+    .elemento-addons-advance-product-list-wrap .elemento-addons-advance-product {
+        width: 100% !important;
+    }
+    .elemento-product-add-to-cart a,
+    .add_to_cart_button,
+    .buy_now_button {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+}
+
+/* Section headings */
+@media (max-width: 430px) {
+    .elemento-addon-heading_ {
+        font-size: 24px !important;
+        line-height: 30px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .elemento-addon-heading_ {
+        font-size: 20px !important;
+        line-height: 26px !important;
+    }
+}
+
+/* Video shopping cards */
+@media (max-width: 768px) {
+    .th-shopable-card {
+        max-width: 100% !important;
+    }
+}
+
+/* Carousel/marquee */
+@media (max-width: 768px) {
+    .hero-carousel {
+        padding: 10px 0 !important;
+    }
+    .marquee-slide {
+        width: 10rem !important;
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+    }
+}
+
+@media (max-width: 430px) {
+    .marquee-slide {
+        width: 8rem !important;
+    }
+}

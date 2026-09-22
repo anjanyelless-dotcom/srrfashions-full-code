@@ -74,6 +74,20 @@ export default function HeroSection() {
             min-height: 350px;
           }
         }
+
+        @media (max-width: 360px) {
+          .srr-hero-section {
+            height: calc(100svh - 50px);
+            min-height: 280px;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .srr-hero-section {
+            height: calc(100svh - 45px);
+            min-height: 240px;
+          }
+        }
       `}</style>
     </div>
   );
