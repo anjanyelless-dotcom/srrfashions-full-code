@@ -137,26 +137,6 @@ export default function ProductDetails() {
       });
   }, [productId]);
 
-  // When the color changes, keep the already-selected size if it is still
-  // valid for the new color. This preserves restored selections after login.
-  useEffect(() => {
-    if (!details || !selectedColor) return;
-    if (selectedSize && !enabledSizes.includes(selectedSize)) {
-      setSelectedSize('');
-    }
-  }, [selectedColor, selectedSize, enabledSizes, details]);
-
-  // Reset any restored selection that is no longer available for this product.
-  useEffect(() => {
-    if (!details) return;
-    if (selectedColor && !enabledColors.includes(selectedColor)) {
-      setSelectedColor('');
-    }
-    if (selectedSize && !enabledSizes.includes(selectedSize)) {
-      setSelectedSize('');
-    }
-  }, [details, enabledColors, enabledSizes, selectedColor, selectedSize]);
-
   const enabledColors = useMemo(() => {
     if (!details?.variants?.length) return [];
     return [...new Set(
@@ -179,6 +159,26 @@ export default function ProductDetails() {
         .map((v) => v.size)
     )];
   }, [details, selectedColor, enabledColors]);
+
+  // When the color changes, keep the already-selected size if it is still
+  // valid for the new color. This preserves restored selections after login.
+  useEffect(() => {
+    if (!details || !selectedColor) return;
+    if (selectedSize && !enabledSizes.includes(selectedSize)) {
+      setSelectedSize('');
+    }
+  }, [selectedColor, selectedSize, enabledSizes, details]);
+
+  // Reset any restored selection that is no longer available for this product.
+  useEffect(() => {
+    if (!details) return;
+    if (selectedColor && !enabledColors.includes(selectedColor)) {
+      setSelectedColor('');
+    }
+    if (selectedSize && !enabledSizes.includes(selectedSize)) {
+      setSelectedSize('');
+    }
+  }, [details, enabledColors, enabledSizes, selectedColor, selectedSize]);
 
   const selectedVariant = useMemo(() => {
     if (!details?.variants?.length) return null;
