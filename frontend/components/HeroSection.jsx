@@ -56,36 +56,36 @@ export default function HeroSection() {
 
         @media (max-width: 1024px) {
           .srr-hero-section {
-            height: calc(90svh - 70px);
-            min-height: 420px;
+            height: calc(92svh - 70px);
+            min-height: 460px;
           }
         }
 
         @media (max-width: 768px) {
           .srr-hero-section {
-            height: calc(70svh - 60px);
-            min-height: 320px;
+            height: calc(85svh - 60px);
+            min-height: 380px;
           }
         }
 
         @media (max-width: 480px) {
           .srr-hero-section {
-            height: calc(60svh - 55px);
-            min-height: 280px;
+            height: calc(78svh - 55px);
+            min-height: 320px;
           }
         }
 
         @media (max-width: 360px) {
           .srr-hero-section {
-            height: calc(55svh - 50px);
-            min-height: 240px;
+            height: calc(75svh - 50px);
+            min-height: 280px;
           }
         }
 
         @media (max-width: 320px) {
           .srr-hero-section {
-            height: calc(50svh - 45px);
-            min-height: 200px;
+            height: calc(70svh - 45px);
+            min-height: 240px;
           }
         }
       `}</style>
