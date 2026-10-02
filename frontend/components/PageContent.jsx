@@ -17,7 +17,7 @@ export default function PageContent() {
     <div {...wpPageAttribs}>
       <HeroSection />
            <JustLandedSection />
-      <FeaturedSeasonSection />
+      {/* <FeaturedSeasonSection /> */}
       <VideoShoppingSection />
       <EditorialLookbookSection />
  

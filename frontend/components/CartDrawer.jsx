@@ -55,7 +55,8 @@ const CartDrawer = () => {
   const handleContinueShopping = (e) => {
     e.preventDefault();
     closeCart();
-    window.location.hash = '';
+    window.history.pushState({}, '', '/');
+    window.dispatchEvent(new PopStateEvent('popstate'));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

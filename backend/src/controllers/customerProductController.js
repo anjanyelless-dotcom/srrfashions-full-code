@@ -308,7 +308,101 @@ const getProductById = async (req, res) => {
   }
 };
 
+const getProductBySlug = async (req, res) => {
+  const { slug } = req.params;
+
+  // Validate slug parameter - handle both undefined and empty string
+  if (!slug || (typeof slug === 'string' && slug.trim().length === 0)) {
+    return res.status(400).json({ error: 'Invalid slug parameter' });
+  }
+
+  const trimmedSlug = slug.trim();
+
+  try {
+    // Get product details by slug
+    const productResult = await pool.query(
+      `SELECT p.*, c.name as category_name
+       FROM products p
+       LEFT JOIN categories c ON p.category_id = c.id
+       WHERE p.slug = $1 AND p.is_active = true`,
+      [trimmedSlug]
+    );
+
+    if (productResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    const product = productResult.rows[0];
+    const productId = product.id;
+
+    // Get product images
+    const imagesResult = await pool.query(
+      `SELECT id, image_url, display_order
+       FROM product_images
+       WHERE product_id = $1
+       ORDER BY display_order`,
+      [productId]
+    );
+
+    // Get product variants with stock status
+    const variantsResult = await pool.query(
+      `SELECT id, color, size, sku, stock_quantity,
+              CASE WHEN stock_quantity > 0 THEN true ELSE false END as available
+       FROM product_variants
+       WHERE product_id = $1
+       ORDER BY color, size`,
+      [productId]
+    );
+
+    // Get available colors and sizes
+    const colorsResult = await pool.query(
+      `SELECT DISTINCT color
+       FROM product_variants
+       WHERE product_id = $1
+         AND stock_quantity > 0
+       ORDER BY color`,
+      [productId]
+    );
+
+    const sizesResult = await pool.query(
+      `SELECT DISTINCT size
+       FROM product_variants
+       WHERE product_id = $1
+         AND stock_quantity > 0
+       ORDER BY size`,
+      [productId]
+    );
+
+    // Get total stock across all variants
+    const stockResult = await pool.query(
+      `SELECT SUM(stock_quantity) as total_stock
+       FROM product_variants
+       WHERE product_id = $1`,
+      [productId]
+    );
+
+    const totalStock = parseInt(stockResult.rows[0].total_stock) || 0;
+    const hasStock = totalStock > 0;
+
+    res.json({
+      product: {
+        ...product,
+        has_stock: hasStock,
+        total_stock: totalStock
+      },
+      images: imagesResult.rows,
+      variants: variantsResult.rows,
+      available_colors: colorsResult.rows.map(row => row.color),
+      available_sizes: sizesResult.rows.map(row => row.size)
+    });
+  } catch (error) {
+    console.error('Get product by slug error:', error);
+    res.status(500).json({ error: 'Failed to fetch product' });
+  }
+};
+
 module.exports = {
   getProducts,
-  getProductById
+  getProductById,
+  getProductBySlug
 };

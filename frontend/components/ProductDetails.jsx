@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { getProductDetails } from '../services/productApi.js';
+import { getProductDetails, getProductDetailsBySlug } from '../services/productApi.js';
 import { addToCartApi } from '../services/cartApi.js';
 import { useCart } from './CartContext.jsx';
 import { CURRENCY_SYMBOL, formatMoney } from '../services/price.js';
 import WhatsAppButton from './WhatsAppButton.jsx';
+import { setProductSEO, setNotFoundSEO } from '../utils/seo.js';
+import { setProductSchema, removeProductSchema, setBreadcrumbSchema, removeBreadcrumbSchema } from '../utils/structuredData.js';
 import './ProductDetails.css';
+
+const SITE_URL = 'https://www.srrfashions.in';
 
 function resolveUrl(src) {
   if (!src) return '';
@@ -22,6 +26,12 @@ function getProductIdFromHash() {
   return params.get('id');
 }
 
+function getProductSlugFromPathname() {
+  const pathname = window.location.pathname || '/';
+  const match = pathname.match(/^\/product\/([^\/]+)$/);
+  return match ? match[1] : null;
+}
+
 function getPendingSelection() {
   try {
     const raw = sessionStorage.getItem(PENDING_PRODUCT_KEY);
@@ -34,6 +44,14 @@ function getPendingSelection() {
 
 export default function ProductDetails() {
   const productId = getProductIdFromHash();
+  const productSlug = getProductSlugFromPathname();
+  
+  // Determine lookup method:
+  // - If clean URL with slug: use slug-based API
+  // - If legacy hash URL with ID: use ID-based API
+  const useSlugLookup = productSlug && !productId;
+  const lookupValue = useSlugLookup ? productSlug : productId;
+  
   const { fetchCart } = useCart();
   const pendingSelection = getPendingSelection();
   const isPendingForProduct =
@@ -69,9 +87,9 @@ export default function ProductDetails() {
   }, [success]);
 
   useEffect(() => {
-    if (!productId) {
+    if (!lookupValue) {
       setLoading(false);
-      setError('Product ID is missing.');
+      setError(useSlugLookup ? 'Product slug is missing.' : 'Product ID is missing.');
       return;
     }
 
@@ -84,7 +102,9 @@ export default function ProductDetails() {
       setQty(1);
     }
 
-    getProductDetails(productId)
+    const apiCall = useSlugLookup ? getProductDetailsBySlug(lookupValue) : getProductDetails(lookupValue);
+    
+    apiCall
       .then((data) => {
         const productData = data.product || {};
         const images = [...(data.images || [])].sort(
@@ -130,12 +150,45 @@ export default function ProductDetails() {
 
         setMainImage(resolvedImages[0] || '');
         setLoading(false);
+        
+        // Update SEO metadata with product data
+        setProductSEO(productData);
+        
+        // Update Product structured data
+        setProductSchema({
+          name: productData.name,
+          slug: productData.slug,
+          description: productData.description,
+          selling_price: productData.selling_price,
+          has_stock: productData.has_stock !== undefined ? productData.has_stock : hasVariantStock,
+          images: images
+        });
+
+        // Update breadcrumb schema (Home → Product Name, no category slug available)
+        setBreadcrumbSchema([
+          { name: 'Home', url: `${SITE_URL}/` },
+          { name: productData.name, url: `${SITE_URL}/product/${productData.slug}` }
+        ]);
       })
       .catch((err) => {
         setError(err.message || 'Failed to load product details.');
         setLoading(false);
+        // Set not-found SEO metadata on error
+        setNotFoundSEO('product');
+        // Remove product schema on error
+        removeProductSchema();
+        // Remove breadcrumb schema on error
+        removeBreadcrumbSchema();
       });
-  }, [productId]);
+  }, [lookupValue, useSlugLookup]);
+
+  // Remove product and breadcrumb schemas when component unmounts
+  useEffect(() => {
+    return () => {
+      removeProductSchema();
+      removeBreadcrumbSchema();
+    };
+  }, []);
 
   const enabledColors = useMemo(() => {
     if (!details?.variants?.length) return [];

@@ -76,7 +76,7 @@ const JustLandedSectionHtml = `
                         data-id="134a993" data-element_type="widget" data-e-type="widget"
                         data-widget_type="button.default">
                         <a class="elementor-button elementor-button-link elementor-size-sm elementor-animation-shrink"
-                            href="shop/index.html">
+                            href="#">
                             <span class="elementor-button-content-wrapper">
                                 <span class="elementor-button-text">VIEW ALL PRODUCTS</span>
                             </span>
@@ -146,13 +146,13 @@ function productCardHtml(product) {
   let actionsHtml = '';
 
   if (isVariable) {
-    actionsHtml = `<a href="product/${slug}/index.html" aria-describedby="${describedById}" data-quantity="1" class="button product_type_variable add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" aria-label="Select options for &ldquo;${name}&rdquo;" rel="nofollow" role="button">Select options</a> ${variableScreenReader}`;
+    actionsHtml = `<a href="/product/${slug}" aria-describedby="${describedById}" data-quantity="1" class="button product_type_variable add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" aria-label="Select options for &ldquo;${name}&rdquo;" rel="nofollow" role="button">Select options</a> ${variableScreenReader}`;
   } else if (inStock) {
     actionsHtml = `
-      <a href="product/${slug}/index.html" data-quantity="1" class="button product_type_simple add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" data-variant_id="${firstVariantId}" aria-label="Add to cart: &ldquo;${name}&rdquo;" rel="nofollow" role="button" style="margin-right:8px;">Add to cart</a>
-      <a href="product/${slug}/index.html" data-quantity="1" class="button product_type_simple add_to_cart_button buy_now_button" data-product_id="${id}" data-product_sku="${sku}" data-variant_id="${firstVariantId}" aria-label="Buy now: &ldquo;${name}&rdquo;" rel="nofollow" role="button">Buy now</a>`;
+      <a href="/product/${slug}" data-quantity="1" class="button product_type_simple add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" data-variant_id="${firstVariantId}" aria-label="Add to cart: &ldquo;${name}&rdquo;" rel="nofollow" role="button" style="margin-right:8px;">Add to cart</a>
+      <a href="/product/${slug}" data-quantity="1" class="button product_type_simple add_to_cart_button buy_now_button" data-product_id="${id}" data-product_sku="${sku}" data-variant_id="${firstVariantId}" aria-label="Buy now: &ldquo;${name}&rdquo;" rel="nofollow" role="button">Buy now</a>`;
   } else {
-    actionsHtml = `<a href="product/${slug}/index.html" aria-describedby="${describedById}" class="button product_type_simple add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" aria-label="Out of stock: &ldquo;${name}&rdquo;" rel="nofollow" role="button" aria-disabled="true" style="pointer-events:none;opacity:0.6;">Out of stock</a>`;
+    actionsHtml = `<a href="/product/${slug}" aria-describedby="${describedById}" class="button product_type_simple add_to_cart_button" data-product_id="${id}" data-product_sku="${sku}" aria-label="Out of stock: &ldquo;${name}&rdquo;" rel="nofollow" role="button" aria-disabled="true" style="pointer-events:none;opacity:0.6;">Out of stock</a>`;
   }
 
   return `<div class="elemento-addons-advance-product thunk-woo-product-list opn-qv-enable th-shop-mania-woo-hover-zoom open-single-product-tab-horizontal open-shadow- open-shadow-hover- th-shop-mania-single-product-content-left product type-product post-${id} status-publish ${stockClass} ${categoryClass} has-post-thumbnail ${saleClass} shipping-taxable ${inStock ? 'purchasable' : ''} product-type-${isVariable ? 'variable has-default-attributes' : 'simple'}">
@@ -178,12 +178,12 @@ function productCardHtml(product) {
             </div>
           </div>
           ${saleHtml}
-          <a href="product/${slug}/index.html">
+          <a href="/product/${slug}">
             <img decoding="async" width="600" height="800" src="${image}" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail wp-post-image" alt="${name}" loading="lazy" />
           </a>
         </div>
         <div class="elemento-product-title">
-          <a href="product/${slug}/index.html">${name}</a>
+          <a href="/product/${slug}">${name}</a>
         </div>
         <div class="elemento-product-price">${priceHtml}</div>
         <div class="elemento-product-add-to-cart-button">

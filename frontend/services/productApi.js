@@ -21,3 +21,11 @@ export async function getProductDetails(id) {
   const res = await fetch(`${API_BASE}/api/products/${encodeURIComponent(id)}`);
   return handleResponse(res);
 }
+
+export async function getProductDetailsBySlug(slug) {
+  if (!slug) {
+    throw new Error('Product slug is required');
+  }
+  const res = await fetch(`${API_BASE}/api/products/slug/${encodeURIComponent(slug)}`);
+  return handleResponse(res);
+}

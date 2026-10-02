@@ -135,8 +135,117 @@ const getCategoryProducts = async (req, res) => {
   }
 };
 
+const getCategoryBySlug = async (req, res) => {
+  const { slug } = req.params;
+
+  // Validate slug parameter
+  if (!slug || typeof slug !== 'string' || slug.trim().length === 0) {
+    return res.status(400).json({ error: 'Invalid slug parameter' });
+  }
+
+  const trimmedSlug = slug.trim();
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM categories WHERE slug = $1 AND is_active = true`,
+      [trimmedSlug]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    res.json({ category: result.rows[0] });
+  } catch (error) {
+    console.error('Get category by slug error:', error);
+    res.status(500).json({ error: 'Failed to fetch category' });
+  }
+};
+
+const getCategoryProductsBySlug = async (req, res) => {
+  const { slug } = req.params;
+  const { page = 1, limit = 20, sort = 'name', order = 'ASC' } = req.query;
+
+  // Validate slug parameter
+  if (!slug || typeof slug !== 'string' || slug.trim().length === 0) {
+    return res.status(400).json({ error: 'Invalid slug parameter' });
+  }
+
+  const trimmedSlug = slug.trim();
+
+  try {
+    // Check if category exists and is active by slug
+    const categoryExists = await pool.query(
+      'SELECT id FROM categories WHERE slug = $1 AND is_active = true',
+      [trimmedSlug]
+    );
+    if (categoryExists.rows.length === 0) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    const categoryId = categoryExists.rows[0].id;
+    const offset = (page - 1) * limit;
+
+    // Validate sort column to prevent SQL injection
+    const validSortColumns = ['name', 'regular_price', 'selling_price', 'created_at'];
+    const sortColumn = validSortColumns.includes(sort) ? sort : 'name';
+    const sortOrder = order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+    // Get products for the category (including subcategories)
+    const productsResult = await pool.query(`
+      SELECT DISTINCT
+        p.id,
+        p.name,
+        p.description,
+        p.regular_price,
+        p.selling_price,
+        p.discount,
+        p.${sortColumn},
+        c.name as category_name
+      FROM products p
+      JOIN categories c ON p.category_id = c.id
+      WHERE p.category_id = $1
+        OR p.category_id IN (
+          SELECT id FROM categories WHERE parent_id = $1 AND is_active = true
+        )
+        AND p.is_active = true
+      ORDER BY p.${sortColumn} ${sortOrder}
+      LIMIT $2 OFFSET $3
+    `, [categoryId, limit, offset]);
+
+    // Get total count
+    const countResult = await pool.query(`
+      SELECT COUNT(DISTINCT p.id) as total
+      FROM products p
+      WHERE p.category_id = $1
+        OR p.category_id IN (
+          SELECT id FROM categories WHERE parent_id = $1 AND is_active = true
+        )
+        AND p.is_active = true
+    `, [categoryId]);
+
+    const total = parseInt(countResult.rows[0].total);
+    const totalPages = Math.ceil(total / limit);
+
+    res.json({
+      products: productsResult.rows,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        totalPages
+      }
+    });
+  } catch (error) {
+    console.error('Get category products by slug error:', error);
+    res.status(500).json({ error: 'Failed to fetch category products' });
+  }
+};
+
 module.exports = {
   getCategories,
   getCategoryById,
-  getCategoryProducts
+  getCategoryProducts,
+  getCategoryBySlug,
+  getCategoryProductsBySlug
 };

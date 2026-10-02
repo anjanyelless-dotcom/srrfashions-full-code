@@ -99,41 +99,41 @@ const overlaysHtml = `<!-- #page --><script type="speculationrules">
                                     class="th-shop-mania-menu-link">Home</span></a>
                         </li>
                         <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-417"><a
-                                href="shop/index.html"><span class="th-shop-mania-menu-link">Shop</span></a></li>
+                                href="/"><span class="th-shop-mania-menu-link">Shop</span></a></li>
                         <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-418"><a
-                                href="product-category/dresses/index.html"><span
+                                href="/category/dresses"><span
                                     class="th-shop-mania-menu-link">Dresses</span></a></li>
                         <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-419"><a
-                                href="product-category/accesories/index.html"><span
+                                href="/category/accesories"><span
                                     class="th-shop-mania-menu-link">Accesories</span></a></li>
                         <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-423"><a
-                                href="#/about-us"><span class="th-shop-mania-menu-link">About Us</span></a>
+                                href="/about-us"><span class="th-shop-mania-menu-link">About Us</span></a>
                         </li>
                         <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-422"><a
-                                href="#contact-us"><span class="th-shop-mania-menu-link">Contact Us</span></a>
+                                href="/contact-us"><span class="th-shop-mania-menu-link">Contact Us</span></a>
                         </li>
                     </ul>
                 </div>
                 <div id="mobile-nav-tab-category" class="mobile-nav-tab-category panel">
                     <ul class="mob-product-cat-list thunk-product-cat-list mobile" data-menu-style="accordion">
-                        <li class="cat-item cat-item-17"><a href="product-category/accesories/index.html">Accesories</a>
+                        <li class="cat-item cat-item-17"><a href="/category/accesories">Accesories</a>
                         </li>
-                        <li class="cat-item cat-item-18"><a href="product-category/cardigans/index.html">Cardigans</a>
+                        <li class="cat-item cat-item-18"><a href="/category/cardigans">Cardigans</a>
                         </li>
-                        <li class="cat-item cat-item-19"><a href="product-category/dresses/index.html">Dresses</a>
+                        <li class="cat-item cat-item-19"><a href="/category/dresses">Dresses</a>
                         </li>
-                        <li class="cat-item cat-item-33"><a href="product-category/handbags/index.html">Handbags</a>
+                        <li class="cat-item cat-item-33"><a href="/category/handbags">Handbags</a>
                         </li>
-                        <li class="cat-item cat-item-57"><a href="product-category/save-more/index.html">Save More</a>
+                        <li class="cat-item cat-item-57"><a href="/category/save-more">Save More</a>
                         </li>
-                        <li class="cat-item cat-item-20"><a href="product-category/shoes/index.html">Shoes</a>
+                        <li class="cat-item cat-item-20"><a href="/category/shoes">Shoes</a>
                         </li>
-                        <li class="cat-item cat-item-21"><a href="product-category/sunglasses/index.html">Sunglasses</a>
+                        <li class="cat-item cat-item-21"><a href="/category/sunglasses">Sunglasses</a>
                         </li>
                         <li class="cat-item cat-item-22"><a
-                                href="product-category/sweatshirts/index.html">Sweatshirts</a>
+                                href="/category/sweatshirts">Sweatshirts</a>
                         </li>
-                        <li class="cat-item cat-item-24"><a href="product-category/tops/index.html">Tops</a>
+                        <li class="cat-item cat-item-24"><a href="/category/tops">Tops</a>
                         </li>
                     </ul>
                 </div>

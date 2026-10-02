@@ -102,11 +102,13 @@ export default function Wishlist() {
 
   const goToProduct = (item) => {
     const slug = getProductSlug(item.link, item.id);
-    window.location.hash = `#/product/${encodeURIComponent(slug)}/?id=${item.id}`;
+    window.history.pushState({}, '', `/product/${encodeURIComponent(slug)}`);
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
   const goToHome = () => {
-    window.location.hash = '';
+    window.history.pushState({}, '', '/');
+    window.dispatchEvent(new PopStateEvent('popstate'));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

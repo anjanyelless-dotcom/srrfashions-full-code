@@ -32,6 +32,7 @@ const paymentSettingsRouter = require('./routes/paymentSettings');
 const cashfreeRouter = require('./routes/cashfree');
 const offersRouter = require('./routes/offers');
 const smsRouter = require('./routes/sms');
+const { getSitemap } = require('./routes/sitemap');
 
 const app = express();
 
@@ -102,6 +103,9 @@ app.use('/api/payment-settings', paymentSettingsRouter);
 app.use('/api/cashfree', cashfreeRouter);
 app.use('/api/offers', offersRouter);
 app.use('/api/admin/sms', smsRouter);
+
+// Sitemap endpoint
+app.get('/sitemap.xml', getSitemap);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

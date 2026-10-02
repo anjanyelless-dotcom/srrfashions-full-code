@@ -16,11 +16,120 @@ import Admin from './components/admin/index.jsx';
 import Wishlist from './components/Wishlist.jsx';
 import AboutUs from './components/AboutUs.jsx';
 import CashfreeTest from './components/CashfreeTest.jsx';
+import CategoryPage from './components/CategoryPage.jsx';
 import WhatsAppButton from './components/WhatsAppButton.jsx';
 import { useCart } from './components/CartContext.jsx';
 import { useWishlist } from './components/WishlistContext.jsx';
 import { formatPrice } from './services/price.js';
+import { setHomepageSEO, setAboutSEO, setContactSEO, setNotFoundSEO } from './utils/seo.js';
+import { setLocalBusinessSchema, setBreadcrumbSchema, removeBreadcrumbSchema } from './utils/structuredData.js';
 import './components/Wishlist.css';
+
+const SITE_URL = 'https://www.srrfashions.in';
+
+// Routing helper functions
+function getPathname() {
+  return window.location.pathname;
+}
+
+function getHash() {
+  return window.location.hash;
+}
+
+function navigateTo(path, options = {}) {
+  if (options.replace) {
+    window.history.replaceState({}, '', path);
+  } else {
+    window.history.pushState({}, '', path);
+  }
+  // Dispatch popstate event to trigger route update
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+
+// Parse route from pathname
+function parseRoute(pathname) {
+  const path = pathname || '/';
+  
+  // Admin routes (keep hash-based for now)
+  const hash = getHash();
+  if (hash && (hash === '#admin' || hash === '#/admin' || hash === '#/admin/' || hash.startsWith('#/admin/'))) {
+    return { type: 'admin', hash };
+  }
+  
+  // Transactional routes (keep hash-based for now)
+  if (hash === '#checkout' || hash === '#/checkout') {
+    return { type: 'checkout' };
+  }
+  if (hash.startsWith('#/payment')) {
+    return { type: 'payment', hash };
+  }
+  if (hash === '#wishlist' || hash === '#/wishlist') {
+    return { type: 'wishlist' };
+  }
+  if (hash === '#my-account') {
+    return { type: 'my-account' };
+  }
+  if (hash === '#cashfree-test' || hash === '#/cashfree-test') {
+    return { type: 'cashfree-test' };
+  }
+  
+  // Legacy hash routes - redirect to clean URLs
+  if (hash === '#contact-us') {
+    return { type: 'redirect', to: '/contact-us' };
+  }
+  if (hash === '#/about-us') {
+    return { type: 'redirect', to: '/about-us' };
+  }
+  if (hash.startsWith('#/product/')) {
+    // Extract slug from hash: #/product/slug/?id=123
+    const match = hash.match(/^#\/product\/([^\/\?]+)/);
+    if (match) {
+      return { type: 'redirect', to: `/product/${match[1]}` };
+    }
+  }
+  
+  // Legacy WordPress-style product URLs - redirect to clean URLs
+  const productIndexMatch = path.match(/^\/product\/([^\/]+)\/index\.html$/);
+  if (productIndexMatch) {
+    return { type: 'redirect', to: `/product/${productIndexMatch[1]}` };
+  }
+  
+  // Legacy WordPress-style category URLs - redirect to clean URLs
+  const categoryIndexMatch = path.match(/^\/product-category\/([^\/]+)\/index\.html$/);
+  if (categoryIndexMatch) {
+    return { type: 'redirect', to: `/category/${categoryIndexMatch[1]}` };
+  }
+  const categoryMatch = path.match(/^\/product-category\/([^\/]+)\/?$/);
+  if (categoryMatch) {
+    return { type: 'redirect', to: `/category/${categoryMatch[1]}` };
+  }
+  
+  // Clean public routes
+  if (path === '/' || path === '/index.html') {
+    return { type: 'home' };
+  }
+  if (path === '/about-us') {
+    return { type: 'about-us' };
+  }
+  if (path === '/contact-us') {
+    return { type: 'contact-us' };
+  }
+  
+  // Product route: /product/{slug}
+  const productMatch = path.match(/^\/product\/([^\/]+)$/);
+  if (productMatch) {
+    return { type: 'product', slug: productMatch[1] };
+  }
+  
+  // Category route: /category/{slug}
+  const categoryCleanMatch = path.match(/^\/category\/([^\/]+)$/);
+  if (categoryCleanMatch) {
+    return { type: 'category', slug: categoryCleanMatch[1] };
+  }
+  
+  // Default to home
+  return { type: 'home' };
+}
 
 function getProductFromButton(button) {
   const productEl = button.closest(
@@ -58,16 +167,66 @@ function getProductFromButton(button) {
 }
 
 function App() {
-  const [hash, setHash] = useState(window.location.hash);
+  const [route, setRoute] = useState(() => parseRoute(getPathname()));
   const { addToCart, openCart, totalQuantity, subtotal } = useCart();
   const { wishlist, wishlistCount, toggleWishlist } = useWishlist();
   const { openOffers } = useOffers();
 
   useEffect(() => {
-    const handleHashChange = () => setHash(window.location.hash);
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    // Handle popstate (browser back/forward)
+    const handlePopState = () => {
+      setRoute(parseRoute(getPathname()));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  // Handle legacy hash routes and redirects
+  useEffect(() => {
+    if (route.type === 'redirect' && route.to) {
+      navigateTo(route.to, { replace: true });
+    }
+  }, [route]);
+
+  // Initialize LocalBusiness structured data on mount
+  useEffect(() => {
+    setLocalBusinessSchema();
+  }, []);
+
+  // Update SEO metadata and breadcrumbs based on route
+  useEffect(() => {
+    switch (route.type) {
+      case 'home':
+        setHomepageSEO();
+        setBreadcrumbSchema([
+          { name: 'Home', url: SITE_URL }
+        ]);
+        break;
+      case 'about-us':
+        setAboutSEO();
+        setBreadcrumbSchema([
+          { name: 'Home', url: SITE_URL },
+          { name: 'About Us', url: `${SITE_URL}/about-us` }
+        ]);
+        break;
+      case 'contact-us':
+        setContactSEO();
+        setBreadcrumbSchema([
+          { name: 'Home', url: SITE_URL },
+          { name: 'Contact Us', url: `${SITE_URL}/contact-us` }
+        ]);
+        break;
+      case 'product':
+      case 'category':
+        // SEO metadata and breadcrumbs are handled by the respective components
+        // They have access to the actual product/category data
+        break;
+      default:
+        // For transactional/admin routes, keep homepage metadata and remove breadcrumbs
+        setHomepageSEO();
+        removeBreadcrumbSchema();
+    }
+  }, [route.type]);
 
 
 
@@ -88,7 +247,7 @@ function App() {
         if (product.id && product.id !== '0') {
           const slugMatch = (product.link || '').match(/product\/([^\/]+)\/index\.html/);
           const slug = slugMatch ? slugMatch[1] : `product-${product.id}`;
-          window.location.hash = `#/product/${encodeURIComponent(slug)}/?id=${product.id}`;
+          navigateTo(`/product/${encodeURIComponent(slug)}`);
         }
       }
 
@@ -141,11 +300,18 @@ function App() {
         return;
       }
 
+      // Only intercept product links if they are legacy WordPress-style
+      // Clean URLs (/product/{slug}) should navigate normally
       if (productLink) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        const product = getProductFromButton(productLink);
-        goToProductPage(product);
+        const href = productLink.getAttribute('href') || '';
+        // Check if it's a legacy WordPress-style link
+        if (href.includes('product/') && (href.includes('/index.html') || href.startsWith('product/') && !href.startsWith('/product/'))) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          const product = getProductFromButton(productLink);
+          goToProductPage(product);
+        }
+        // Clean URLs (/product/{slug}) are allowed to navigate normally
       }
     }
 
@@ -193,27 +359,37 @@ function App() {
     });
   }, [totalQuantity, subtotal]);
 
-  const isAdmin =
-    hash === '#admin' ||
-    hash === '#/admin' ||
-    hash === '#/admin/' ||
-    hash === '#/admin/login' ||
-    hash.startsWith('#/admin/');
+  const isAdmin = route.type === 'admin';
 
   if (isAdmin) {
-    return <Admin hash={hash} />;
+    return <Admin hash={route.hash} />;
   }
 
   const renderPage = () => {
-    if (hash === '#contact-us') return <ContactUs />;
-    if (hash === '#my-account') return <MyAccount />;
-    if (hash.startsWith('#/product/')) return <ProductDetails />;
-    if (hash === '#checkout' || hash === '#/checkout') return <Checkout />;
-    if (hash.startsWith('#/payment')) return <Payment />;
-    if (hash === '#wishlist' || hash === '#/wishlist') return <Wishlist />;
-    if (hash === '#about-us' || hash === '#/about-us') return <AboutUs />;
-    if (hash === '#cashfree-test' || hash === '#/cashfree-test') return <CashfreeTest />;
-    return <PageContent />;
+    switch (route.type) {
+      case 'home':
+        return <PageContent />;
+      case 'about-us':
+        return <AboutUs />;
+      case 'contact-us':
+        return <ContactUs />;
+      case 'product':
+        return <ProductDetails />;
+      case 'category':
+        return <CategoryPage slug={route.slug} />;
+      case 'checkout':
+        return <Checkout />;
+      case 'payment':
+        return <Payment hash={route.hash} />;
+      case 'wishlist':
+        return <Wishlist />;
+      case 'my-account':
+        return <MyAccount />;
+      case 'cashfree-test':
+        return <CashfreeTest />;
+      default:
+        return <PageContent />;
+    }
   };
 
   return (

@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom';
 import RawHtmlTag from './RawHtmlTag.jsx';
 
 const NAV_ITEMS = [
-  { label: 'Home', href: '#/' },
-  { label: 'About Us', href: '#/about-us' },
-  { label: 'Contact Us', href: '#contact-us' },
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about-us' },
+  { label: 'Contact Us', href: '/contact-us' },
 ];
 
 const getHeaderAttribs = (isScrolled) => ({
@@ -481,9 +481,13 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const handleHashChange = () => setIsMenuOpen(false);
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    const handleRouteChange = () => setIsMenuOpen(false);
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
   }, []);
 
   // Close mobile menu when cart or offers drawer is opened (prevent stacking)

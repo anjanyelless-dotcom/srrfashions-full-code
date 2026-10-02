@@ -2,6 +2,18 @@ require('dotenv-flow/config');
 const pool = require('../config/database');
 const { deleteFile, getFileUrl } = require('../storage/storageAdapter');
 
+// Helper function to generate URL-friendly slug from name
+function generateSlug(name) {
+  if (!name) return null;
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
+
 const createCategory = async (req, res) => {
   const { name, parent_id, image_url, display_order } = req.body;
 
@@ -22,10 +34,10 @@ const createCategory = async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO categories (name, parent_id, image_url, display_order)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO categories (name, parent_id, image_url, display_order, slug)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [name.trim(), parent_id || null, image_url || null, display_order || 0]
+      [name.trim(), parent_id || null, image_url || null, display_order || 0, generateSlug(name.trim())]
     );
 
     res.status(201).json({

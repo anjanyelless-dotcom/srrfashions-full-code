@@ -2,6 +2,18 @@ require('dotenv-flow/config');
 const pool = require('../config/database');
 const { deleteFile, getFileUrl } = require('../storage/storageAdapter');
 
+// Helper function to generate URL-friendly slug from name
+function generateSlug(name) {
+  if (!name) return null;
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
+
 function validateVariant(variant, index) {
   const errors = [];
   if (!variant.size || String(variant.size).trim().length === 0) {
@@ -183,10 +195,10 @@ const createProduct = async (req, res) => {
     }
 
     const result = await client.query(
-      `INSERT INTO products (name, description, category_id, regular_price, selling_price, discount, video_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO products (name, description, category_id, regular_price, selling_price, discount, video_url, slug)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [name.trim(), description || null, category_id, regular_price, selling_price, discount || 0, validatedVideo]
+      [name.trim(), description || null, category_id, regular_price, selling_price, discount || 0, validatedVideo, generateSlug(name.trim())]
     );
 
     const product = result.rows[0];
