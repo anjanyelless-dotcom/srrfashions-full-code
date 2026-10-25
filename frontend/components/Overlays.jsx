@@ -1,5 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import RawHtmlTag from './RawHtmlTag.jsx';
+import { getCategories } from '../services/categoryApi.js';
+
+function slugify(text) {
+  return String(text || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Populate every .mob-product-cat-list in the document (the injected overlay
+// copy AND the static index.html copy) with the live categories from the API,
+// so the nav always reflects the real inventory instead of template defaults.
+function useDynamicCategories() {
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await getCategories();
+        const cats = (data?.categories || []).filter((c) => c.name);
+        if (cancelled || cats.length === 0) return;
+        const html = cats
+          .map((c) => `<li class="cat-item"><a href="/category/${encodeURIComponent(c.slug || slugify(c.name))}">${String(c.name).replace(/[<>&"]/g, '')}</a></li>`)
+          .join('');
+        document.querySelectorAll('.mob-product-cat-list').forEach((ul) => {
+          ul.innerHTML = html;
+        });
+      } catch {
+        // keep the static list on failure
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+}
 
 const overlaysHtml = `<!-- #page --><script type="speculationrules">
 {"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/veloura/*"},{"not":{"href_matches":["/veloura/wp-*.php","/veloura/wp-admin/*","/veloura/wp-content/uploads/sites/383/*","/veloura/wp-content/*","/veloura/wp-content/plugins/*","/veloura/wp-content/themes/th-shop-mania/*","/veloura/*\\\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\\"nofollow\\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
@@ -101,11 +131,11 @@ const overlaysHtml = `<!-- #page --><script type="speculationrules">
                         <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-417"><a
                                 href="/"><span class="th-shop-mania-menu-link">Shop</span></a></li>
                         <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-418"><a
-                                href="/category/dresses"><span
-                                    class="th-shop-mania-menu-link">Dresses</span></a></li>
+                                href="/category/women"><span
+                                    class="th-shop-mania-menu-link">Women</span></a></li>
                         <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-419"><a
-                                href="/category/accesories"><span
-                                    class="th-shop-mania-menu-link">Accesories</span></a></li>
+                                href="/category/acce-orie-"><span
+                                    class="th-shop-mania-menu-link">Accessories</span></a></li>
                         <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-423"><a
                                 href="/about-us"><span class="th-shop-mania-menu-link">About Us</span></a>
                         </li>
@@ -116,35 +146,19 @@ const overlaysHtml = `<!-- #page --><script type="speculationrules">
                 </div>
                 <div id="mobile-nav-tab-category" class="mobile-nav-tab-category panel">
                     <ul class="mob-product-cat-list thunk-product-cat-list mobile" data-menu-style="accordion">
-                        <li class="cat-item cat-item-17"><a href="/category/accesories">Accesories</a>
+                        <li class="cat-item"><a href="/category/men">Men</a>
                         </li>
-                        <li class="cat-item cat-item-18"><a href="/category/cardigans">Cardigans</a>
+                        <li class="cat-item"><a href="/category/women">Women</a>
                         </li>
-                        <li class="cat-item cat-item-19"><a href="/category/dresses">Dresses</a>
+                        <li class="cat-item"><a href="/category/kid-">Kids</a>
                         </li>
-                        <li class="cat-item cat-item-33"><a href="/category/handbags">Handbags</a>
+                        <li class="cat-item"><a href="/category/footwear">Footwear</a>
                         </li>
-                        <li class="cat-item cat-item-57"><a href="/category/save-more">Save More</a>
-                        </li>
-                        <li class="cat-item cat-item-20"><a href="/category/shoes">Shoes</a>
-                        </li>
-                        <li class="cat-item cat-item-21"><a href="/category/sunglasses">Sunglasses</a>
-                        </li>
-                        <li class="cat-item cat-item-22"><a
-                                href="/category/sweatshirts">Sweatshirts</a>
-                        </li>
-                        <li class="cat-item cat-item-24"><a href="/category/tops">Tops</a>
+                        <li class="cat-item"><a href="/category/acce-orie-">Accessories</a>
                         </li>
                     </ul>
                 </div>
             </div>
-        </div>
-    </div><div id="th-register-success-modal" style="display:none;">
-        <div class="th-modal-inner">
-            <span id="th-close-register-modal">&times;</span>
-            <h2>🎉Successfully Registered!</h2>
-            <p>You have successfully created your account.</p>
-            <a href="my-account/index.html" class="button">Login Now</a>
         </div>
     </div><div class="thnew-popup">
 
@@ -164,8 +178,8 @@ const overlaysHtml = `<!-- #page --><script type="speculationrules">
     </div><div class="th-recent-products-wrapper">
         <div class="th-recent-products-canvas">
             <div class="thrv-header"><span class="th-close th-icon th-icon-clear"></span>
-                <h2>You have not viewed any product yet!</h2>
-            </div> <a href="shop/index.html" class="th-back-to-shop">Back To Shop</a>
+                <h2>Recently Viewed Products</h2>
+            </div> <a href="/" class="th-back-to-shop">Back To Shop</a>
 
         </div>
     </div><script>
@@ -220,5 +234,6 @@ const overlaysHtml = `<!-- #page --><script type="speculationrules">
 </script>`;
 
 export default function Overlays() {
+  useDynamicCategories();
   return <RawHtmlTag tag="div" html={overlaysHtml} />;
 }

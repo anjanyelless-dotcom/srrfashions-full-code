@@ -125,7 +125,7 @@ const ContactUs = () => {
           <div className="veloura-contact-card">
             <div className="veloura-contact-icon">{icons.phone}</div>
             <h3 className="veloura-card-title">Call Us</h3>
-            <p className="veloura-card-text"><a href="tel:+919876543210">+91 9032666032</a></p>
+            <p className="veloura-card-text"><a href="tel:+919032666032">+91 9032666032</a></p>
           </div>
           <div className="veloura-contact-card">
             <div className="veloura-contact-icon">{icons.location}</div>
@@ -135,7 +135,7 @@ const ContactUs = () => {
           <div className="veloura-contact-card">
             <div className="veloura-contact-icon">{icons.hours}</div>
             <h3 className="veloura-card-title">Business Hours</h3>
-            <p className="veloura-card-text">Monday –Satday<br />9:00 AM – 9:00 PM</p>
+            <p className="veloura-card-text">Monday – Saturday<br />9:00 AM – 9:00 PM</p>
           </div>
         </div>
       </section>

@@ -63,6 +63,7 @@ const getProducts = async (req, res) => {
       SELECT DISTINCT
         p.id,
         p.name,
+        p.slug,
         p.description,
         p.regular_price,
         p.selling_price,

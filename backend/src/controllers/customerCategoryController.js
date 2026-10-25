@@ -22,6 +22,7 @@ const getCategories = async (req, res) => {
       SELECT
         c.id,
         c.name,
+        c.slug,
         c.parent_id,
         c.image_url,
         c.display_order,
@@ -29,7 +30,7 @@ const getCategories = async (req, res) => {
       FROM categories c
       LEFT JOIN products p ON c.id = p.category_id AND p.is_active = true
       WHERE c.is_active = true
-      GROUP BY c.id, c.name, c.parent_id, c.image_url, c.display_order
+      GROUP BY c.id, c.name, c.slug, c.parent_id, c.image_url, c.display_order
       ORDER BY c.display_order, c.name
     `);
 
@@ -89,6 +90,7 @@ const getCategoryProducts = async (req, res) => {
       SELECT DISTINCT
         p.id,
         p.name,
+        p.slug,
         p.description,
         p.regular_price,
         p.selling_price,
@@ -196,6 +198,7 @@ const getCategoryProductsBySlug = async (req, res) => {
       SELECT DISTINCT
         p.id,
         p.name,
+        p.slug,
         p.description,
         p.regular_price,
         p.selling_price,
