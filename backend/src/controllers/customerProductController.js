@@ -64,6 +64,7 @@ const getProducts = async (req, res) => {
         p.id,
         p.name,
         p.slug,
+        p.video_url,
         p.description,
         p.regular_price,
         p.selling_price,
