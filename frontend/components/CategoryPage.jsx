@@ -7,6 +7,7 @@ import OffersDrawer from './OffersDrawer.jsx';
 import WhatsAppButton from './WhatsAppButton.jsx';
 import { getCategoryBySlug, getCategoryProductsBySlug } from '../services/categoryApi.js';
 import { formatMoney } from '../services/price.js';
+import { getProductImageUrl, IMAGE_FALLBACK } from '../utils/image.js';
 import { setCategorySEO, setNotFoundSEO } from '../utils/seo.js';
 import { setBreadcrumbSchema, removeBreadcrumbSchema } from '../utils/structuredData.js';
 import './CategoryPage.css';
@@ -22,12 +23,7 @@ function escapeHtml(text) {
 }
 
 function resolveImageUrl(product) {
-  const url = product?.images?.[0]?.image_url;
-  if (!url) return '';
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url;
-  if (url.startsWith('wp-content/')) return url;
-  if (url.startsWith('uploads/')) return url.replace(/^uploads\//, 'wp-content/uploads/sites/383/');
-  return 'wp-content/uploads/sites/383/' + url;
+  return getProductImageUrl(product?.images?.[0]?.image_url);
 }
 
 function hasAvailableVariants(product) {
@@ -43,7 +39,7 @@ function productCardHtml(product) {
   const hasSale = Number(product.regular_price || 0) > Number(product.selling_price || 0);
   const discount = formatMoney(product.discount || (hasSale ? Number(product.regular_price) - Number(product.selling_price) : 0));
   const sku = product.variants && product.variants[0] ? product.variants[0].sku : '';
-  const image = resolveImageUrl(product) || 'wp-content/uploads/sites/383/2026/06/placeholder.jpg';
+  const image = resolveImageUrl(product) || IMAGE_FALLBACK;
   const categoryClass = product.category_name ? 'product_cat-' + slugify(product.category_name) : '';
   const saleClass = hasSale ? 'sale' : '';
   const inStock = hasAvailableVariants(product);
@@ -99,7 +95,7 @@ function productCardHtml(product) {
           </div>
           ${saleHtml}
           <a href="/product/${slug}">
-            <img decoding="async" width="600" height="800" src="${image}" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail wp-post-image" alt="${name}" loading="lazy" />
+            <img decoding="async" width="600" height="800" src="${image}" onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='${IMAGE_FALLBACK}'}" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail wp-post-image" alt="${name}" loading="lazy" />
           </a>
         </div>
         <div class="elemento-product-title">

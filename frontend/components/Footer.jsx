@@ -23,9 +23,14 @@ const Footer = () => {
       <div className="veloura-footer-inner">
         <div className="veloura-footer-top">
           <div className="veloura-footer-brand">
-            <h2 className="veloura-footer-logo" onClick={scrollToTop} role="button" tabIndex={0}>
-              SR selections
-            </h2>
+            <img
+              src="/wp-content/uploads/sites/383/2026/07/Elegant%20SR%20Selections%20Monogram%20Logo.png"
+              alt="SR Selections"
+              className="veloura-footer-logo"
+              onClick={scrollToTop}
+              role="button"
+              tabIndex={0}
+            />
             <p className="veloura-footer-tagline">
               Designed for the moments you remember. Crafted with intention, worn with confidence.
             </p>
@@ -58,7 +63,7 @@ const Footer = () => {
         <div className="veloura-footer-divider" />
 
         <div className="veloura-footer-links">
-          <div className="veloura-footer-column">
+          {/* <div className="veloura-footer-column">
             <h4 className="veloura-footer-column-title">Shop</h4>
             <ul className="veloura-footer-list">
               <li><a href="#new-arrivals">New Arrivals</a></li>
@@ -66,9 +71,9 @@ const Footer = () => {
               <li><a href="#clothing">Clothing</a></li>
               <li><a href="#accessories">Accessories</a></li>
             </ul>
-          </div>
+          </div> */}
 
-          <div className="veloura-footer-column">
+          {/* <div className="veloura-footer-column">
             <h4 className="veloura-footer-column-title">About</h4>
             <ul className="veloura-footer-list">
               <li><a href="#our-story">Our Story</a></li>
@@ -76,9 +81,9 @@ const Footer = () => {
               <li><a href="#sustainability">Sustainability</a></li>
               <li><a href="#journal">Journal</a></li>
             </ul>
-          </div>
+          </div> */}
 
-          <div className="veloura-footer-column">
+          {/* <div className="veloura-footer-column">
             <h4 className="veloura-footer-column-title">Customer Care</h4>
             <ul className="veloura-footer-list">
               <li><a href="#contact">Contact Us</a></li>
@@ -86,7 +91,7 @@ const Footer = () => {
               <li><a href="#size-guide">Size Guide</a></li>
               <li><a href="#faq">FAQ</a></li>
             </ul>
-          </div>
+          </div> */}
 
           <div className="veloura-footer-column veloura-footer-contact">
             <h4 className="veloura-footer-column-title">Connect</h4>
@@ -113,7 +118,7 @@ const Footer = () => {
         <div className="veloura-footer-divider" />
 
         <div className="veloura-footer-bottom">
-          <p className="veloura-copyright">&copy; 2026 Veloura. All rights reserved.</p>
+          <p className="veloura-copyright">&copy; 2026 SRR Fashions. All rights reserved.</p>
           <div className="veloura-legal-links">
             <a href="#privacy">Privacy Policy</a>
             <a href="#terms">Terms &amp; Conditions</a>

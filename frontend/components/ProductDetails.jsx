@@ -6,14 +6,13 @@ import { CURRENCY_SYMBOL, formatMoney } from '../services/price.js';
 import WhatsAppButton from './WhatsAppButton.jsx';
 import { setProductSEO, setNotFoundSEO } from '../utils/seo.js';
 import { setProductSchema, removeProductSchema, setBreadcrumbSchema, removeBreadcrumbSchema } from '../utils/structuredData.js';
+import { getProductImageUrl, onImageError } from '../utils/image.js';
 import './ProductDetails.css';
 
 const SITE_URL = 'https://www.srrfashions.in';
 
 function resolveUrl(src) {
-  if (!src) return '';
-  if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/')) return src;
-  return src;
+  return getProductImageUrl(src);
 }
 
 const PENDING_PRODUCT_KEY = 'srfashion_pendingProductSelection';
@@ -463,6 +462,7 @@ export default function ProductDetails() {
                   src={details.mediaItems[0].url}
                   alt={details.title}
                   className="srfashion-qv-hero-content"
+                  onError={onImageError}
                   onClick={() => openLightbox(0)}
                 />
               ) : (
@@ -491,6 +491,7 @@ export default function ProductDetails() {
                       src={media.url}
                       alt={`${details.title} ${i + 2}`}
                       className="srfashion-qv-media-content"
+                      onError={onImageError}
                     />
                   ) : (
                     <div className="srfashion-qv-video-wrapper">

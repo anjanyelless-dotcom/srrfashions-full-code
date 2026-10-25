@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useCart } from './CartContext.jsx';
 import { formatPrice } from '../services/price.js';
+import { onImageError } from '../utils/image.js';
 import './CartDrawer.css';
 
 const bagIcon = (
@@ -112,7 +113,7 @@ const CartDrawer = () => {
                       <div className="item-product-wrap">
                         <div className="item-image">
                           {item.image ? (
-                            <img src={item.image} alt={item.name} loading="lazy" />
+                            <img src={item.image} alt={item.name} loading="lazy" onError={onImageError} />
                           ) : (
                             <div className="item-no-image">{bagIcon}</div>
                           )}

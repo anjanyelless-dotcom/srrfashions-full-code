@@ -124,6 +124,14 @@ const MyAccount = () => {
       }
       await refresh();
       setProfileSuccess('Date of birth saved successfully.');
+
+      // Profile is complete — continue to any pending destination
+      // (e.g. a product the user was adding to the cart before logging in)
+      const redirect = sessionStorage.getItem('redirectAfterLogin');
+      if (redirect) {
+        sessionStorage.removeItem('redirectAfterLogin');
+        window.location.hash = redirect;
+      }
     } catch (err) {
       setProfileError(err.message || 'Failed to save date of birth.');
     } finally {
@@ -131,11 +139,23 @@ const MyAccount = () => {
     }
   };
 
+  const clearAuthNotices = () => {
+    setLoginErrors([]);
+    setLoginSuccess('');
+    setRegisterErrors([]);
+    setRegisterSuccess('');
+  };
+
   const handleLogout = (e) => {
     e.preventDefault();
     removeCustomerAuth();
     clearCart();
     setCurrentUser(null);
+    setActiveTab('login');
+    setDob('');
+    clearAuthNotices();
+    setProfileError('');
+    setProfileSuccess('');
   };
 
   const validateLogin = () => {
@@ -165,6 +185,7 @@ const MyAccount = () => {
       saveCustomerAuth(data.user, data.token);
       setCurrentUser(data.user);
       await fetchCart();
+      setLoginErrors([]);
       setLoginSuccess(data.message || 'Login successful');
       setLogin({ identifier: '', password: '', remember: false });
 
@@ -221,6 +242,7 @@ const MyAccount = () => {
       saveCustomerAuth(data.user, data.token);
       setCurrentUser(data.user);
       await fetchCart();
+      setRegisterErrors([]);
       setRegisterSuccess(data.message || 'Registration successful');
       setRegister({ full_name: '', email: '', mobile_number: '', password: '' });
 
@@ -229,7 +251,8 @@ const MyAccount = () => {
         sessionStorage.removeItem('redirectAfterLogin');
         window.location.hash = redirect;
       } else {
-        setActiveTab('login');
+        // New account — land on the profile tab to complete DOB
+        setActiveTab('profile');
       }
     } catch (err) {
       setRegisterErrors([err.message]);
@@ -464,7 +487,7 @@ const MyAccount = () => {
             className="woocommerce-button button"
             disabled={profileLoading}
           >
-            {profileLoading ? 'Saving…' : 'Save Date of Birth'}
+            {profileLoading ? 'Saving…' : dob ? 'Update Date of Birth' : 'Save Date of Birth'}
           </button>
         </p>
       </form>
@@ -566,14 +589,14 @@ const MyAccount = () => {
                                 <button
                                   type="button"
                                   className={`col-1 th-popup-tab ${activeTab === 'login' ? 'active' : ''}`}
-                                onClick={() => { setActiveTab('login'); setLoginErrors([]); setLoginSuccess(''); }}
+                                onClick={() => { setActiveTab('login'); clearAuthNotices(); }}
                                 >
                                   Login
                                 </button>
                                 <button
                                   type="button"
                                   className={`col-2 th-popup-tab ${activeTab === 'register' ? 'active' : ''}`}
-                                onClick={() => { setActiveTab('register'); setRegisterErrors([]); setRegisterSuccess(''); }}
+                                onClick={() => { setActiveTab('register'); clearAuthNotices(); }}
                                 >
                                   Sign Up
                                 </button>

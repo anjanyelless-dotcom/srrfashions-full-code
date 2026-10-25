@@ -19,7 +19,7 @@ export default function AboutUs() {
         <section className="srfashion-hero-section">
           <div className="srfashion-hero-image-wrapper">
             <img
-              src="wp-content/uploads/sites/383/2026/07/16-1.png"
+              src="/wp-content/uploads/sites/383/2026/07/16-1.png"
               alt="SRR Fashions Collection"
               className="srfashion-hero-image"
             />
@@ -31,7 +31,7 @@ export default function AboutUs() {
           <div className="srfashion-secondary-content">
             <div className="srfashion-secondary-image-wrapper">
               <img
-                src="wp-content/uploads/sites/383/2026/07/15-1.png"
+                src="/wp-content/uploads/sites/383/2026/07/15-1.png"
                 alt="SRR Fashions"
                 className="srfashion-secondary-image"
               />

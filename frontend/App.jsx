@@ -50,10 +50,19 @@ function navigateTo(path, options = {}) {
 function parseRoute(pathname) {
   const path = pathname || '/';
   
-  // Admin routes (keep hash-based for now)
+  // Admin routes via hash — the actual hash takes precedence so that
+  // /admin#/admin/products and #/admin/products resolve to the right view
   const hash = getHash();
   if (hash && (hash === '#admin' || hash === '#/admin' || hash === '#/admin/' || hash.startsWith('#/admin/'))) {
     return { type: 'admin', hash };
+  }
+
+  // Admin routes via clean path: /admin, /admin/login, /admin/{view}
+  const adminPathMatch = path.match(/^\/admin\/?(.*)$/);
+  if (adminPathMatch) {
+    const sub = adminPathMatch[1].replace(/\/$/, '');
+    const view = sub === 'login' || sub === '' ? '' : `/${sub}`;
+    return { type: 'admin', hash: `#/admin${view}` };
   }
   
   // Transactional routes (keep hash-based for now)
@@ -173,12 +182,17 @@ function App() {
   const { openOffers } = useOffers();
 
   useEffect(() => {
-    // Handle popstate (browser back/forward)
-    const handlePopState = () => {
+    // Handle popstate (browser back/forward) and hashchange (hash navigation
+    // such as the admin sidebar, which sets window.location.hash directly)
+    const handleRouteChange = () => {
       setRoute(parseRoute(getPathname()));
     };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleRouteChange);
+    window.addEventListener('hashchange', handleRouteChange);
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener('hashchange', handleRouteChange);
+    };
   }, []);
 
   // Handle legacy hash routes and redirects

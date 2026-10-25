@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { getCartApi, updateCartItemApi, removeCartItemApi } from '../services/cartApi.js';
+import { getProductImageUrl } from '../utils/image.js';
 
 const CartContext = createContext(null);
 
@@ -61,7 +62,7 @@ export const CartProvider = ({ children }) => {
         productId: item.product_id,
         variantId: item.variant_id,
         name: item.product_name,
-        image: item.image_url,
+        image: getProductImageUrl(item.image_url),
         price: Number(item.current_price || item.price_at_add || 0),
         quantity: item.quantity,
         color: item.color,

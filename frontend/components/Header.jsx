@@ -253,7 +253,7 @@ export default function Header() {
                                     <div class="thunk-logo">
                                         <a href="#/" class="custom-logo-link" rel="home"
                                             aria-current="page"><img fetchpriority="high" width="2000" height="601"
-                                                src="wp-content/uploads/sites/383/2026/07/2-5.png" class="custom-logo"
+                                                src="/wp-content/uploads/sites/383/2026/07/2-5.png" class="custom-logo"
                                                 alt="Veloura" decoding="async" /></a>
                                     </div>
                                 </span>
@@ -382,7 +382,7 @@ export default function Header() {
                         <span class="logo-content">
                             <div class="thunk-logo">
                                 <a href="#/" rel="home"><img
-                                        src="wp-content/uploads/sites/383/2026/07/2-5.png"
+                                        src="/wp-content/uploads/sites/383/2026/07/2-5.png"
                                         alt="No ALT text found"></a>
                             </div>
                         </span>

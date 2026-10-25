@@ -40,11 +40,9 @@
 }
 
 .veloura-footer-logo {
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-  font-size: 34px;
-  font-weight: 500;
-  letter-spacing: 1.5px;
-  color: #f5f3f0;
+  height: 70px;
+  width: auto;
+  display: block;
   margin: 0 0 16px;
   cursor: pointer;
 }
@@ -262,7 +260,7 @@
   }
 
   .veloura-footer-logo {
-    font-size: 30px;
+    height: 36px;
   }
 
   .veloura-newsletter-form {

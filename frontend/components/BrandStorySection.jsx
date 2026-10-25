@@ -36,7 +36,7 @@ const BrandStorySectionHtml = `
                         <div class="elementor-element elementor-element-ffbf1ec elementor-widget elementor-widget-heading"
                             data-id="ffbf1ec" data-element_type="widget" data-e-type="widget"
                             data-widget_type="heading.default">
-                            <h2 class="elementor-heading-title elementor-size-default">SRRwas born from a simple
+                            <h2 class="elementor-heading-title elementor-size-default">SRR was born from a simple
                                 belief: that truly beautiful clothing should feel like a second skin — effortless to
                                 wear, impossible to forget. Every piece is designed with intention, not trend.</h2>
                         </div>
@@ -67,7 +67,7 @@ const BrandStorySectionHtml = `
                                     <div class="elementor-counter-number-wrapper">
                                         <span class="elementor-counter-number-prefix"></span>
                                         <span class="elementor-counter-number" data-duration="2000" data-to-value="12"
-                                            data-from-value="0" data-delimiter=",">0</span>
+                                            data-from-value="0" data-delimiter=",">2</span>
                                         <span class="elementor-counter-number-suffix">+</span>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@ const BrandStorySectionHtml = `
                                     <div class="elementor-counter-number-wrapper">
                                         <span class="elementor-counter-number-prefix"></span>
                                         <span class="elementor-counter-number" data-duration="2000" data-to-value="40"
-                                            data-from-value="0" data-delimiter=",">0</span>
+                                            data-from-value="0" data-delimiter=",">2</span>
                                         <span class="elementor-counter-number-suffix">k</span>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@ const BrandStorySectionHtml = `
                                     <div class="elementor-counter-number-wrapper">
                                         <span class="elementor-counter-number-prefix"></span>
                                         <span class="elementor-counter-number" data-duration="2000" data-to-value="100"
-                                            data-from-value="0" data-delimiter=",">0</span>
+                                            data-from-value="0" data-delimiter=",">100</span>
                                         <span class="elementor-counter-number-suffix">%</span>
                                     </div>
                                 </div>

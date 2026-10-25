@@ -266,17 +266,28 @@ const createCashfreeOrder = async (orderNumber, finalAmount, customerDetails) =>
         customer_name: customerDetails.customer_name,
         customer_email: customerDetails.customer_email,
         customer_phone: customerDetails.customer_phone
-      },
-      order_meta: {
-        // Use frontend URL for return to ensure proper hash routing
-        return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment-return.html?orderId=${customerDetails.internal_order_id}&from=cashfree`,
-        notify_url: `${process.env.BACKEND_URL || 'http://localhost:3000'}/api/cashfree/webhook`
       }
     };
 
+    // Cashfree's live API rejects http:// return/notify URLs (https required).
+    // Only include them when configured with https endpoints — on plain-http
+    // local development they are omitted so the order can still be created.
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
+    const returnUrl = `${frontendUrl}/payment-return.html?orderId=${customerDetails.internal_order_id}&from=cashfree`;
+    const notifyUrl = `${backendUrl}/api/cashfree/webhook`;
+    const orderMeta = {};
+    if (returnUrl.startsWith('https://')) orderMeta.return_url = returnUrl;
+    if (notifyUrl.startsWith('https://')) orderMeta.notify_url = notifyUrl;
+    if (Object.keys(orderMeta).length > 0) {
+      requestBody.order_meta = orderMeta;
+    } else {
+      console.warn('[PAYMENT] FRONTEND_URL/BACKEND_URL are not https — omitting order_meta (no return/webhook URLs sent to Cashfree)');
+    }
+
     console.log(`Cashfree request to: ${url}`);
     console.log(`Cashfree order_id: ${requestBody.order_id}, amount: ${requestBody.order_amount}`);
-    console.log(`[PAYMENT] Cashfree return URL: ${requestBody.order_meta.return_url}`);
+    console.log(`[PAYMENT] Cashfree return URL: ${orderMeta.return_url || '(omitted — non-https)'}`);
     console.log(`[PAYMENT] Internal order ID: ${customerDetails.internal_order_id}`);
 
     const response = await fetch(url, {
